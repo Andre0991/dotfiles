@@ -14,16 +14,16 @@ call vundle#begin('~/.vundle')
 call vundle#end()
 
 " display options
-	syntax on
-	set number		" show number
-	set relativenumber	" relative numbers
-	set incsearch		" incremental search
-	set hlsearch 		" highlight the search
-	set ignorecase 		" ignore case
-	set smartcase 		" ...unless the search uses uppercase letters
-	set showcmd 		" information about the current command going on
-	set linebreak		" avoid splitting words across two lines
-	set ruler		" show columns numbers
+syntax on
+set number		" show number
+set relativenumber	" relative numbers
+set incsearch		" incremental search
+set hlsearch 		" highlight the search
+set ignorecase 		" ignore case
+set smartcase 		" ...unless the search uses uppercase letters
+set showcmd 		" information about the current command going on
+set linebreak		" avoid splitting words across two lines
+set ruler		" show columns numbers
 
 " themes
 	" desert
@@ -35,6 +35,11 @@ call vundle#end()
 		" set background=dark
 		" set background=light
 		colorscheme solarized
+
+" spellcheck visual
+" uncomment if highlights are too distractive
+" hi clear SpellBad
+" hi SpellBad cterm=underline
 
 " general settings
 set undofile 			" undo in different sessions
