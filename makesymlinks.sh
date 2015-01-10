@@ -6,7 +6,7 @@
 ############################
 
 # check git installation
-if ! which git2 > /dev/null; then
+if ! which git > /dev/null; then
 	echo "This script requires git. Please install it."
 	exit 1
 fi
