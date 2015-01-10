@@ -1,17 +1,20 @@
 #!/bin/bash
-# Script by Michael Smalley (see http://blog.smalleycreative.com/tutorials/using-git-and-github-to-manage-your-dotfiles/)
+# Modified version of Michael Smalley's script (http://blog.smalleycreative.com/tutorials/using-git-and-github-to-manage-your-dotfiles/)
 ############################
 # .make.sh
 # This script creates symlinks from the home directory to any desired dotfiles in ~/dotfiles
 ############################
 
-########## Variables
+# check git installation
+if ! which git2 > /dev/null; then
+	echo "This script requires git. Please install it."
+	exit 1
+fi
 
+# Variables
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
 files="vimrc"			  # list of files/folders to symlink in homedir
-
-##########
 
 # create dotfiles_old in homedir
 echo -n "Creating $olddir for backup of any existing dotfiles in ~ ..."
@@ -30,3 +33,7 @@ for file in $files; do
     echo "Creating symlink to $file in home directory."
     ln -s $dir/$file ~/.$file
 done
+
+# install vundle
+git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+vim +PluginInstall +qall
