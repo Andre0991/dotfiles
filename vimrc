@@ -45,7 +45,7 @@ set ruler		" show columns numbers
 set undofile 			" undo in different sessions
 set undodir=/Users/andre0991/.vim/undos " create dir before using this
 set mouse+=a 			" avoid including numbers in mouse selection
-set clipboard=unnamed 		" use system clipboard for all operations (req vim 7.3+)
+set clipboard=unnamedplus 		" use system clipboard for all operations (req vim 7.3+)
 set shortmess+=I 		" remove initial message when opening vim without file
 set wildmode=longest,list 	" autocomplete works like unix instead of DOS
 au BufRead *.txt setlocal spell " set spell for *.txt files
