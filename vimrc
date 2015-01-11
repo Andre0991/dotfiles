@@ -45,7 +45,8 @@ set ruler		" show columns numbers
 set undofile 			" undo in different sessions
 set undodir=/Users/andre0991/.vim/undos " create dir before using this
 set mouse+=a 			" avoid including numbers in mouse selection
-set clipboard=unnamedplus 		" use system clipboard for all operations (req vim 7.3+)
+" set clipboard=unnamedplus 		" use system clipboard for all operations (req vim 7.3+)
+set clipboard=unnamed
 set shortmess+=I 		" remove initial message when opening vim without file
 set wildmode=longest,list 	" autocomplete works like unix instead of DOS
 au BufRead *.txt setlocal spell " set spell for *.txt files
@@ -96,9 +97,10 @@ let g:tex_flavor = "latex"	" fix .tex detection
 let NERDSpaceDelims = 1
 map <Leader> <Plug>(easymotion-prefix)
 
-" detect octave files properly
+" detect desired filetypes
 augroup filetypedetect
 	au! BufRead,BufNewFile *.m,*.oct set filetype=octave
+	autocmd BufNewFile,BufRead *.md set filetype=markdown
 augroup END
 
 " habit breaking, habit making
