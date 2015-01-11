@@ -86,18 +86,20 @@ if has("autocmd")
 endif
 
 " remappings
-let mapleader = " "
-nnoremap <F2> :set invpaste paste?<CR>
+imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	" correct last mispelling (insert mode)
+nmap <c-l> [s1z=<c-o>]			" same in command mode
+let mapleader = " "			" leader is space
+nnoremap <F2> :set invpaste paste?<CR>	" F2 togles paste mode
 inoremap {<CR>  <CR>{<CR>}<Esc>O
 set pastetoggle=<F2>
-set showmode 		" requires vim >= 7
+set showmode 				" requires vim >= 7
 
 " other
-let g:tex_flavor = "latex"	" fix .tex detection
 let NERDSpaceDelims = 1
 map <Leader> <Plug>(easymotion-prefix)
 
 " detect desired filetypes
+let g:tex_flavor = "latex"		" fix .tex detection
 augroup filetypedetect
 	au! BufRead,BufNewFile *.m,*.oct set filetype=octave
 	autocmd BufNewFile,BufRead *.md set filetype=markdown
