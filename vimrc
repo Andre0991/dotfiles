@@ -1,4 +1,4 @@
-" set the runtime path to include Vundle and initialize it
+" ===============  Vundle  ===============
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -13,7 +13,8 @@ call vundle#begin('~/.vundle')
 	Plugin 'bling/vim-airline'
 call vundle#end()
 
-" display options
+
+" ===============  Display  ===============
 syntax on
 set number		" show number
 set relativenumber	" relative numbers
@@ -24,58 +25,71 @@ set smartcase 		" ...unless the search uses uppercase letters
 set showcmd 		" information about the current command going on
 set linebreak		" avoid splitting words across two lines
 set ruler		" show columns numbers
+hi clear SpellBad 	" make highlights less distractive
+hi SpellBad cterm=underline
 
-" themes
-	" desert
-		" colorscheme desert
-	" wombat
-		" set t_Co=256
-		" colorscheme wombat256
+
+" ===============  Themes  ===============
+" desert
+	" colorscheme desert
+" wombat
+	" set t_Co=256
+	" colorscheme wombat256
 " solarized theme settings
-		" set background=dark
-		" set background=light
-		colorscheme solarized
+	" set background=dark
+	" set background=light
+	colorscheme solarized
 
-" spellcheck visual
-" uncomment if highlights are too distractive
-" hi clear SpellBad
-" hi SpellBad cterm=underline
 
-" general settings
+
+" ===============  General settings  ===============
 set undofile 			" undo in different sessions
-set undodir=/Users/andre0991/.vim/undos " create dir before using this
+set undodir=/Users/andre0991/.vim/undos " dir should exist
 set mouse+=a 			" avoid including numbers in mouse selection
-" set clipboard=unnamedplus 		" use system clipboard for all operations (req vim 7.3+)
-set clipboard=unnamed
+" set clipboard=unnamedplus 	" use system clipboard for all operations (req vim 7.3+)
+set clipboard=unnamed		" use this if the above line does not work properly
 set shortmess+=I 		" remove initial message when opening vim without file
 set wildmode=longest,list 	" autocomplete works like unix instead of DOS
-au BufRead *.txt setlocal spell " set spell for *.txt files
 
 
+" ===============  Text edition  ===============
+" set spell for *.txt files
+au BufRead *.txt setlocal spell 
+set spelllang=en,pt
 
-" identation & readability
+func! WordProcessorMode()
+	setlocal formatoptions=t1
+	setlocal textwidth=80
+	setlocal smartindent
+	setlocal spell spelllang=en_us
+	setlocal noexpandtab
+endfu
+com! WP call WordProcessorMode()
+
+
+" ===============  Identation & readability  ===============
 set autoindent		" auto identation
 filetype on 		" smart indenting by filetype
-filetype indent on
-filetype plugin on
+filetype indent on	" filetype-specific indenting
+filetype plugin on	" filetype-specific plugins
 
 " creates a line crossing the column 80
-" vim >= 7.3
-	" set colorcolumn=80
-" vim < 7.3
-	" if exists('+colorcolumn')
-		" set colorcolumn=80
-	" else
-		" au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
-	" endif
-" limit column width to 80
-function! FormatWidth()
-	:set textwidth=80
-	:%s/\n/\r\r/g
-	:normal gg
-	:normal gqG
-	:%s/\n\n/\r/g
+function! Column_mark()
+	if exists('+colorcolumn')
+		set colorcolumn=80
+	else
+		au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+	endif
 endfunc
+
+
+" ===============  Other  ===============
+" detect desired filetypes
+let g:tex_flavor = "latex"		" fix .tex detection
+augroup filetypedetect
+	au! BufRead,BufNewFile *.m,*.oct set filetype=octave
+	autocmd BufNewFile,BufRead *.md set filetype=markdown
+augroup END
 
 " Jump to the last position when opening a file.
 " If this doesn't work, you might not have ownership
@@ -85,25 +99,19 @@ if has("autocmd")
 	au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-" remappings
+let NERDSpaceDelims = 1			" add extra space after comment
+map <Leader> <Plug>(easymotion-prefix)  " leader is the key to use easymotion
+
+
+" ===============  Remappings  ===============
 imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	" correct last mispelling (insert mode)
-nmap <c-l> [s1z=<c-o>]			" same in command mode
-let mapleader = " "			" leader is space
-nnoremap <F2> :set invpaste paste?<CR>	" F2 togles paste mode
-inoremap {<CR>  <CR>{<CR>}<Esc>O
-set pastetoggle=<F2>
-set showmode 				" requires vim >= 7
-
-" other
-let NERDSpaceDelims = 1
-map <Leader> <Plug>(easymotion-prefix)
-
-" detect desired filetypes
-let g:tex_flavor = "latex"		" fix .tex detection
-augroup filetypedetect
-	au! BufRead,BufNewFile *.m,*.oct set filetype=octave
-	autocmd BufNewFile,BufRead *.md set filetype=markdown
-augroup END
+nmap <c-l> [s1z=<c-o>]			" correct last mispelling (command mode) 
+let mapleader = " "			" leader is space key
+inoremap {<CR>  <CR>{<CR>}<Esc>O	" autocomplete code block
+nnoremap <F2> :set invpaste paste?<CR>	
+set pastetoggle=<F2>			" F2 togles paste mode
+set showmode 				
+nmap <silent> <leader><space> :nohlsearch<CR>
 
 " habit breaking, habit making
 noremap <Up> <NOP>
@@ -111,13 +119,24 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-" generates ordered lists
-function! GenList(myarg1, myarg2)
-	execute "for i in range(a:myarg1, a:myarg2) | put = i.'. ' | endfor"
+
+" ===============  My functions  ===============
+" Reformat text limiting width
+function! FormatWidth()
+	:set textwidth=80
+	:%s/\n/\r\r/g
+	:normal gg
+	:normal gqG
+	:%s/\n\n/\r/g
+endfunc
+" generates ordered lists from first_item to last_item
+function! GenList(first_item, last_item)
+	execute "for i in range(a:first_item, a:last_item) | put = i.'. ' | endfor"
 endfunc
 
-" statusline
-set laststatus=2			  "always show statusline
+
+" ===============  Statusline  ===============
+set laststatus=2				    "always show statusline
 " customized statusline
 	" set statusline=
 	" set statusline+=%<\                       " cut at start
@@ -127,5 +146,6 @@ set laststatus=2			  "always show statusline
 	" set statusline+=%10((%l,%c)%)\            " line and column
 	" set statusline+=%P                        " percentage of file
 " airline
-let g:airline_left_sep=''
-let g:airline_right_sep=''
+let g:airline_left_sep=''			" change symbol that requires powerline fonts
+let g:airline_right_sep=''			" . 
+
