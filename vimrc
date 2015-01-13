@@ -54,7 +54,7 @@ set wildmode=longest,list 	" autocomplete works like unix instead of DOS
 
 " ===============  Text edition  ===============
 " set spell for *.txt files
-au BufRead *.txt setlocal spell 
+au BufRead *.txt setlocal spell
 set spelllang=en,pt
 
 func! WordProcessorMode()
@@ -65,7 +65,6 @@ func! WordProcessorMode()
 	setlocal noexpandtab
 endfu
 com! WP call WordProcessorMode()
-
 
 " ===============  Identation & readability  ===============
 set autoindent		" auto identation
@@ -82,6 +81,22 @@ function! Column_mark()
 	endif
 endfunc
 
+
+" ===============  Remappings  ===============
+imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	" correct last mispelling (insert mode)
+nmap <c-l> [s1z=<c-o>]			" correct last mispelling (command mode)
+let mapleader=" "			" leader is space key
+inoremap {<CR>  <CR>{<CR>}<Esc>O	" autocomplete code block
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>			" F2 togles paste mode
+set showmode
+nmap <silent> <leader><space> :nohlsearch<CR>
+
+" habit breaking, habit making
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 
 " ===============  Other  ===============
 " detect desired filetypes
@@ -100,24 +115,8 @@ if has("autocmd")
 endif
 
 let NERDSpaceDelims = 1			" add extra space after comment
-map <Leader> <Plug>(easymotion-prefix)  " leader is the key to use easymotion
-
-
-" ===============  Remappings  ===============
-imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	" correct last mispelling (insert mode)
-nmap <c-l> [s1z=<c-o>]			" correct last mispelling (command mode) 
-let mapleader = " "			" leader is space key
-inoremap {<CR>  <CR>{<CR>}<Esc>O	" autocomplete code block
-nnoremap <F2> :set invpaste paste?<CR>	
-set pastetoggle=<F2>			" F2 togles paste mode
-set showmode 				
-nmap <silent> <leader><space> :nohlsearch<CR>
-
-" habit breaking, habit making
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+" leader is the key to use easymotion
+map <Leader> <Plug>(easymotion-prefix)
 
 
 " ===============  My functions  ===============
@@ -147,5 +146,5 @@ set laststatus=2				    "always show statusline
 	" set statusline+=%P                        " percentage of file
 " airline
 let g:airline_left_sep=''			" change symbol that requires powerline fonts
-let g:airline_right_sep=''			" . 
+let g:airline_right_sep=''			" .
 
