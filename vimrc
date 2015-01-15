@@ -36,7 +36,7 @@ hi SpellBad cterm=underline
 	" set t_Co=256
 	" colorscheme wombat256
 " solarized theme settings
-	" set background=dark
+	set background=dark
 	" set background=light
 	colorscheme solarized
 
@@ -83,12 +83,17 @@ endfunc
 
 
 " ===============  Remappings  ===============
-imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	" correct last mispelling (insert mode)
-nmap <c-l> [s1z=<c-o>]			" correct last mispelling (command mode)
-let mapleader=" "			" leader is space key
-inoremap {<CR>  <CR>{<CR>}<Esc>O	" autocomplete code block
+" correct last mispelling (insert mode)
+imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	
+" correct last mispelling (command mode)
+nmap <c-l> [s1z=<c-o>]			
+" leader is space key
+let mapleader=" "			
+" autocomplete code block
+inoremap {<CR>  <CR>{<CR>}<Esc>O
+" F2 togles paste mode
 nnoremap <F2> :set invpaste paste?<CR>
-set pastetoggle=<F2>			" F2 togles paste mode
+set pastetoggle=<F2>
 set showmode
 nmap <silent> <leader><space> :nohlsearch<CR>
 
@@ -115,7 +120,8 @@ if has("autocmd")
 endif
 
 let NERDSpaceDelims = 1			" add extra space after comment
-" leader is the key to use easymotion
+" leader is the key to use easymotion.
+" Do not insert a trailing whitespace or tab on the line below.
 map <Leader> <Plug>(easymotion-prefix)
 
 
