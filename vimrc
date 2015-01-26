@@ -124,6 +124,11 @@ let NERDSpaceDelims = 1			" add extra space after comment
 " Do not insert a trailing whitespace or tab on the line below.
 map <Leader> <Plug>(easymotion-prefix)
 
+" Delete comment character when joining commented lines (from tpope's sensible.vim)
+if v:version > 703 || v:version == 703 && has("patch541")
+	set formatoptions+=j
+endif"
+
 
 " ===============  My functions  ===============
 " Reformat text limiting width
@@ -151,6 +156,7 @@ set laststatus=2				    "always show statusline
 	" set statusline+=%10((%l,%c)%)\            " line and column
 	" set statusline+=%P                        " percentage of file
 " airline
-let g:airline_left_sep=''			" change symbol that requires powerline fonts
-let g:airline_right_sep=''			" .
+let g:airline_powerline_fonts = 1
+" let g:airline_left_sep=''			" change symbol that requires powerline fonts
+" let g:airline_right_sep=''			" .
 
