@@ -1,5 +1,5 @@
 " ===============  General  ===============
-" Hides Firefix navigation bar (address, serach, etc)
+" Hides Firefox navigation bar (address, serach, etc)
 set gui=nonavigation
 set titlestring="Mozilla Firefox"
 
