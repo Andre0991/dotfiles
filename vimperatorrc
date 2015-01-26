@@ -1,0 +1,11 @@
+" ===============  General  ===============
+" Hides Firefix navigation bar (address, serach, etc)
+set gui=nonavigation
+set titlestring="Mozilla Firefox"
+
+
+" ===============  Remappings  ===============
+noremap J gt
+noremap K gT
+nnoremap k 5k
+nnoremap j 5j
