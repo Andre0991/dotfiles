@@ -11,6 +11,7 @@ call vundle#begin('~/.vundle')
 	Plugin 'Raimondi/delimitMate'
 	Plugin 'Lokaltog/vim-easymotion'
 	Plugin 'bling/vim-airline'
+	Plugin 'takac/vim-hardtime'
 call vundle#end()
 
 
@@ -84,11 +85,11 @@ endfunc
 
 " ===============  Remappings  ===============
 " correct last mispelling (insert mode)
-imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u 	
+imap <c-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 " correct last mispelling (command mode)
-nmap <c-l> [s1z=<c-o>]			
+nmap <c-l> [s1z=<c-o>]
 " leader is space key
-let mapleader=" "			
+let mapleader=" "
 " autocomplete code block
 inoremap {<CR>  <CR>{<CR>}<Esc>O
 " F2 togles paste mode
@@ -129,6 +130,12 @@ if v:version > 703 || v:version == 703 && has("patch541")
 	set formatoptions+=j
 endif"
 
+" Activate vim-hardtime
+let g:hardtime_default_on = 1
+" Activate HardTime notifications
+let g:hardtime_showmsg = 1
+" Max number of repetative key preses
+let g:hardtime_maxcount = 2
 
 " ===============  My functions  ===============
 " Reformat text limiting width
