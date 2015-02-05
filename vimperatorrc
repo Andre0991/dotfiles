@@ -5,7 +5,7 @@ set titlestring="Mozilla Firefox"
 
 
 " ===============  Remappings  ===============
-noremap J gt
-noremap K gT
-nnoremap k 5k
-nnoremap j 5j
+noremap j gt
+noremap k gT
+nnoremap <Up> 5k
+nnoremap <Down> 5j
