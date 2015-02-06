@@ -9,7 +9,9 @@ call vundle#begin('~/.vundle')
 	Plugin 'scrooloose/nerdcommenter'
 	Plugin 'altercation/vim-colors-solarized'
 	Plugin 'Raimondi/delimitMate'
-	Plugin 'Lokaltog/vim-easymotion'
+	" Plugin 'Lokaltog/vim-easymotion'
+	" Lightweight alternative to easymotion
+	" Plugin 'justinmk/vim-sneak'
 	Plugin 'bling/vim-airline'
 	Plugin 'takac/vim-hardtime'
 call vundle#end()
@@ -103,6 +105,12 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+
+" Use <leader>b to show buffers,
+" See :help 'wildcharm for details.
+set wcm=<C-Z>
+map <leader>b :b<space><C-Z>
+
 
 " ===============  Other  ===============
 " detect desired filetypes
