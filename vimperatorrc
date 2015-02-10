@@ -7,5 +7,36 @@ set titlestring="Mozilla Firefox"
 " ===============  Remappings  ===============
 noremap j gt
 noremap k gT
-nnoremap <Up> 5k
-nnoremap <Down> 5j
+noremap h :back<CR>
+noremap l :forward<CR>
+noremap J <C-d>
+noremap K <C-u>
+map <A-Down> :tabmove! +1<CR>
+map <A-Up> :tabmove! -1<CR>
+
+" Try to start in normal mode on all pages
+set focuscontent
+
+:ignorekeys add mail\\.google\\.com -except :,t,d,b
+:ignorekeys add feedly\\.com -except :,t,d,b
+
+" let @d = '<M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>'
+noremap @q <M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>
+
+noremap <silent> <leader>g :set gui=navigation<CR>
+noremap <silent> <leader>G :set gui=nonavigation<CR>
+
+" google i'm lucky - http://www.google.com/webhp?#q=yourquery&btnI=I , http://www.google.com/search?btnI=I%27m+Feeling+Lucky&q=%s
+
+
+" go<key> opens qmark in the current tab
+" gn<key> opens qmark in a new tab
+qmark h https://news.ycombinator.com/news
+qmark y https://www.youtube.com/feed/subscriptions
+qmark m https://mail.google.com/
+
+" Google's I'm feeling lucky
+bmark -t "Google Feeling Lucky Search" -k "goto" http://www.google.com/search?q=%s&btnI=I%27m+Feeling+Lucky
+
+" nnoremap <Up> 5k
+" nnoremap <Down> 5j
