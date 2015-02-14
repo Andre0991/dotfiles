@@ -18,7 +18,7 @@ map <A-Up> :tabmove! -1<CR>
 set focuscontent
 
 :ignorekeys add mail\\.google\\.com -except :,t,d,b
-:ignorekeys add feedly\\.com -except :,t,d,b
+" :ignorekeys add feedly\\.com -except :,t,d,b
 
 " let @d = '<M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>'
 noremap @q <M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>
