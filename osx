@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Inspired by https://github.com/mathiasbynens/dotfiles/blob/master/.osx
+
+defaults write -g NSTextInsertionPointBlinkPeriodOn -float 999999999999
+
