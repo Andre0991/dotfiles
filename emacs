@@ -5,6 +5,10 @@
 
 ;; start maximized
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 ;; spaces instead of tabs for identation
@@ -71,11 +75,6 @@
 
 (blink-cursor-mode 0)
 
-;; (load-theme 'tango-dark t)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t nil))))
+(setq solarized-broken-srgb nil)
+(load-theme 'solarized-dark t)
+;; (load-theme 'sanityinc-solarized-dark t)
