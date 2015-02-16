@@ -10,10 +10,6 @@
 
 ;; start maximized
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 ;; spaces instead of tabs for identation
@@ -42,10 +38,6 @@
 
 ;; timestamps in done tasks
 (setq org-log-done t)
-;; Required to untick checkboxes (see https://lists.gnu.org/archive/html/emacs-orgmode/2013-11/msg01055.html)
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-; (require 'org-subtask-reset)
-(require 'org-checklist)
 
 ;; remember cursor position
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -61,18 +53,14 @@
 (smartparens-global-mode t)
 (require 'smartparens-config)
 
+;; space as leader.
+(setq evil-leader/in-all-states 1)
+(global-evil-leader-mode)
+(evil-leader/set-leader "<SPC>")
+
 ;; enable evil-mode
 (evil-mode 1)
 
-;; " " as leader.
-(setq evil-leader/in-all-states 1)
-(global-evil-leader-mode)
-(evil-leader/set-leader " ")
-
-;; Guide-key list - present key bindings for listed prefixes
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
 
 ;; Key bindings
 ; Use ibuffer
@@ -81,9 +69,6 @@
 (blink-cursor-mode 0)
 
 
-;; (add-to-list 'load-path "~/.emacs.d/mythemes/emacs-color-theme-solarized")
-;; (require 'solarized-dark-theme)
-;; (setq solarized-broken-srgb nil)
 ;; (load-theme 'solarized-dark t)
 ;; (load-theme 'wombat t)
 ;; (load-theme 'sanityinc-solarized-dark t)
