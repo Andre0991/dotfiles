@@ -3,6 +3,10 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; exec-path-from-shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 ;; ido-mode
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -10,7 +14,14 @@
 
 ;; start maximized
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
+
+;; Org mode configuration
+;; (customize-set-variable org-M-RET-may-split-line (quote ((default))))
 
 ;; spaces instead of tabs for identation
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -26,9 +37,12 @@
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; relative-line-numbers enabled globally
-(add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
-(add-hook 'prog-mode-hook 'line-number-mode t)
-(add-hook 'prog-mode-hook 'column-number-mode t)
+;; (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
+;; (add-hook 'prog-mode-hook 'line-number-mode t)
+;; (add-hook 'prog-mode-hook 'column-number-mode t)
+
+
+(global-relative-line-numbers-mode)
 
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
