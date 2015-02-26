@@ -1,9 +1,4 @@
-# Colours
-# export CLICOLOR=1
-# export LSCOLORS=GxFxCxDxBxegedabagaced
-
-
-# Run 'title example' to make 'example' the title of current session
+# iTerm2 -  run 'title example' to make 'example' the title of current session
 function title {
     echo -ne "\033]0;"$*"\007"
 }
@@ -28,7 +23,7 @@ if [ -d "$GHC_DOT_APP" ]; then
     export PATH="${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
 fi
 
-# Colors
+# Colours
 eval $( dircolors -b $HOME/.dir_colors )
 
 # Aliases
