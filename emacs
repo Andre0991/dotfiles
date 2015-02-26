@@ -7,10 +7,47 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
+;; helm
+;; source: http://tuhdo.github.io/helm-intro.html
+(require 'helm)
+(require 'helm-config)
+
+;; From Oh-my-emacs (https://github.com/xiaohanyu/oh-my-emacs/commit/34bf80a0fea61ff1112accfb8448a45dafd2204a)
+(require 'cl) ; otherwise emacs complains about "case" in the following block
+(setq helm-locate-command
+      (case system-type
+            ('gnu/linux "locate -i -r %s")
+            ('berkeley-unix "locate -i %s")
+            ('windows-nt "es %s")
+            ('darwin "mdfind -name %s %s")
+            (t "locate %s")))
+
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+
+(global-set-key (kbd "C-x b") 'helm-mini)
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+(global-set-key (kbd "C-c h o") 'helm-occur)
+
+(global-set-key (kbd "C-c h g") 'helm-google-suggest)
+
+(helm-mode 1)
+
 ;; ido-mode
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode 1)
 
 ;; start maximized
 (custom-set-variables
@@ -36,13 +73,13 @@
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; relative-line-numbers enabled globally
-;; (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
-;; (add-hook 'prog-mode-hook 'line-number-mode t)
-;; (add-hook 'prog-mode-hook 'column-number-mode t)
+;; relative-line-numbers
+(add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
+(add-hook 'prog-mode-hook 'line-number-mode t)
+(add-hook 'prog-mode-hook 'column-number-mode t)
 
 
-(global-relative-line-numbers-mode)
+;; (global-relative-line-numbers-mode)
 
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
@@ -74,6 +111,10 @@
 
 ;; enable evil-mode
 (evil-mode 1)
+
+;; evil-surround
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 
 ;; Key bindings
