@@ -1,7 +1,20 @@
+; -*-Lisp-*-
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
+;; backups
+;; From sacha's config: http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq delete-old-versions -1)    ; do not delete old versions
+(setq version-control t)         ; backups are numbered
+(setq vc-make-backup-files t)    ; by default, emacs does not backup files managed by a version control system. Setting it to t modifies that.
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+
+;; alternative to default describe-bindings
+(require 'helm-descbinds)
+(helm-descbinds-mode)
 
 ;; exec-path-from-shell
 (when (memq window-system '(mac ns))
@@ -116,6 +129,12 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
+;; yasnippet
+(require 'yasnippet)
+(yas-reload-all) ; global-mode can affect negatively other modes, use this instead to used it as a non-global minor mode
+(add-hook 'prog-mode-hook
+          '(lambda ()
+             (yas-minor-mode)))
 
 ;; Key bindings
 ; Use ibuffer
