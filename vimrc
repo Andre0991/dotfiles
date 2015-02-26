@@ -14,6 +14,7 @@ call vundle#begin('~/.vundle')
 	" Plugin 'justinmk/vim-sneak'
 	Plugin 'bling/vim-airline'
 	Plugin 'takac/vim-hardtime'
+	Plugin 'tpope/vim-surround'
 call vundle#end()
 
 
