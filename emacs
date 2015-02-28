@@ -4,6 +4,17 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; Move between emacs windows using super + arrow keys
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings 'super))
+
+;; Use (y/n) instead of (yes/no)
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Bell
+(setq ring-bell-function 'ignore)
+(setq visible-bell t)
+
 ;; backups
 ;; From sacha's config: http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
@@ -86,13 +97,10 @@
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; relative-line-numbers
+;; relative-line-numbers (from http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migration-guide/)
 (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
 (add-hook 'prog-mode-hook 'line-number-mode t)
 (add-hook 'prog-mode-hook 'column-number-mode t)
-
-
-;; (global-relative-line-numbers-mode)
 
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
