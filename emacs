@@ -130,6 +130,19 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 
+;; evil-nerd-commenter
+;; Settings according to tip 4 on https://github.com/redguardtoo/evil-nerd-commenter
+(evil-leader/set-key
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "cc" 'evilnc-copy-and-comment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs
+  "cr" 'comment-or-uncomment-region
+  "cv" 'evilnc-toggle-invert-comment-line-by-line
+  " "  'evilnc-comment-operator ; Use <SPC> instead of \\
+  )
+
 ;; enable evil-mode
 (evil-mode 1)
 
