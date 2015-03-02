@@ -12,15 +12,16 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Bell
-(setq ring-bell-function 'ignore)
-(setq visible-bell t)
+;; (setq ring-bell-function 'ignore) ; turn off alarms
+(setq visible-bell 1) ; use visual alarm instead of sound
+
 
 ;; backups
-;; From sacha's config: http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
+;; From http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 (setq delete-old-versions -1)    ; do not delete old versions
 (setq version-control t)         ; backups are numbered
-(setq vc-make-backup-files t)    ; by default, emacs does not backup files managed by a version control system. Setting it to t modifies that.
+(setq vc-make-backup-files t)    ; by default, emacs does not backup files managed by a version control system. Setting it to "t" modifies that.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 
 ;; alternative to default describe-bindings
@@ -150,6 +151,10 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
+
+;; evil-visualstar
+(global-evil-visualstar-mode)
+
 ;; yasnippet
 (require 'yasnippet)
 (yas-reload-all) ; global-mode can affect negatively other modes, use this instead to used it as a non-global minor mode
@@ -160,14 +165,44 @@
 ;; Key bindings
 ; Use ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+;; done in org-mode
+(define-key evil-normal-state-map (kbd "<SPC> d") 'org-todo)
+
+;; M-x
+(define-key evil-normal-state-map (kbd "<SPC> x") 'helm-M-x)
+(define-key evil-visual-state-map (kbd "<SPC> x") 'helm-M-x)
+
+;; C-x b
+(define-key evil-normal-state-map (kbd "<SPC> b") 'helm-mini)
+
+
+;; esc quits
+;; From https://github.com/davvil/.emacs.d/blob/master/init.el
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark  t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'evil-exit-emacs-state)
 
 (blink-cursor-mode 0)
 
 
-;; (load-theme 'solarized-dark t)
-;; (load-theme 'wombat t)
-;; (load-theme 'sanityinc-solarized-dark t)
-(load-theme 'zenburn t)
+;; Theme
+(if window-system
+    (load-theme 'zenburn t)
+  (load-theme 'wombat t))
 
 
 (custom-set-faces
