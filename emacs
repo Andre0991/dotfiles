@@ -144,6 +144,11 @@
   " "  'evilnc-comment-operator ; Use <SPC> instead of \\
   )
 
+;; evil-numbers
+(require 'evil-numbers)
+(define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
 ;; enable evil-mode
 (evil-mode 1)
 
@@ -174,6 +179,11 @@
 
 ;; C-x b
 (define-key evil-normal-state-map (kbd "<SPC> b") 'helm-mini)
+(define-key evil-visual-state-map (kbd "<SPC> b") 'helm-mini)
+
+;; helm-locate
+(define-key evil-normal-state-map (kbd "<SPC> l") 'helm-locate)
+(define-key evil-visual-state-map (kbd "<SPC> l") 'helm-locate)
 
 
 ;; esc quits
