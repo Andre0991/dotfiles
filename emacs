@@ -99,9 +99,13 @@
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; relative-line-numbers (from http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migration-guide/)
-(add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
-(add-hook 'prog-mode-hook 'line-number-mode t)
-(add-hook 'prog-mode-hook 'column-number-mode t)
+(add-hook 'org-mode-hook 'relative-line-numbers-mode t)
+(add-hook 'org-mode-hook 'line-number-mode t)
+(add-hook 'org-mode-hook 'column-number-mode t)
+
+;; (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
+;; (add-hook 'prog-mode-hook 'line-number-mode t)
+;; (add-hook 'prog-mode-hook 'column-number-mode t)
 
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
@@ -174,17 +178,32 @@
 (define-key evil-normal-state-map (kbd "<SPC> d") 'org-todo)
 
 ;; M-x
-(define-key evil-normal-state-map (kbd "<SPC> x") 'helm-M-x)
-(define-key evil-visual-state-map (kbd "<SPC> x") 'helm-M-x)
+(define-key evil-normal-state-map (kbd "<SPC> f") 'helm-M-x)
+(define-key evil-visual-state-map (kbd "<SPC> f") 'helm-M-x)
+
+;; C-x C-q
+(define-key evil-normal-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
+(define-key evil-visual-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
 
 ;; C-x b
-(define-key evil-normal-state-map (kbd "<SPC> b") 'helm-mini)
-(define-key evil-visual-state-map (kbd "<SPC> b") 'helm-mini)
+(define-key evil-normal-state-map (kbd "<SPC> j") 'helm-mini)
+(define-key evil-visual-state-map (kbd "<SPC> j") 'helm-mini)
 
 ;; helm-locate
 (define-key evil-normal-state-map (kbd "<SPC> l") 'helm-locate)
 (define-key evil-visual-state-map (kbd "<SPC> l") 'helm-locate)
 
+;; helm-imenu
+(define-key evil-normal-state-map (kbd "<SPC> m") 'helm-imenu)
+(define-key evil-visual-state-map (kbd "<SPC> m") 'helm-imenu)
+
+;; save-buffer
+(define-key evil-normal-state-map (kbd "<SPC> s") 'save-buffer)
+(define-key evil-visual-state-map (kbd "<SPC> s") 'save-buffer)
+
+;; help
+(define-key evil-normal-state-map (kbd "<SPC> h") 'help-command)
+(define-key evil-visual-state-map (kbd "<SPC> h") 'help-command)
 
 ;; esc quits
 ;; From https://github.com/davvil/.emacs.d/blob/master/init.el
