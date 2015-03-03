@@ -3,6 +3,21 @@
 set gui=nonavigation
 set titlestring="Mozilla Firefox"
 
+"  set editor
+set editor=/usr/local/bin/mvim
+" fix
+"if has("win32")
+"  "
+"else
+"  if has("unix")
+"    let s:uname = system("uname")
+"    if s:uname == "Darwin\n"
+"      set editor=/usr/local/bin/mvim
+"    else
+"      set editor=gvim
+"    endif
+"  endif
+"endif
 
 " ===============  Remappings  ===============
 noremap j gt
@@ -13,11 +28,14 @@ noremap J <C-d>
 noremap K <C-u>
 map <A-Down> :tabmove! +1<CR>
 map <A-Up> :tabmove! -1<CR>
+map <A-J> :tabmove! +1<CR>
+map <A-K> :tabmove! -1<CR>
 
 " Try to start in normal mode on all pages
 set focuscontent
 
 :ignorekeys add mail\\.google\\.com -except :,t,d,b
+:ignorekeys add inbox\\.google\\.com -except :,t,d,b
 " :ignorekeys add feedly\\.com -except :,t,d,b
 
 " let @d = '<M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>'
@@ -25,6 +43,9 @@ noremap @q <M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>
 
 noremap <silent> <leader>g :set gui=navigation<CR>
 noremap <silent> <leader>G :set gui=nonavigation<CR>
+
+" pocket
+nnoremap gp <A-w>
 
 " google i'm lucky - http://www.google.com/webhp?#q=yourquery&btnI=I , http://www.google.com/search?btnI=I%27m+Feeling+Lucky&q=%s
 
