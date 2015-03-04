@@ -29,3 +29,4 @@ eval $( dircolors -b $HOME/.dir_colors )
 # Aliases
 alias ls="ls --color=always"
 alias grep="grep --color=always"
+alias ledger="ledger -f ~/Dropbox/notes/ledger.dat"
