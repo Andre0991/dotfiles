@@ -140,7 +140,6 @@
 (evil-leader/set-key
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
   "cc" 'evilnc-copy-and-comment-lines
   "cp" 'evilnc-comment-or-uncomment-paragraphs
   "cr" 'comment-or-uncomment-region
@@ -205,6 +204,10 @@
 (define-key evil-normal-state-map (kbd "<SPC> h") 'help-command)
 (define-key evil-visual-state-map (kbd "<SPC> h") 'help-command)
 
+;; other-window
+(define-key evil-normal-state-map (kbd "<SPC> k") 'other-window)
+(define-key evil-visual-state-map (kbd "<SPC> k") 'other-window)
+
 ;; esc quits
 ;; From https://github.com/davvil/.emacs.d/blob/master/init.el
 (defun minibuffer-keyboard-quit ()
@@ -233,6 +236,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
     (load-theme 'zenburn t)
   (load-theme 'wombat t))
 
+;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
