@@ -239,6 +239,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
+;; wrap lines - visual line mode
+;; (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+(global-visual-line-mode 1)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
