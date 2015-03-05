@@ -74,12 +74,15 @@
 ;; (setq ido-everywhere t)
 ;; (ido-mode 1)
 
-;; start maximized
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+
+ ; consider all themes as safe
+ '(custom-safe-themes t)
+ ; start maximized
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 ;; Org mode configuration
@@ -149,7 +152,7 @@
   "W" 'save-some-buffers
   ;"f" 'flycheck-buffer
   "z" 'suspend-emacs
-  ;; "c" 'evilnc-comment-or-uncomment-lines
+  "<SPC>" 'evilnc-comment-or-uncomment-lines
   ; evil-nerd-commenter
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
@@ -160,7 +163,15 @@
   " "  'evilnc-comment-operator ; Use <SPC> instead of \\
   )
 
-;; (evilnc-default-hotkeys)
+;; from https://github.com/edwtjo/evil-org-mode
+(evil-define-key 'normal org-mode-map
+  "<" 'org-metaleft
+  ">" 'org-metaright
+  "gh" 'outline-up-heading
+  "gl" 'outline-next-visible-heading
+  "gj" 'org-forward-heading-same-level
+  "gk" 'org-backward-heading-same-level
+  )
 
 ;; ;; evil-nerd-commenter
 ;; ;; Settings according to tip 4 on https://github.com/redguardtoo/evil-nerd-commenter
@@ -272,8 +283,15 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; Theme
 (if window-system
+    ;; (load-theme 'sanityinc-solarized-light t)
     (load-theme 'zenburn t)
   (load-theme 'wombat t))
+
+;; disable current theme before loading new one
+; from http://stackoverflow.com/a/15595000
+(defadvice load-theme 
+  (before theme-dont-propagate activate)
+  (mapcar #'disable-theme custom-enabled-themes))
 
 ; do not show splash screen
 (setq inhibit-startup-message t)
