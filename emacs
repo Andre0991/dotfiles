@@ -103,9 +103,9 @@
 (add-hook 'org-mode-hook 'line-number-mode t)
 (add-hook 'org-mode-hook 'column-number-mode t)
 
-;; (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
-;; (add-hook 'prog-mode-hook 'line-number-mode t)
-;; (add-hook 'prog-mode-hook 'column-number-mode t)
+(add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
+(add-hook 'prog-mode-hook 'line-number-mode t)
+(add-hook 'prog-mode-hook 'column-number-mode t)
 
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
@@ -131,13 +131,26 @@
 (require 'smartparens-config)
 
 ;; space as leader.
-(setq evil-leader/in-all-states 1)
+;; required before evil-mode is enabled
 (global-evil-leader-mode)
+; enable C-<leader> when not in normal mode
+(setq evil-leader/in-all-states 1)
 (evil-leader/set-leader "<SPC>")
-
-;; evil-nerd-commenter
-;; Settings according to tip 4 on https://github.com/redguardtoo/evil-nerd-commenter
 (evil-leader/set-key
+  "f" 'helm-M-x
+  "j" 'helm-mini
+  "k" 'kill-this-buffer
+  "l" 'helm-locate
+  "m" 'helm-imenu
+  "o" 'other-window
+  "q" 'save-buffers-kill-terminal
+  "E" 'go-errcheck
+  "w" 'save-buffer
+  "W" 'save-some-buffers
+  ;"f" 'flycheck-buffer
+  "z" 'suspend-emacs
+  ;; "c" 'evilnc-comment-or-uncomment-lines
+  ; evil-nerd-commenter
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
   "cc" 'evilnc-copy-and-comment-lines
@@ -146,6 +159,23 @@
   "cv" 'evilnc-toggle-invert-comment-line-by-line
   " "  'evilnc-comment-operator ; Use <SPC> instead of \\
   )
+
+;; (evilnc-default-hotkeys)
+
+;; ;; evil-nerd-commenter
+;; ;; Settings according to tip 4 on https://github.com/redguardtoo/evil-nerd-commenter
+;; ; (add-hook 'prog-mode-hook
+;; ; '(lambda ()
+;; (evil-leader/set-key
+;;   "ci" 'evilnc-comment-or-uncomment-lines
+;;   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+;;   "cc" 'evilnc-copy-and-comment-lines
+;;   "cp" 'evilnc-comment-or-uncomment-paragraphs
+;;   "cr" 'comment-or-uncomment-region
+;;   "cv" 'evilnc-toggle-invert-comment-line-by-line
+;;   " "  'evilnc-comment-operator ; Use <SPC> instead of \\
+;;   )
+;;   ; ))
 
 ;; evil-numbers
 (require 'evil-numbers)
@@ -173,42 +203,51 @@
 ;; Key bindings
 ; Use ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-;; done in org-mode
+
+; (add-hook 'evil-motion-state-entry-hook '(define-key map (kbd "<SPC>") nil) )
+
+;; done in org-mode -- TODO: add for specific hook (read evil-leader doc)
 (define-key evil-normal-state-map (kbd "<SPC> d") 'org-todo)
 
 ;; M-x
-(define-key evil-normal-state-map (kbd "<SPC> f") 'helm-M-x)
-(define-key evil-visual-state-map (kbd "<SPC> f") 'helm-M-x)
+;; (define-key evil-normal-state-map (kbd "<SPC> f") 'helm-M-x)
+;; (define-key evil-visual-state-map (kbd "<SPC> f") 'helm-M-x)
+;; ;(define-key evil-motion-state-map (kbd "<SPC> f") 'helm-M-x)
 
-;; C-x C-q
-(define-key evil-normal-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
-(define-key evil-visual-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
+;; ;; C-x C-q
+;; (define-key evil-normal-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
+;; (define-key evil-visual-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
+;; ; (define-key evil-motion-state-map (kbd "<SPC> q") 'save-buffers-kill-terminal)
 
-;; C-x b
-(define-key evil-normal-state-map (kbd "<SPC> j") 'helm-mini)
-(define-key evil-visual-state-map (kbd "<SPC> j") 'helm-mini)
+;; ;; C-x b
+;; (define-key evil-normal-state-map (kbd "<SPC> j") 'helm-mini)
+;; (define-key evil-visual-state-map (kbd "<SPC> j") 'helm-mini)
+;; ; (define-key evil-motion-state-map (kbd "<SPC> j") 'helm-mini)
 
-;; helm-locate
-(define-key evil-normal-state-map (kbd "<SPC> l") 'helm-locate)
-(define-key evil-visual-state-map (kbd "<SPC> l") 'helm-locate)
+;; ;; helm-locate
+;; (define-key evil-normal-state-map (kbd "<SPC> l") 'helm-locate)
+;; (define-key evil-visual-state-map (kbd "<SPC> l") 'helm-locate)
+;; ; (define-key evil-motion-state-map (kbd "<SPC> l") 'helm-locate)
 
-;; helm-imenu
-(define-key evil-normal-state-map (kbd "<SPC> m") 'helm-imenu)
-(define-key evil-visual-state-map (kbd "<SPC> m") 'helm-imenu)
+;; ;; helm-imenu
+;; (define-key evil-normal-state-map (kbd "<SPC> m") 'helm-imenu)
+;; (define-key evil-visual-state-map (kbd "<SPC> m") 'helm-imenu)
 
-;; save-buffer
-(define-key evil-normal-state-map (kbd "<SPC> s") 'save-buffer)
-(define-key evil-visual-state-map (kbd "<SPC> s") 'save-buffer)
+;; ;; save-buffer
+;; (define-key evil-normal-state-map (kbd "<SPC> s") 'save-buffer)
+;; (define-key evil-visual-state-map (kbd "<SPC> s") 'save-buffer)
 
-;; help
-(define-key evil-normal-state-map (kbd "<SPC> h") 'help-command)
-(define-key evil-visual-state-map (kbd "<SPC> h") 'help-command)
+;; ;; help
+;; (define-key evil-normal-state-map (kbd "<SPC> h") 'help-command)
+;; (define-key evil-visual-state-map (kbd "<SPC> h") 'help-command)
+;; ; (define-key evil-motion-state-map (kbd "<SPC> h") 'help-command)
 
-;; other-window
-(define-key evil-normal-state-map (kbd "<SPC> k") 'other-window)
-(define-key evil-visual-state-map (kbd "<SPC> k") 'other-window)
+;; ;; other-window
+;; (define-key evil-normal-state-map (kbd "<SPC> k") 'other-window)
+; (define-key evil-visual-state-map (kbd "<SPC> k") 'other-window)
+; (define-key evil-motion-state-map (kbd "<SPC> k") 'other-window)
 
-;; esc quits
+;; esc quits like C-g
 ;; From https://github.com/davvil/.emacs.d/blob/master/init.el
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
@@ -235,6 +274,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (if window-system
     (load-theme 'zenburn t)
   (load-theme 'wombat t))
+
+; do not show splash screen
+(setq inhibit-startup-message t)
 
 ;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
