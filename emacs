@@ -1,5 +1,7 @@
 (package-initialize) ; Not using built-in version, otherwise set it to nill
 
+(setq vc-follow-symlinks nil)
+
 (require 'org)
 (require 'ob-tangle)
 
