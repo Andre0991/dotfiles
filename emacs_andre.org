@@ -126,12 +126,12 @@ Alternative to default describe-bindings
 (helm-descbinds-mode)
 #+END_SRC
 *** Use ibuffer
-** Customise interface
-*** custom-set-variables
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
+** Customise interface
+*** custom-set-variables
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
