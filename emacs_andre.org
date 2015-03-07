@@ -122,7 +122,7 @@ Based on https://github.com/edwtjo/evil-org-mode.
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(evil-leader/set-key
+(evil-leader/set-key-for-mode 'org-mode
   "ml" 'org-insert-link
   "mL" 'org-store-link
   "i" 'helm-org-in-buffer-headings
@@ -349,6 +349,7 @@ Use company-mode in all buffers
 
 *** Mardown-mode
 **** Initialisation
+Use Github flavored markdown.
 #+BEGIN_SRC emacs-lisp
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
@@ -357,7 +358,7 @@ Use company-mode in all buffers
 #+END_SRC
 **** Keybindings
 #+BEGIN_SRC 
-(evil-leader/set-key
+(evil-leader/set-key-for-mode 'gfm-mode
   "ml" 'markdown-insert-link
 )
 #+END_SRC
