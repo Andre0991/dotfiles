@@ -60,11 +60,117 @@ From http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
 
+*** Semantic
+    Quoting to the Emacs manual, "Semantic is a package that provides language-aware editing commands based on source code parsers."
+It is used by =helm-semantic-or-imenu=.
+#+BEGIN_SRC emacs-lisp
+(semantic-mode 1)
+#+END_SRC
 *** Get system's environment variables
 [[https://github.com/purcell/exec-path-from-shell][Purcell's package]] =exec-path-from-shell= makes this easy on OS X.
 #+BEGIN_SRC emacs-lisp
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
+#+END_SRC
+** Evil
+*** evil-leader
+Use space as the leader key.
+Required before =evil-mode= is enabled.
+
+#+BEGIN_SRC emacs-lisp
+(global-evil-leader-mode)
+; enable C-<leader> when not in normal mode
+(setq evil-leader/in-all-states 1)
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+  "f" 'helm-M-x
+  "h" 'help-command
+  "b" 'helm-mini
+  "k" 'kill-this-buffer
+  "l" 'helm-locate
+  "i" 'helm-semantic-or-imenu
+  "o" 'other-window
+  "q" 'save-buffers-kill-terminal
+  "E" 'go-errcheck
+  "w" 'save-buffer
+  "W" 'save-some-buffers
+  "z" 'suspend-emacs
+  "<SPC>" 'evilnc-comment-or-uncomment-lines
+  ; evil-nerd-commenter
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "cc" 'evilnc-copy-and-comment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs
+  "cr" 'comment-or-uncomment-region
+  "cv" 'evilnc-toggle-invert-comment-line-by-line
+  " "  'evilnc-comment-operator ; Use <SPC> instead of \\
+  )
+#+END_SRC
+
+*** Org-mode keybindings
+Based on https://github.com/edwtjo/evil-org-mode.
+#+BEGIN_SRC emacs-lisp
+(evil-define-key 'normal org-mode-map
+  "<" 'org-metaleft
+  ">" 'org-metaright
+  "gh" 'outline-up-heading
+  "gl" 'outline-next-visible-heading
+  "gj" 'org-forward-heading-same-level
+  "gk" 'org-backward-heading-same-level
+  (kbd "TAB") 'org-cycle ; overwrites evil C-i in terminal
+  )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key
+  "ml" 'org-insert-link
+  "mL" 'org-store-link
+  "i" 'helm-org-in-buffer-headings
+)
+#+END_SRC
+
+*** Enable evil-mode
+#+BEGIN_SRC emacs-lisp
+(evil-mode 1)
+#+END_SRC
+
+*** Make esc like C-g
+From https://github.com/davvil/.emacs.d/blob/master/init.el
+#+BEGIN_SRC emacs-lisp
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark  t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'evil-exit-emacs-state)
+#+END_SRC
+
+*** Evil related packages
+**** evil-numbers
+#+BEGIN_SRC emacs-lisp
+(require 'evil-numbers)
+#+END_SRC
+
+**** evil-surround
+#+BEGIN_SRC emacs-lisp
+(require 'evil-surround)
+(global-evil-surround-mode 1)
+#+END_SRC
+
+**** evil-visualstar
+#+BEGIN_SRC emacs-lisp
+(global-evil-visualstar-mode)
 #+END_SRC
 
 ** Helm
@@ -97,6 +203,9 @@ Some snippets of code were taken from http://tuhdo.github.io/helm-intro.html
 (global-set-key (kbd "C-x b") 'helm-mini)
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
+
+(setq helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match    t)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
@@ -177,99 +286,6 @@ Alternative to default describe-bindings
 (require 'saveplace)
 #+END_SRC
 
-** Evil
-*** evil-leader
-Use space as the leader key.
-Required before =evil-mode= is enabled.
-
-#+BEGIN_SRC emacs-lisp
-(global-evil-leader-mode)
-; enable C-<leader> when not in normal mode
-(setq evil-leader/in-all-states 1)
-(evil-leader/set-leader "<SPC>")
-(evil-leader/set-key
-  "f" 'helm-M-x
-  "h" 'help-command
-  "j" 'helm-mini
-  "k" 'kill-this-buffer
-  "l" 'helm-locate
-  "m" 'helm-imenu
-  "o" 'other-window
-  "q" 'save-buffers-kill-terminal
-  "E" 'go-errcheck
-  "w" 'save-buffer
-  "W" 'save-some-buffers
-  "z" 'suspend-emacs
-  "<SPC>" 'evilnc-comment-or-uncomment-lines
-  ; evil-nerd-commenter
-  "ci" 'evilnc-comment-or-uncomment-lines
-  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-  "cc" 'evilnc-copy-and-comment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs
-  "cr" 'comment-or-uncomment-region
-  "cv" 'evilnc-toggle-invert-comment-line-by-line
-  " "  'evilnc-comment-operator ; Use <SPC> instead of \\
-  )
-#+END_SRC
-
-*** Org-mode keybindings
-Based on https://github.com/edwtjo/evil-org-mode.
-#+BEGIN_SRC emacs-lisp
-(evil-define-key 'normal org-mode-map
-  "<" 'org-metaleft
-  ">" 'org-metaright
-  "gh" 'outline-up-heading
-  "gl" 'outline-next-visible-heading
-  "gj" 'org-forward-heading-same-level
-  "gk" 'org-backward-heading-same-level
-  (kbd "TAB") 'org-cycle ; overwrites evil C-i in terminal
-  )
-#+END_SRC
-
-*** Enable evil-mode
-#+BEGIN_SRC emacs-lisp
-(evil-mode 1)
-#+END_SRC
-
-*** Make esc like C-g
-From https://github.com/davvil/.emacs.d/blob/master/init.el
-#+BEGIN_SRC emacs-lisp
-(defun minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-In Delete Selection mode, if the mark is active, just deactivate it;
-then it takes a second \\[keyboard-quit] to abort the minibuffer."
-  (interactive)
-  (if (and delete-selection-mode transient-mark-mode mark-active)
-      (setq deactivate-mark  t)
-    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-    (abort-recursive-edit)))
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(global-set-key [escape] 'evil-exit-emacs-state)
-#+END_SRC
-
-*** Evil related packages
-**** evil-numbers
-#+BEGIN_SRC emacs-lisp
-(require 'evil-numbers)
-#+END_SRC
-
-**** evil-surround
-#+BEGIN_SRC emacs-lisp
-(require 'evil-surround)
-(global-evil-surround-mode 1)
-#+END_SRC
-
-**** evil-visualstar
-#+BEGIN_SRC emacs-lisp
-(global-evil-visualstar-mode)
-#+END_SRC
-
 ** Theme & visual configuration
 *** Disable blinking cursor
     Restore sanity.
@@ -305,7 +321,7 @@ From http://stackoverflow.com/a/15595000
 #+END_SRC
 
 ** Other packages 
-*** company-mode
+*** Company-mode
 Use company-mode in all buffers
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'global-company-mode)
@@ -318,7 +334,7 @@ Use company-mode in all buffers
 (require 'smartparens-config)
 #+END_SRC
 
-*** yasnippet
+*** Yasnippet
 #+BEGIN_SRC emacs-lisp
 (require 'yasnippet)
 (yas-reload-all) ; global-mode can affect negatively other modes, use this instead to used it as a non-global minor mode
@@ -331,6 +347,20 @@ Use company-mode in all buffers
 (add-hook 'after-init-hook #'global-flycheck-mode)
 #+END_SRC
 
+*** Mardown-mode
+**** Initialisation
+#+BEGIN_SRC emacs-lisp
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . gfm-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+#+END_SRC
+**** Keybindings
+#+BEGIN_SRC 
+(evil-leader/set-key
+  "ml" 'markdown-insert-link
+)
+#+END_SRC
 ** Formatting
 *** Wrap lines
 Use =visual line mode= globally.
