@@ -8,11 +8,18 @@ It is an example of literate programming.
 Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs configuration]].
 
 ** Initialisation
+*** Package repositories
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+#+END_SRC
+*** Get system's environment variables
+[[https://github.com/purcell/exec-path-from-shell][Purcell's package]] =exec-path-from-shell= makes this easy on OS X.
+#+BEGIN_SRC emacs-lisp
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 #+END_SRC
 
 ** General
@@ -22,12 +29,14 @@ From http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migrat
 (add-hook 'org-mode-hook 'relative-line-numbers-mode t)
 (add-hook 'org-mode-hook 'line-number-mode t)
 (add-hook 'org-mode-hook 'column-number-mode t)
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'relative-line-numbers-mode t)
 (add-hook 'prog-mode-hook 'line-number-mode t)
 (add-hook 'prog-mode-hook 'column-number-mode t)
+
+(add-hook 'markdown-mode-hook 'relative-line-numbers-mode t)
+(add-hook 'markdown-mode-hook 'line-number-mode t)
+(add-hook 'markdown-mode-hook 'column-number-mode t)
 #+END_SRC
    
 *** Move between windows
@@ -59,15 +68,9 @@ From http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 (setq vc-make-backup-files t)    ; by default, emacs does not backup files managed by a version control system. Setting it to "t" modifies that.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
-*** Get system's environment variables
-[[https://github.com/purcell/exec-path-from-shell][Purcell's package]] =exec-path-from-shell= makes this easy on OS X.
-#+BEGIN_SRC emacs-lisp
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-#+END_SRC
 
 *** Semantic
-    Quoting to the Emacs manual, "Semantic is a package that provides language-aware editing commands based on source code parsers."
+Quoting to the Emacs manual, "Semantic is a package that provides language-aware editing commands based on source code parsers."
 It is used by =helm-semantic-or-imenu=.
 #+BEGIN_SRC emacs-lisp
 (semantic-mode 1)
@@ -83,17 +86,20 @@ Required before =evil-mode= is enabled.
 (setq evil-leader/in-all-states 1)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
-  "f" 'helm-M-x
+  "f" 'helm-for-files
+  "j" 'helm-M-x
   "h" 'help-command
   "b" 'helm-mini
+  "d" 'dired
   "k" 'kill-this-buffer
   "l" 'helm-locate
   "i" 'helm-semantic-or-imenu
+  ;; "o" 'helm-occur
   "o" 'other-window
   "q" 'save-buffers-kill-terminal
   "E" 'go-errcheck
-  "w" 'save-buffer
-  "W" 'save-some-buffers
+  "s" 'save-buffer
+  "S" 'save-some-buffers
   "z" 'suspend-emacs
   "<SPC>" 'evilnc-comment-or-uncomment-lines
   ; evil-nerd-commenter
@@ -171,6 +177,86 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 **** evil-visualstar
 #+BEGIN_SRC emacs-lisp
 (global-evil-visualstar-mode)
+#+END_SRC
+
+** Windows manipulation
+    
+This section depends on Evil initialisation.
+**** Rotate windows
+"This snippet flips a two-window frame, so that left is right, or up is down. It's sanity preserving if you've got a sliver of OCD."
+From http://whattheemacsd.com/buffer-defuns.el-02.html
+#+BEGIN_SRC emacs-lisp
+; (defun rotate-windows ()
+;   "Rotate your windows"
+;   (interactive)
+;   (cond ((not (> (count-windows)1))
+;          (message "You can't rotate a single window!"))
+;         (t
+;          (setq i 1)
+;          (setq numWindows (count-windows))
+;          (while  (< i numWindows)
+;            (let* (
+;                   (w1 (elt (window-list) i))
+;                   (w2 (elt (window-list) (+ (% i numWindows) 1)))
+; 
+;                   (b1 (window-buffer w1))
+;                   (b2 (window-buffer w2))
+; 
+;                   (s1 (window-start w1))
+;                   (s2 (window-start w2))
+;                   )
+;              (set-window-buffer w1  b2)
+;              (set-window-buffer w2 b1)
+;              (set-window-start w1 s2)
+;              (set-window-start w2 s1)
+;              (setq i (1+ i)))))))
+#+END_SRC
+
+**** Split and focus
+From Spacemacs, lightly modified.
+#+BEGIN_SRC emacs-lisp
+(defun split-window-below-and-focus ()
+  "Split the window vertically and focus the new window."
+  (interactive)
+  (split-window-below)
+  (windmove-down))
+
+(defun split-window-right-and-focus ()
+  "Split the window horizontally and focus the new window."
+  (interactive)
+  (split-window-right)
+  (windmove-right))
+#+END_SRC
+**** TODO Keybinding
+Based on Spacemacs configuration.
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key
+   ;; "w2"  'layout-double-columns
+   ;; "w3"  'layout-triple-columns
+   ;; "wb"  'switch-to-minibuffer-window
+   "wc"  'delete-window
+   ;; "wd"  'toggle-current-window-dedication
+   "wH"  'evil-window-move-far-left
+   "wh"  'evil-window-left
+   "wJ"  'evil-window-move-very-bottom
+   "wj"  'evil-window-down
+   "wK"  'evil-window-move-very-top
+   "wk"  'evil-window-up
+   "wL"  'evil-window-move-far-right
+   "wl"  'evil-window-right
+   "wm"  'delete-other-windows
+   ;; "wM"  'toggle-maximize-centered-buffer
+   "ww"  'other-frame
+   "wr"  'rotate-windows
+   "ws"  'split-window-below
+   "wS"  'split-window-below-and-focus
+   "w-"  'split-window-below
+   ;; "wU"  'winner-redo
+   ;; "wu"  'winner-undo
+   "wv"  'split-window-right
+   "wV"  'split-window-right-and-focus
+   "wo"  'other-window
+   "w|"  'split-window-right)
 #+END_SRC
 
 ** Helm
@@ -259,10 +345,22 @@ Alternative to default describe-bindings
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Monaco")))))
 #+END_SRC
 
-** Org-mode configuration
-
-*** Org-mode global suggested keys
+** Org-mode
+*** 
+    
 #+BEGIN_SRC emacs-lisp
+(evil-leader/set-key-for-mode 'org-mode
+  "mtrd" 'org-table-delete-row
+  "mtri" 'org-table-insert-row
+  "mtcd" 'org-table-delete-column
+  "mtci" 'org-table-insert-column
+  "mt-" 'org-table-insert-hline
+  "mtfn" 'org-table-edit-field  ; narrow
+  "mtn" 'org-table-create-or-convert-from-region
+)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
@@ -281,7 +379,7 @@ Alternative to default describe-bindings
 (require 'saveplace)
 #+END_SRC
 
-** Theme & visual configuration
+** Theme & visual
 *** Disable blinking cursor
     Restore sanity.
 #+BEGIN_SRC emacs-lisp
@@ -305,7 +403,7 @@ Alternative to default describe-bindings
 *** Disable current theme before loading new one
 From http://stackoverflow.com/a/15595000
 #+BEGIN_SRC emacs-lisp
-(defadvice load-theme 
+(defadvice load-theme
   (before theme-dont-propagate activate)
   (mapcar #'disable-theme custom-enabled-themes))
 #+END_SRC
@@ -318,6 +416,11 @@ From http://stackoverflow.com/a/15595000
 ** Other packages 
 *** Company-mode
 Use company-mode in all buffers
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay 0)
@@ -329,7 +432,7 @@ Use company-mode in all buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
-**** Keybindings
+**** TODO Keybindings
      Differences with the default configuration:
 | Key | Function |
 |-----+----------|
@@ -361,7 +464,7 @@ Use company-mode in all buffers
 *** Yasnippet
 #+BEGIN_SRC emacs-lisp
 (require 'yasnippet)
-(yas-reload-all) ; global-mode can affect negatively other modes, use this instead to used it as a non-global minor mode
+(yas-reload-all) ; global-mode can affect negatively other modes, use this instead to use it as a non-global minor mode
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
@@ -412,3 +515,67 @@ Use spaces instead of tabs.
 (setq-default tab-width 4 indent-tabs-mode nil)
 (setq-default c-basic-offset 4 c-default-style "bsd")
 #+END_SRC
+** Latex
+*** Initialization
+According to the Auctex manual,
+
+"
+In order to get support for many of the LaTeX packages you will use
+in your documents, you should enable document parsing as well, which can
+be achieved by putting
+"
+
+#+BEGIN_SRC emacs-lisp
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode) ; make `<key> expand math macro by default
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+#+END_SRC
+
+*** Workaround - fonts
+The =C-c C-f= keybinding is a interactive function that reads the next keys.
+In order to get functions for these actions, we have to make the following definitions:
+From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compile-keybindings
+#+BEGIN_SRC emacs-lisp
+(defun TeX-italic()
+  (interactive)
+  (TeX-font nil ?\C-i))
+
+(defun TeX-bold()
+  (interactive)
+  (TeX-font nil ?\C-b))
+
+(defun TeX-emphasis()
+  (interactive)
+  (TeX-font nil ?\C-e))
+
+(defun TeX-font-delete()
+  (interactive)
+  (TeX-font nil ?\C-d))
+#+END_SRC
+
+*** Keybindings
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key-for-mode 'latex-mode
+  "mm" 'TeX-insert-macro
+  "ms" 'LaTeX-section
+  "me" 'LaTeX-environment
+  "mc" 'TeX-command-master
+  "m`" 'TeX-next-error
+  "mfb" 'TeX-italic
+  "mfi" 'TeX-bold
+  "mfe" 'TeX-emphasis
+  "mfd" 'TeX-font-delete
+)
+
+; (define-key LaTeX-mode-map (kbd "<C-return>") 'LaTeX-insert-item) ; consistent with org-mode
+#+END_SRC
+** Ruby
+*** TODO Workaround
+Flycheck wasn't able to find the right PATH for ruby gems installed by rvm, so we set it manually.
+TODO: Make it Mac specific.
+#+BEGIN_SRC emacs-lisp
+(setq flycheck-ruby-rubylint-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
+(setq flycheck-ruby-rubocop-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
+#+END_SRC
+
