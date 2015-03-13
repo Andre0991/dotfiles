@@ -52,6 +52,20 @@ From http://pages.sachachua.com/.emacs.d/Sacha.html
 #+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
+*** Formatting
+**** Wrap lines
+Use =visual line mode= globally.
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+(global-visual-line-mode 1)
+#+END_SRC
+
+**** Identation
+Use spaces instead of tabs.
+#+BEGIN_SRC emacs-lisp
+(setq-default tab-width 4 indent-tabs-mode nil)
+(setq-default c-basic-offset 4 c-default-style "bsd")
+#+END_SRC
 
 *** Bell
 Use visual alarm instead of sound.
@@ -59,6 +73,10 @@ Use visual alarm instead of sound.
 (setq visible-bell 1)
 #+END_SRC
 
+*** Require final newline
+    #+BEGIN_SRC emacs-lisp
+    (setq require-final-newline t)
+    #+END_SRC
 *** Backups
 From http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 #+BEGIN_SRC emacs-lisp
@@ -88,19 +106,21 @@ Required before =evil-mode= is enabled.
 (evil-leader/set-key
   "f" 'helm-for-files
   "j" 'helm-M-x
-  "h" 'help-command
   "b" 'helm-mini
-  "d" 'dired
+  "B" 'ibuffer
+  "D" 'dired
   "k" 'kill-this-buffer
   "l" 'helm-locate
   "i" 'helm-semantic-or-imenu
-  ;; "o" 'helm-occur
   "o" 'other-window
   "q" 'save-buffers-kill-terminal
   "E" 'go-errcheck
   "s" 'save-buffer
   "S" 'save-some-buffers
   "z" 'suspend-emacs
+  ; helm
+  "ho" 'helm-occur
+  "hb" 'helm-descbinds
   "<SPC>" 'evilnc-comment-or-uncomment-lines
   ; evil-nerd-commenter
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -179,6 +199,41 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-evil-visualstar-mode)
 #+END_SRC
 
+** Dired
+*** Initialisation
+Enable extra features.
+#+BEGIN_SRC emacs-lisp
+(require 'dired-x)
+#+END_SRC
+*** Functions
+When jumping up one directory with =h=, close the old Dired buffer.
+From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-up-directory ()
+  "Take dired up one directory, but behave like dired-find-alternate-file"
+  (interactive)
+  (let ((old (current-buffer)))
+    (dired-up-directory)
+    (kill-buffer old)
+    ))
+#+END_SRC
+Based on http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key "d" 'dired-jump)
+
+(evil-define-key 'normal dired-mode-map ( kbd "<RET>" ) 'dired-find-alternate-file)
+(evil-define-key 'normal dired-mode-map "h" 'my-dired-up-directory)
+(evil-define-key 'normal dired-mode-map "l" 'dired-find-alternate-file)
+(evil-define-key 'normal dired-mode-map "o" 'dired-sort-toggle-or-edit)
+(evil-define-key 'normal dired-mode-map "t" 'dired-toggle-marks)
+(evil-define-key 'normal dired-mode-map "m" 'dired-mark)
+(evil-define-key 'normal dired-mode-map "u" 'dired-unmark)
+(evil-define-key 'normal dired-mode-map "U" 'dired-unmark-all-marks)
+(evil-define-key 'normal dired-mode-map "c" 'dired-create-directory)
+(evil-define-key 'normal dired-mode-map "n" 'evil-search-next)
+(evil-define-key 'normal dired-mode-map "N" 'evil-search-previous)
+(evil-define-key 'normal dired-mode-map "q" 'kill-this-buffer)
+#+END_SRC
 ** Windows manipulation
     
 This section depends on Evil initialisation.
@@ -346,8 +401,7 @@ Alternative to default describe-bindings
 #+END_SRC
 
 ** Org-mode
-*** 
-    
+*** Keybindings 
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'org-mode
   "mtrd" 'org-table-delete-row
@@ -357,8 +411,12 @@ Alternative to default describe-bindings
   "mt-" 'org-table-insert-hline
   "mtfn" 'org-table-edit-field  ; narrow
   "mtn" 'org-table-create-or-convert-from-region
+  "mta" 'org-table-beginning-of-field
+  "mte" 'org-table-end-of-field
+  "mtw" 'org-meta-return ; wrap field
 )
 #+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 ;; Org-mode global suggested keys
 (global-set-key "\C-cl" 'org-store-link)
@@ -429,19 +487,12 @@ Use company-mode in all buffers
 *** Ibuffer
 **** Initialisation
 #+BEGIN_SRC emacs-lisp
+(evil-set-initial-state 'ibuffer-mode 'normal)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
 **** TODO Keybindings
      Differences with the default configuration:
-| Key | Function |
-|-----+----------|
-|     |          |
-      ;(kbd "J") 'ibuffer-jump-to-buffer
-      ;(kbd "j") 'evil-next-line    
-      ;(kbd "k") 'evil-previous-line
-      ;<SPC> forward-line remove
-      ;ibuffer-do-kill-lines from k to K
 #+BEGIN_SRC emacs-lisp
 (eval-after-load 'ibuffer
   '(progn
@@ -475,18 +526,43 @@ Use company-mode in all buffers
 #+END_SRC
 
 *** Slime
+**** Initialisation
 From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
 #+BEGIN_SRC emacs-lisp
 (require 'elisp-slime-nav)
 
 (defun my-lisp-hook ()
   (elisp-slime-nav-mode)
-  (turn-on-eldoc-mode)
+  (eldoc-mode)
   )
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-hook)
 #+END_SRC
-*** Mardown-mode
+**** TODO Keybindings
+     From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html#fn7
+     Not working yet.
+     #+BEGIN_SRC emacs-lisp
+     (evil-define-key 'normal emacs-lisp-mode-map (kbd "K")
+       'elisp-slime-nav-describe-elisp-thing-at-point)
+     #+END_SRC
+*** Magit
+From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
+#+BEGIN_SRC emacs-lisp
+;    (evil-set-initial-state 'magit-mode 'normal)
+;    (evil-set-initial-state 'magit-status-mode 'normal)
+;    (evil-set-initial-state 'magit-diff-mode 'normal)
+;    (evil-set-initial-state 'magit-log-mode 'normal)
+;    (evil-define-key 'normal magit-mode-map
+;        "j" 'magit-goto-next-section
+;        "k" 'magit-goto-previous-section)
+;    (evil-define-key 'normal magit-log-mode-map
+;        "j" 'magit-goto-next-section
+;        "k" 'magit-goto-previous-section)
+;    (evil-define-key 'normal magit-diff-mode-map
+;        "j" 'magit-goto-next-section
+;        "k" 'magit-goto-previous-section)))
+#+END_SRC
+*** Markdown-mode
 **** Initialisation
 Use Github flavored markdown.
 #+BEGIN_SRC emacs-lisp
@@ -500,20 +576,6 @@ Use Github flavored markdown.
 (evil-leader/set-key-for-mode 'gfm-mode
   "ml" 'markdown-insert-link
 )
-#+END_SRC
-** Formatting
-*** Wrap lines
-Use =visual line mode= globally.
-#+BEGIN_SRC emacs-lisp
-;; (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-(global-visual-line-mode 1)
-#+END_SRC
-
-*** Identation
-Use spaces instead of tabs.
-#+BEGIN_SRC emacs-lisp
-(setq-default tab-width 4 indent-tabs-mode nil)
-(setq-default c-basic-offset 4 c-default-style "bsd")
 #+END_SRC
 ** Latex
 *** Initialization
@@ -571,7 +633,15 @@ From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compil
 ; (define-key LaTeX-mode-map (kbd "<C-return>") 'LaTeX-insert-item) ; consistent with org-mode
 #+END_SRC
 ** Ruby
-*** TODO Workaround
+*** Ruby shell inside emacs
+    We get an REPL buffer with =inf-ruby=.
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key-for-mode 'ruby-mode
+  "mr" 'rvm-activate-corresponding-rub
+)
+#+END_SRC
+
+*** TODO Workaround for Flycheck
 Flycheck wasn't able to find the right PATH for ruby gems installed by rvm, so we set it manually.
 TODO: Make it Mac specific.
 #+BEGIN_SRC emacs-lisp
