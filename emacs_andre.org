@@ -133,28 +133,6 @@ Required before =evil-mode= is enabled.
   )
 #+END_SRC
 
-*** Org-mode keybindings
-Based on https://github.com/edwtjo/evil-org-mode.
-#+BEGIN_SRC emacs-lisp
-(evil-define-key 'normal org-mode-map
-  "<" 'org-metaleft
-  ">" 'org-metaright
-  "gh" 'outline-up-heading
-  "gl" 'outline-next-visible-heading
-  "gj" 'org-forward-heading-same-level
-  "gk" 'org-backward-heading-same-level
-  (kbd "TAB") 'org-cycle ; overwrites evil C-i in terminal
-  )
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(evil-leader/set-key-for-mode 'org-mode
-  "ml" 'org-insert-link
-  "mL" 'org-store-link
-  "i" 'helm-org-in-buffer-headings
-)
-#+END_SRC
-
 *** Enable evil-mode
 #+BEGIN_SRC emacs-lisp
 (evil-mode 1)
@@ -303,13 +281,13 @@ Based on Spacemacs configuration.
    ;; "wM"  'toggle-maximize-centered-buffer
    "ww"  'other-frame
    "wr"  'rotate-windows
-   "ws"  'split-window-below
-   "wS"  'split-window-below-and-focus
+   "wS"  'split-window-below
+   "ws"  'split-window-below-and-focus
    "w-"  'split-window-below
    ;; "wU"  'winner-redo
    ;; "wu"  'winner-undo
-   "wv"  'split-window-right
-   "wV"  'split-window-right-and-focus
+   "wV"  'split-window-right
+   "wv"  'split-window-right-and-focus
    "wo"  'other-window
    "w|"  'split-window-right)
 #+END_SRC
@@ -401,9 +379,32 @@ Alternative to default describe-bindings
 #+END_SRC
 
 ** Org-mode
-*** Keybindings 
+*** Initialisation
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'flyspell-mode)
+(setq org-agenda-files (list "~/org/agenda.org"))
+#+END_SRC
+*** Keybindings
+**** TODO Create new status for org mode, make "msd" mark as done instead of toggling
+Based on https://github.com/edwtjo/evil-org-mode.
+#+BEGIN_SRC emacs-lisp
+(evil-define-key 'normal org-mode-map
+  "<" 'org-metaleft
+  ">" 'org-metaright
+  "gh" 'outline-up-heading
+  "gl" 'outline-next-visible-heading
+  "gj" 'org-forward-heading-same-level
+  "gk" 'org-backward-heading-same-level
+  (kbd "TAB") 'org-cycle ; overwrites evil C-i in terminal
+  )
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'org-mode
+  "ml" 'org-insert-link
+  "mL" 'org-store-link
+  "i" 'helm-org-in-buffer-headings
+  "me" 'org-edit-special
   "mtrd" 'org-table-delete-row
   "mtri" 'org-table-insert-row
   "mtcd" 'org-table-delete-column
@@ -414,6 +415,10 @@ Alternative to default describe-bindings
   "mta" 'org-table-beginning-of-field
   "mte" 'org-table-end-of-field
   "mtw" 'org-meta-return ; wrap field
+  ; mnemonics: status
+  "msd" 'org-todo
+  "mst" 'org-todo ; toggle
+  "mo" 'org-open-at-point
 )
 #+END_SRC
 
@@ -437,6 +442,12 @@ Alternative to default describe-bindings
 (require 'saveplace)
 #+END_SRC
 
+*** imenu depth
+#+BEGIN_SRC emacs-lisp
+(setq org-imenu-depth 6)
+#+END_SRC
+
+    
 ** Theme & visual
 *** Disable blinking cursor
     Restore sanity.
@@ -477,6 +488,12 @@ Use company-mode in all buffers
 
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
+#+END_SRC
+
+Robe integration for Ruby.
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'company
+  '(push 'company-robe company-backends))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -544,6 +561,11 @@ From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
      #+BEGIN_SRC emacs-lisp
      (evil-define-key 'normal emacs-lisp-mode-map (kbd "K")
        'elisp-slime-nav-describe-elisp-thing-at-point)
+     #+END_SRC
+     #+BEGIN_SRC emacs-lisp
+     (evil-leader/set-key-for-mode 'emacs-lisp-mode
+       "mer" 'eval-region
+     )
      #+END_SRC
 *** Magit
 From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
@@ -633,13 +655,28 @@ From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compil
 ; (define-key LaTeX-mode-map (kbd "<C-return>") 'LaTeX-insert-item) ; consistent with org-mode
 #+END_SRC
 ** Ruby
+   Setup based on guide at http://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html
+*** Emacs and Ruby Version Manager (rvm) integration. 
+    #+BEGIN_SRC emacs-lisp
+(require 'rvm)
+(rvm-use-default) ;; use rvm's default ruby for the current Emacs session
+    #+END_SRC
 *** Ruby shell inside emacs
-    We get an REPL buffer with =inf-ruby=.
+    We get a REPL buffer with =inf-ruby=.
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'ruby-mode
   "mr" 'rvm-activate-corresponding-rub
 )
 #+END_SRC
+*** Code navigation and completion
+    "Robe is a code assistance tool that uses a Ruby REPL subprocess with your application or gem code loaded, to provide information about loaded classes and modules, and where each method is defined."
+    From https://github.com/dgutov/robe
+#+BEGIN_SRC emacs-lisp
+(require 'robe)
+(add-hook 'ruby-mode-hook 'robe-mode)
+
+#+END_SRC
+    
 
 *** TODO Workaround for Flycheck
 Flycheck wasn't able to find the right PATH for ruby gems installed by rvm, so we set it manually.
@@ -648,4 +685,6 @@ TODO: Make it Mac specific.
 (setq flycheck-ruby-rubylint-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
 (setq flycheck-ruby-rubocop-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
 #+END_SRC
+
+
 
