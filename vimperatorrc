@@ -43,7 +43,7 @@ map <C-K> :tabmove! -1<CR>
 map <Leader>d :downloads<CR>
 
 ; Mnemonics: highlight
-nmap <Leader>h :nohlsearch<CR>
+nnoremap <Leader>h :nohlsearch<CR>
 
 " Try to start in normal mode on all pages
 set focuscontent
