@@ -1,3 +1,6 @@
+" ===============  Plugins  ===============
+set runtimepath+=~/vimperator-plugins
+
 " ===============  General  ===============
 " Hides Firefox navigation bar (address, serach, etc)
 set gui=nonavigation
@@ -26,16 +29,27 @@ noremap h :back<CR>
 noremap l :forward<CR>
 noremap J <C-d>
 noremap K <C-u>
+
+; Mnemonics: noscript menu
+nnoremap <leader>nm :noscript popup<CR>
+nnoremap <leader>nt :noscript toggletemp<CR>  
+nnoremap <leader>np :noscript toggleperrem<CR>
+
 map <A-Down> :tabmove! +1<CR>
 map <A-Up> :tabmove! -1<CR>
-map <A-J> :tabmove! +1<CR>
-map <A-K> :tabmove! -1<CR>
+map <C-J> :tabmove! +1<CR>
+map <C-K> :tabmove! -1<CR>
+
+map <Leader>d :downloads<CR>
+
+; Mnemonics: highlight
+nmap <Leader>h :nohlsearch<CR>
 
 " Try to start in normal mode on all pages
 set focuscontent
 
-:ignorekeys add mail\\.google\\.com -except :,t,d,b
-:ignorekeys add inbox\\.google\\.com -except :,t,d,b
+" :ignorekeys add mail\\.google\\.com -except :,t,d,b
+" :ignorekeys add inbox\\.google\\.com -except :,t,d,b
 " :ignorekeys add feedly\\.com -except :,t,d,b
 
 " let @d = '<M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>'
