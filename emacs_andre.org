@@ -104,7 +104,7 @@ Required before =evil-mode= is enabled.
 (setq evil-leader/in-all-states 1)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
-  "f" 'helm-for-files
+  "ff" 'helm-for-files
   "j" 'helm-M-x
   "b" 'helm-mini
   "B" 'ibuffer
@@ -364,6 +364,22 @@ Alternative to default describe-bindings
 
  ; consider all themes as safe
  '(custom-safe-themes t)
+ ; Do not add extra whitespace
+ '(evil-surround-pairs-alist
+   (quote
+    ((40 "(" . ")")
+     (91 "[" . "]")
+     (123 "{" . "}")
+     (41 "(" . ")")
+     (93 "[" . "]")
+     (125 "{" . "}")
+     (35 "#{" . "}")
+     (98 "(" . ")")
+     (66 "{" . "}")
+     (62 "<" . ">")
+     (116 . evil-surround-read-tag)
+     (60 . evil-surround-read-tag)
+     (102 . evil-surround-function))))
  ; start maximized
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 #+END_SRC
@@ -383,6 +399,10 @@ Alternative to default describe-bindings
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'flyspell-mode)
 (setq org-agenda-files (list "~/org/agenda.org"))
+#+END_SRC
+*** General
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
 #+END_SRC
 *** Keybindings
 **** TODO Create new status for org mode, make "msd" mark as done instead of toggling
@@ -441,10 +461,23 @@ Based on https://github.com/edwtjo/evil-org-mode.
 (setq-default save-place t)
 (require 'saveplace)
 #+END_SRC
-
 *** imenu depth
 #+BEGIN_SRC emacs-lisp
 (setq org-imenu-depth 6)
+#+END_SRC
+
+*** org-babel
+**** plantuml
+Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-support.html
+#+BEGIN_SRC emacs-lisp
+;; active Org-babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(;; other Babel languages
+   (plantuml . t)))
+
+(setq org-plantuml-jar-path
+      (expand-file-name "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar"))
 #+END_SRC
 
     
@@ -676,8 +709,6 @@ From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compil
 (add-hook 'ruby-mode-hook 'robe-mode)
 
 #+END_SRC
-    
-
 *** TODO Workaround for Flycheck
 Flycheck wasn't able to find the right PATH for ruby gems installed by rvm, so we set it manually.
 TODO: Make it Mac specific.
@@ -685,6 +716,17 @@ TODO: Make it Mac specific.
 (setq flycheck-ruby-rubylint-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
 (setq flycheck-ruby-rubocop-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
 #+END_SRC
+    
+*** Keybindings
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key-for-mode 'ruby-mode
+  "eR" 'ruby-send-region
+  "er" 'ruby-send-region-and-go
+)
+#+END_SRC
 
-
-
+Make the arrow keys search through history instead of jumping to other lines (which can be done with =j= and =k= using Evil).
+#+BEGIN_SRC emacs-lisp
+(define-key inf-ruby-mode-map (kbd "<up>") 'comint-previous-input)
+(define-key inf-ruby-mode-map (kbd "<down>") 'comint-next-input)
+#+END_SRC
