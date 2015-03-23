@@ -41,6 +41,7 @@ map <C-J> :tabmove! +1<CR>
 map <C-K> :tabmove! -1<CR>
 
 map <Leader>d :downloads<CR>
+map <Leader>a :addons<CR>
 
 ; Mnemonics: highlight
 nnoremap <Leader>h :nohlsearch<CR>
