@@ -520,7 +520,8 @@ From http://stackoverflow.com/a/15595000
 Use company-mode in all buffers
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
+; (with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
+(with-eval-after-load 'company (define-key company-active-map (kbd "j") 'company-select-next) (define-key company-active-map (kbd "k") 'company-select-previous))
 #+END_SRC
 
 Robe integration for Ruby.
@@ -683,6 +684,10 @@ From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compil
   "mfi" 'TeX-bold
   "mfe" 'TeX-emphasis
   "mfd" 'TeX-font-delete
+  ;; preview-latex
+  "mpb" 'preview-buffer
+  "mpr" 'preview-region
+  "mpp" 'preview-at-point
 )
 
 ; (define-key LaTeX-mode-map (kbd "<C-return>") 'LaTeX-insert-item) ; consistent with org-mode
