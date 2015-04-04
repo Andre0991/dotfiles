@@ -6,6 +6,9 @@ set runtimepath+=~/vimperator-plugins
 set gui=nonavigation
 set titlestring="Mozilla Firefox"
 
+" Split to split URL lists in commands like :open " (quoted from the documentation)
+set urlseparator=' \| '
+
 "  set editor
 set editor=/usr/local/bin/mvim
 " fix
@@ -22,7 +25,10 @@ set editor=/usr/local/bin/mvim
 "  endif
 "endif
 
-" ===============  Remappings  ===============
+" no beeping
+set visualbell
+
+ ===============  Remappings  ===============
 noremap j gt
 noremap k gT
 noremap h :back<CR>
