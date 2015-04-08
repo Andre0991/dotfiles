@@ -34,17 +34,17 @@ hi SpellBad cterm=underline
 
 
 " ===============  Themes  ===============
+set t_Co=256
 " desert
 	" colorscheme desert
 " wombat
-	" set t_Co=256
 	" colorscheme wombat256
 " solarized theme settings
-	set background=dark
+	" set background=dark
 	" set background=light
-	colorscheme solarized
-
-
+	" colorscheme solarized
+" zenburn
+    colorscheme zenburn
 
 " ===============  General settings  ===============
 set undofile 			" undo in different sessions
@@ -54,9 +54,9 @@ set mouse+=a 			" avoid including numbers in mouse selection
 set clipboard=unnamed		" use this if the above line does not work properly
 set shortmess+=I 		" remove initial message when opening vim without file
 set wildmode=longest,list 	" autocomplete works like unix instead of DOS
+set history=200  "ex commands max number of entries (default is 20)
 
-
-" ===============  Text edition  ===============
+ ===============  Text edition  ===============
 " set spell for *.txt files
 au BufRead *.txt setlocal spell
 set spelllang=en,pt
