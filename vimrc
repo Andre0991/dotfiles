@@ -56,7 +56,7 @@ set shortmess+=I 		" remove initial message when opening vim without file
 set wildmode=longest,list 	" autocomplete works like unix instead of DOS
 set history=200  "ex commands max number of entries (default is 20)
 
- ===============  Text edition  ===============
+" ===============  Text edition  ===============
 " set spell for *.txt files
 au BufRead *.txt setlocal spell
 set spelllang=en,pt
