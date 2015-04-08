@@ -100,6 +100,10 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 nmap <silent> <leader><space> :nohlsearch<CR>
+" <Up> and <Down> can autocomplete commands in ex mode
+" when searching through the history. Make C-n and C-p like that.
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
 
 " habit breaking, habit making
 noremap <Up> <NOP>
