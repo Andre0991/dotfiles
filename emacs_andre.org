@@ -8,6 +8,18 @@ It is an example of literate programming.
 Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs configuration]].
 
 ** Initialisation
+*** Automatically open some files
+#+BEGIN_SRC emacs-lisp
+(defun my-init-hook ()
+(find-file "~/Dropbox/unimelb/sem2/knowledge_technologies/notes/notes_knowledge_technologies.org")
+(find-file "~/Dropbox/unimelb/sem2/software_modelling_and_design/notes/notes_software_modelling_and_design.org")
+(find-file "~/Dropbox/unimelb/sem2/artificial_intelligence/notes_artificial_intelligence.org")
+(find-file "~/dotfiles/emacs_andre.org")
+(switch-to-buffer "*scratch*")
+  )
+(add-hook 'after-init-hook 'my-init-hook)
+
+#+END_SRC
 *** Package repositories
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -403,6 +415,7 @@ Alternative to default describe-bindings
 *** General
 #+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t)
+(setq org-startup-with-inline-images t)
 #+END_SRC
 *** Keybindings
 **** TODO Create new status for org mode, make "msd" mark as done instead of toggling
@@ -521,7 +534,7 @@ Use company-mode in all buffers
 
 #+BEGIN_SRC emacs-lisp
 ; (with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
-(with-eval-after-load 'company (define-key company-active-map (kbd "j") 'company-select-next) (define-key company-active-map (kbd "k") 'company-select-previous))
+(with-eval-after-load 'company (define-key company-active-map (kbd "C-n") 'company-select-next) (define-key company-active-map (kbd "C-p") 'company-select-previous))
 #+END_SRC
 
 Robe integration for Ruby.
