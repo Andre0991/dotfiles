@@ -13,7 +13,7 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 (defun my-init-hook ()
 (find-file "~/Dropbox/unimelb/sem2/knowledge_technologies/notes/notes_knowledge_technologies.org")
 (find-file "~/Dropbox/unimelb/sem2/software_modelling_and_design/notes/notes_software_modelling_and_design.org")
-(find-file "~/Dropbox/unimelb/sem2/artificial_intelligence/notes_artificial_intelligence.org")
+(find-file "~/Dropbox/unimelb/sem2/artificial_intelligence/notes/notes_artificial_intelligence.org")
 (find-file "~/Dropbox/org/todo.org")
 (find-file "~/dotfiles/emacs_andre.org")
 (find-file "/Users/andre0991/Dropbox/english/notes_english_grammar_in_use.org")
@@ -440,6 +440,8 @@ Based on https://github.com/edwtjo/evil-org-mode.
 
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'org-mode
+  "mn" 'outline-next-visible-heading
+  "mp" 'outline-previous-visible-heading
   "ml" 'org-insert-link
   "mL" 'org-store-link
   "i" 'helm-org-in-buffer-headings
@@ -501,6 +503,11 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
 
     
 ** Theme & visual
+*** Center window
+#+BEGIN_SRC emacs-lisp
+(require 'centered-window-mode)
+(centered-window-mode t)
+#+END_SRC
 *** Disable blinking cursor
     Restore sanity.
 #+BEGIN_SRC emacs-lisp
@@ -651,6 +658,55 @@ Use Github flavored markdown.
 (evil-leader/set-key-for-mode 'gfm-mode
   "ml" 'markdown-insert-link
 )
+#+END_SRC
+** Functions
+*** Insert image from Dropbox's Screenshot folder to org-mode buffer
+Thanks to finster from #emacs on freenode for providing that code. I added the insertion and newline.
+#+BEGIN_SRC emacs-lisp
+(defun get-newest-file-from-dir (dir)
+  "Return the file name of the newes file in DIR."
+  (when (file-directory-p dir)
+    (expand-file-name (car (split-string (shell-command-to-string (format "ls -t %s | head -1" dir)) "\n" t))
+                      dir)))
+
+
+
+(defun insert-org-image (image-name)
+  "Moves image from Dropbox folder to current directory, changing its name."
+  (interactive "sImage name: ")
+  (let* ((indir (expand-file-name "/Users/andre0991/Dropbox/Screenshots"))
+         (infile (get-newest-file-from-dir indir))
+         (outdir (concat (file-name-directory (buffer-file-name)) "/media"))
+         (outfile (expand-file-name (concat image-name ".png") outdir)))
+         ;; (outfilepng (concat outfile ".png"))
+    (unless (file-directory-p outdir)
+      (make-directory outdir t))
+    (rename-file infile outfile))
+  (insert (concat (concat "[[./media/" image-name) ".png]]"))
+  (newline)
+  (newline)
+  ;; (org-display-inline-images)
+  )
+#+END_SRC
+*** Rename file
+From http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+#+BEGIN_SRC emacs-lisp
+(defun rename-this-buffer-and-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond ((get-buffer new-name)
+               (error "A buffer named '%s' already exists!" new-name))
+              (t
+               (rename-file filename new-name 1)
+               (rename-buffer new-name)
+               (set-visited-file-name new-name)
+               (set-buffer-modified-p nil)
+               (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
 #+END_SRC
 ** Latex
 *** Initialization
