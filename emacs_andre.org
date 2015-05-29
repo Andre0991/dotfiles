@@ -38,6 +38,10 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 #+END_SRC
 
 ** General
+*** Spelling
+#+BEGIN_SRC emacs-lisp
+(setq ispell-dictionary "british")
+#+END_SRC
 *** Relative numbers
 From http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migration-guide/
 #+BEGIN_SRC emacs-lisp
