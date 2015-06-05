@@ -1,0 +1,32 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; EVIL MODE STUFF
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+; require 'evil-leader needs to be first
+(require 'evil-leader)
+(global-evil-leader-mode)
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+  "b" 'switch-to-buffer
+  "k" 'kill-this-buffer
+  "e" 'find-file
+  "E" 'go-errcheck
+  "w" 'save-buffer
+  "W" 'save-some-buffers
+  "f" 'flycheck-buffer
+  "z" 'suspend-emacs
+  "c" 'evilnc-comment-or-uncomment-lines)
+; evil nerd commenter
+(evilnc-default-hotkeys)
+; plain evil
+(require 'evil)
+(evil-mode 1)
+; evil-org
+(require 'evil-org)
+; escape stuff
+(setq-default evil-escape-key-sequence "jk")
+;;; THIS ONE RECOMMENDED IF SAME KEY TWICE USED
+;(setq-default evil-escape-delay 0.2)
+(setq-default evil-escape-delay 0.1)
+(require 'evil-escape)
+(evil-escape-mode 1)

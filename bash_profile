@@ -14,6 +14,8 @@ MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH";
 
+GEM_PATH=/Users/andre0991/.rvm/gems/ruby-2.1.0:/Users/andre0991/.rvm/gems/ruby-2.1.0@global
+
 # Add SWI-Prolog to the path
 export PATH=/Applications/SWI-Prolog.app/Contents/MacOS:$PATH
 
@@ -30,3 +32,4 @@ eval $( dircolors -b $HOME/.dir_colors )
 alias ls="ls --color=always"
 alias grep="grep --color=always"
 alias ledger="ledger -f ~/Dropbox/notes/ledger.dat"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
