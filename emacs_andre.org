@@ -443,7 +443,7 @@ Based on https://github.com/edwtjo/evil-org-mode.
   "gj" 'org-forward-heading-same-level
   "gk" 'org-backward-heading-same-level
   (kbd "TAB") 'org-cycle ; overwrites evil C-i in terminal
-  (kbd "[ s") 'flyspell-check-previous-highlighted-word ; overwrites evil C-i in terminal
+  (kbd "[ s") 'flyspell-check-previous-highlighted-word
   )
 #+END_SRC
 
