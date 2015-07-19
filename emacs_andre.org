@@ -29,6 +29,8 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 #+END_SRC
 *** Get system's environment variables
@@ -106,12 +108,28 @@ From http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-1
 (setq vc-make-backup-files t)    ; by default, emacs does not backup files managed by a version control system. Setting it to "t" modifies that.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
-
 *** Semantic
 Quoting to the Emacs manual, "Semantic is a package that provides language-aware editing commands based on source code parsers."
 It is used by =helm-semantic-or-imenu=.
 #+BEGIN_SRC emacs-lisp
 (semantic-mode 1)
+#+END_SRC
+
+*** Rename file
+    Taken from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+#+BEGIN_SRC 
+(defun rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
 #+END_SRC
 ** Evil
 *** evil-leader
@@ -510,7 +528,6 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
       (expand-file-name "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar"))
 #+END_SRC
 
-    
 ** Theme & visual
 *** Center window
 #+BEGIN_SRC emacs-lisp
@@ -645,6 +662,11 @@ From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
        "mer" 'eval-region
      )
      #+END_SRC
+
+*** Rainbow parenthesis
+    #+BEGIN_SRC 
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    #+END_SRC
 *** Magit
 From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
 #+BEGIN_SRC emacs-lisp
