@@ -11,9 +11,6 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 *** Automatically open some files
 #+BEGIN_SRC emacs-lisp
 (defun my-init-hook ()
-(find-file "~/Dropbox/unimelb/sem2/knowledge_technologies/notes/notes_knowledge_technologies.org")
-(find-file "~/Dropbox/unimelb/sem2/software_modelling_and_design/notes/notes_software_modelling_and_design.org")
-(find-file "~/Dropbox/unimelb/sem2/artificial_intelligence/notes/notes_artificial_intelligence.org")
 (find-file "~/Dropbox/ciencia_da_computacao/org/notes_computer_science.org")
 (find-file "~/Dropbox/org/todo.org")
 (find-file "~/dotfiles/emacs_andre.org")
@@ -44,6 +41,36 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 *** Spelling
 #+BEGIN_SRC emacs-lisp
 (setq ispell-dictionary "british")
+#+END_SRC
+*** Holidays
+    Do not use all default holidays.
+#+BEGIN_SRC 
+(setq holiday-general-holidays nil)
+(setq holiday-christian-holidays nil)
+(setq holiday-hebrew-holidays nil)
+(setq holiday-islamic-holidays nil)
+(setq holiday-bahai-holidays nil)
+(setq holiday-oriental-holidays nil)
+#+END_SRC
+    Use the following instead:
+#+BEGIN_SRC 
+(setq holiday-local-holidays
+    '((holiday-fixed 1 1 "Dia da Confraternização Universal")
+    ; (holiday-fixed 02 07 "Carvanal")
+    ; (holiday-fixed 04 07 "Paixão de Cristo")
+    ; (holiday-fixed 04 07 "Páscoa")
+    (holiday-fixed 04 21 "Dia de Tiradentes")
+    (holiday-fixed 05 01 "Dia do trabalho")
+    (holiday-fixed 06 04 "Corpus Christi")
+    (holiday-fixed 07 09 "Revolução Constitucionalista de 1932")
+    (holiday-fixed 09 07 "Dia da Independência do Brasil")
+    (holiday-fixed 10 12 "Dia de Nossa Senhora Aparecida")
+    (holiday-fixed 11 02 "Dia de Finados")
+    (holiday-fixed 11 02 "Dia de Finados")
+    (holiday-fixed 11 20 "Dia da Consciência Negra")
+    (holiday-fixed 12 25 "Natal"))
+)
+
 #+END_SRC
 *** Relative numbers
 From http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migration-guide/
@@ -114,7 +141,6 @@ It is used by =helm-semantic-or-imenu=.
 #+BEGIN_SRC emacs-lisp
 (semantic-mode 1)
 #+END_SRC
-
 *** Rename file
     Taken from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
 #+BEGIN_SRC 
@@ -131,6 +157,11 @@ It is used by =helm-semantic-or-imenu=.
           (rename-file filename new-name t)
           (set-visited-file-name new-name t t)))))))
 #+END_SRC
+
+*** Keybindings
+    #+BEGIN_SRC 
+                (lambda () (interactive) (find-file "~/Dropbox/org/todo.org") 
+    #+END_SRC
 ** Evil
 *** evil-leader
 Use space as the leader key.
@@ -142,6 +173,15 @@ Required before =evil-mode= is enabled.
 (setq evil-leader/in-all-states 1)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
+  ; f: files
+  "ft" '(lambda () (interactive) (find-file "~/Dropbox/org/todo.org"))
+  "fe" '(lambda () (interactive) (find-file "~/dotfiles/emacs_andre.org"))
+  ; o: org
+  "oa" 'org-agenda
+  "oc" 'org-capture
+  "of" 'org-capture-finalize
+  "." 'org-time-stamp
+  ; other
   "ff" 'helm-for-files
   "j" 'helm-M-x
   "b" 'helm-mini
@@ -150,7 +190,6 @@ Required before =evil-mode= is enabled.
   "k" 'kill-this-buffer
   "l" 'helm-locate
   "i" 'helm-semantic-or-imenu
-  "o" 'other-window
   "q" 'save-buffers-kill-terminal
   "E" 'go-errcheck
   "s" 'save-buffer
@@ -436,7 +475,6 @@ Alternative to default describe-bindings
 *** Initialisation
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'flyspell-mode)
-(setq org-agenda-files (list "~/org/agenda.org"))
 #+END_SRC
 *** General
 #+BEGIN_SRC emacs-lisp
@@ -483,9 +521,7 @@ Based on https://github.com/edwtjo/evil-org-mode.
   "mta" 'org-table-beginning-of-field
   "mte" 'org-table-end-of-field
   "mtw" 'org-meta-return ; wrap field
-  ; mnemonics: status
-  "msd" 'org-todo
-  "mst" 'org-todo ; toggle
+  "t" 'org-todo ; toggle
   "mo" 'org-open-at-point
 )
 #+END_SRC
@@ -514,6 +550,10 @@ Based on https://github.com/edwtjo/evil-org-mode.
 (setq org-imenu-depth 6)
 #+END_SRC
 
+*** org-drill
+    #+BEGIN_SRC 
+   (require 'org-drill) 
+    #+END_SRC
 *** org-babel
 **** plantuml
 Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-support.html
@@ -528,6 +568,31 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
       (expand-file-name "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar"))
 #+END_SRC
 
+*** org-capture
+**** File
+    #+BEGIN_SRC 
+    (setq org-default-notes-file "~/Dropbox/org/todo.org")
+    #+END_SRC
+**** Templates
+     #+BEGIN_SRC 
+;     (setq org-capture-templates
+;(quote
+;       '(("t" "Todo" entry (file+headline "~/Dropbox/org/todo.org" "Tasks")
+;             "* TODO %?\n  \n  %a")
+;       ("e" "Emacs task" checkitem (file+headline "~/Dropbox/org/todo.org" "Emacs tasks")
+;             "- [ ] %?\n\n  %i\n"))))
+
+    (setq org-capture-templates
+     '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+            "* TODO %?\n  %i\n  %a")
+       ("j" "Journal" entry (file+datetree "~/org/journal.org")
+            "* %?\nEntered on %U\n  %i\n  %a")))
+     #+END_SRC
+*** org-agenda
+**** File
+#+BEGIN_SRC 
+(setq org-agenda-files (quote ("~/Dropbox/org/todo.org")))
+#+END_SRC
 ** Theme & visual
 *** Center window
 #+BEGIN_SRC emacs-lisp
