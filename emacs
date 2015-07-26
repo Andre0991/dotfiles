@@ -1,4 +1,4 @@
-(package-initialize nil) ; Not using built-in version, otherwise set it to nil
+(package-initialize)
 
 (setq vc-follow-symlinks nil)
 
