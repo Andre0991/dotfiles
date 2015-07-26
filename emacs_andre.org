@@ -44,7 +44,7 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 #+END_SRC
 *** Holidays
     Do not use all default holidays.
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (setq holiday-general-holidays nil)
 (setq holiday-christian-holidays nil)
 (setq holiday-hebrew-holidays nil)
@@ -53,7 +53,7 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 (setq holiday-oriental-holidays nil)
 #+END_SRC
     Use the following instead:
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (setq holiday-local-holidays
     '((holiday-fixed 1 1 "Dia da Confraternização Universal")
     ; (holiday-fixed 02 07 "Carvanal")
@@ -87,7 +87,7 @@ From http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migrat
 (add-hook 'markdown-mode-hook 'line-number-mode t)
 (add-hook 'markdown-mode-hook 'column-number-mode t)
 #+END_SRC
-   
+
 *** Move between windows
 Use super + arrow keys to move between Emacs windows.
 
@@ -143,7 +143,7 @@ It is used by =helm-semantic-or-imenu=.
 #+END_SRC
 *** Rename file
     Taken from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (defun rename-file-and-buffer ()
   "Rename the current buffer and file it is visiting."
   (interactive)
@@ -158,10 +158,6 @@ It is used by =helm-semantic-or-imenu=.
           (set-visited-file-name new-name t t)))))))
 #+END_SRC
 
-*** Keybindings
-    #+BEGIN_SRC 
-                (lambda () (interactive) (find-file "~/Dropbox/org/todo.org") 
-    #+END_SRC
 ** Evil
 *** evil-leader
 Use space as the leader key.
@@ -290,8 +286,8 @@ Based on http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
 (evil-define-key 'normal dired-mode-map "q" 'kill-this-buffer)
 #+END_SRC
 ** Windows manipulation
-    
 This section depends on Evil initialisation.
+
 **** Rotate windows
 "This snippet flips a two-window frame, so that left is right, or up is down. It's sanity preserving if you've got a sliver of OCD."
 From http://whattheemacsd.com/buffer-defuns.el-02.html
@@ -337,7 +333,7 @@ From Spacemacs, lightly modified.
   (split-window-right)
   (windmove-right))
 #+END_SRC
-**** TODO Keybinding
+**** TODO Keybindings
 Based on Spacemacs configuration.
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key
@@ -551,9 +547,10 @@ Based on https://github.com/edwtjo/evil-org-mode.
 #+END_SRC
 
 *** org-drill
-    #+BEGIN_SRC 
-   (require 'org-drill) 
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(require 'org-drill)
+#+END_SRC
+
 *** org-babel
 **** plantuml
 Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-support.html
@@ -570,11 +567,11 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
 
 *** org-capture
 **** File
-    #+BEGIN_SRC 
+    #+BEGIN_SRC emacs-lisp
     (setq org-default-notes-file "~/Dropbox/org/todo.org")
     #+END_SRC
 **** Templates
-     #+BEGIN_SRC 
+     #+BEGIN_SRC emacs-lisp
 ;     (setq org-capture-templates
 ;(quote
 ;       '(("t" "Todo" entry (file+headline "~/Dropbox/org/todo.org" "Tasks")
@@ -590,7 +587,7 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
      #+END_SRC
 *** org-agenda
 **** File
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (setq org-agenda-files (quote ("~/Dropbox/org/todo.org")))
 #+END_SRC
 ** Theme & visual
@@ -641,7 +638,7 @@ From http://stackoverflow.com/a/15595000
 
 ;; (sublimity-mode 1)
 #+END_SRC
-** Other packages 
+** Other packages
 *** Company-mode
 Use company-mode in all buffers
 
@@ -652,8 +649,8 @@ Use company-mode in all buffers
 
 Robe integration for Ruby.
 #+BEGIN_SRC emacs-lisp
-(eval-after-load 'company
-  '(push 'company-robe company-backends))
+; (eval-after-load 'company
+;   '(push 'company-robe company-backends))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -681,7 +678,7 @@ Robe integration for Ruby.
        (kbd "K") 'ibuffer-do-kill-lines
        )
     )
-)  
+)
 #+END_SRC
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
@@ -729,8 +726,8 @@ From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
      #+END_SRC
 
 *** Rainbow parenthesis
-    #+BEGIN_SRC 
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    #+BEGIN_SRC emacs-lisp
+; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
     #+END_SRC
 *** Magit
 From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
@@ -753,16 +750,16 @@ From http://nathantypanski.com/blog/2014-08-03-a-vim-like-emacs-config.html
 **** Initialisation
 Use Github flavored markdown.
 #+BEGIN_SRC emacs-lisp
-(autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . gfm-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+; (autoload 'markdown-mode "markdown-mode"
+;   "Major mode for editing Markdown files" t)
+; (add-to-list 'auto-mode-alist '("\\.markdown\\'" . gfm-mode))
+; (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 #+END_SRC
 **** Keybindings
-#+BEGIN_SRC 
-(evil-leader/set-key-for-mode 'gfm-mode
-  "ml" 'markdown-insert-link
-)
+#+BEGIN_SRC emacs-lisp
+; (evil-leader/set-key-for-mode 'gfm-mode
+;   "ml" 'markdown-insert-link
+; )
 #+END_SRC
 ** Functions
 *** Insert image from Screenshot's folder to org-mode buffer
@@ -900,44 +897,44 @@ From http://stackoverflow.com/questions/14629198/redefine-auctex-font-and-compil
 #+END_SRC
 ** Ruby
    Setup based on guide at http://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html
-*** Emacs and Ruby Version Manager (rvm) integration. 
+*** Emacs and Ruby Version Manager (rvm) integration.
     #+BEGIN_SRC emacs-lisp
-(require 'rvm)
-(rvm-use-default) ;; use rvm's default ruby for the current Emacs session
+; (require 'rvm)
+; (rvm-use-default) ;; use rvm's default ruby for the current Emacs session
     #+END_SRC
 *** Ruby shell inside emacs
     We get a REPL buffer with =inf-ruby=.
 #+BEGIN_SRC emacs-lisp
-(evil-leader/set-key-for-mode 'ruby-mode
-  "mr" 'rvm-activate-corresponding-rub
-)
+; (evil-leader/set-key-for-mode 'ruby-mode
+;   "mr" 'rvm-activate-corresponding-rub
+; )
 #+END_SRC
 *** Code navigation and completion
     "Robe is a code assistance tool that uses a Ruby REPL subprocess with your application or gem code loaded, to provide information about loaded classes and modules, and where each method is defined."
     From https://github.com/dgutov/robe
 #+BEGIN_SRC emacs-lisp
-(require 'robe)
-(add-hook 'ruby-mode-hook 'robe-mode)
+; (require 'robe)
+; (add-hook 'ruby-mode-hook 'robe-mode)
 
 #+END_SRC
 *** TODO Workaround for Flycheck
 Flycheck wasn't able to find the right PATH for ruby gems installed by rvm, so we set it manually.
 TODO: Make it Mac specific.
 #+BEGIN_SRC emacs-lisp
-(setq flycheck-ruby-rubylint-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
-(setq flycheck-ruby-rubocop-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
+; (setq flycheck-ruby-rubylint-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
+; (setq flycheck-ruby-rubocop-executable "/Users/andre0991/.rvm/gems/ruby-2.1.0")
 #+END_SRC
-    
+
 *** Keybindings
 #+BEGIN_SRC emacs-lisp
-(evil-leader/set-key-for-mode 'ruby-mode
-  "eR" 'ruby-send-region
-  "er" 'ruby-send-region-and-go
-)
+; (evil-leader/set-key-for-mode 'ruby-mode
+;   "eR" 'ruby-send-region
+;   "er" 'ruby-send-region-and-go
+; )
 #+END_SRC
 
 Make the arrow keys search through history instead of jumping to other lines (which can be done with =j= and =k= using Evil).
 #+BEGIN_SRC emacs-lisp
-(define-key inf-ruby-mode-map (kbd "<up>") 'comint-previous-input)
-(define-key inf-ruby-mode-map (kbd "<down>") 'comint-next-input)
+; (define-key inf-ruby-mode-map (kbd "<up>") 'comint-previous-input)
+; (define-key inf-ruby-mode-map (kbd "<down>") 'comint-next-input)
 #+END_SRC

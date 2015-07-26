@@ -1,9 +1,11 @@
+; (package-initialize nil) ; uncomment if not using org-plus-contrib
 (package-initialize)
 
 (setq vc-follow-symlinks nil)
 
-(require 'org)
-(require 'ob-tangle)
+; uncomment if not using org-plus-contrib
+; (require 'org)
+; (require 'ob-tangle)
 
 (org-babel-load-file "~/.emacs.d/emacs_andre.org")
 (custom-set-variables
