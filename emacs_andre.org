@@ -15,6 +15,7 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 (find-file "~/Dropbox/org/todo.org")
 (find-file "~/dotfiles/emacs_andre.org")
 (find-file "/Users/andre0991/Dropbox/english/notes_english_grammar_in_use.org")
+(find-file "/Users/andre0991/Dropbox/music_theory/notes_music_theory.org")
 (find-file "/Users/andre0991/Dropbox/ciencia_da_computacao/practical_vim/notes_practical_vim.org")
 (switch-to-buffer "*scratch*")
 )
@@ -53,25 +54,6 @@ Inspired by [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's Emacs conf
 (setq holiday-oriental-holidays nil)
 #+END_SRC
     Use the following instead:
-#+BEGIN_SRC emacs-lisp
-(setq holiday-local-holidays
-    '((holiday-fixed 1 1 "Dia da Confraternização Universal")
-    ; (holiday-fixed 02 07 "Carvanal")
-    ; (holiday-fixed 04 07 "Paixão de Cristo")
-    ; (holiday-fixed 04 07 "Páscoa")
-    (holiday-fixed 04 21 "Dia de Tiradentes")
-    (holiday-fixed 05 01 "Dia do trabalho")
-    (holiday-fixed 06 04 "Corpus Christi")
-    (holiday-fixed 07 09 "Revolução Constitucionalista de 1932")
-    (holiday-fixed 09 07 "Dia da Independência do Brasil")
-    (holiday-fixed 10 12 "Dia de Nossa Senhora Aparecida")
-    (holiday-fixed 11 02 "Dia de Finados")
-    (holiday-fixed 11 02 "Dia de Finados")
-    (holiday-fixed 11 20 "Dia da Consciência Negra")
-    (holiday-fixed 12 25 "Natal"))
-)
-
-#+END_SRC
 *** Relative numbers
 From http://juanjoalvarez.net/es/detail/2014/sep/19/vim-emacsevil-chaotic-migration-guide/
 #+BEGIN_SRC emacs-lisp
@@ -171,10 +153,13 @@ Required before =evil-mode= is enabled.
 (evil-leader/set-key
   ; f: files
   "ft" '(lambda () (interactive) (find-file "~/Dropbox/org/todo.org"))
+  "fm" '(lambda () (interactive) (find-file "~/Dropbox/org/music_download_and_audition.org"))
+  "fb" '(lambda () (interactive) (find-file "~/Dropbox/org/books.org"))
   "fe" '(lambda () (interactive) (find-file "~/dotfiles/emacs_andre.org"))
   ; o: org
   "oa" 'org-agenda
   "oc" 'org-capture
+  "od" 'org-drill
   "of" 'org-capture-finalize
   "." 'org-time-stamp
   ; other
@@ -337,6 +322,9 @@ From Spacemacs, lightly modified.
 Based on Spacemacs configuration.
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key
+   "er"  'eval-region
+   "el"  'eval-last-sexp
+   "ed"  'eval-defun
    ;; "w2"  'layout-double-columns
    ;; "w3"  'layout-triple-columns
    ;; "wb"  'switch-to-minibuffer-window
@@ -506,7 +494,7 @@ Based on https://github.com/edwtjo/evil-org-mode.
   "ml" 'org-insert-link
   "mL" 'org-store-link
   "i" 'helm-org-in-buffer-headings
-  "me" 'org-edit-special
+  "me" 'org-export-dispatch
   "mtrd" 'org-table-delete-row
   "mtri" 'org-table-insert-row
   "mtcd" 'org-table-delete-column
@@ -549,6 +537,12 @@ Based on https://github.com/edwtjo/evil-org-mode.
 *** org-drill
 #+BEGIN_SRC emacs-lisp
 (require 'org-drill)
+
+; From the org-drill manual: "By default, you will be prompted to save all unsaved buffers at the end of a drill session. If you don't like this behaviour, use the following setting:"
+(setq org-drill-save-buffers-after-drill-sessions-p nil)
+
+; The lower, the more frequently items appear. Default is 0.5.
+(setq org-drill-learn-fraction 0.4)
 #+END_SRC
 
 *** org-babel
@@ -579,11 +573,21 @@ Setup according to http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-s
 ;       ("e" "Emacs task" checkitem (file+headline "~/Dropbox/org/todo.org" "Emacs tasks")
 ;             "- [ ] %?\n\n  %i\n"))))
 
+;   (setq org-capture-templates
+;    '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+;           "* TODO %?\n  %i\n  %a")
+;      ("j" "Journal" entry (file+datetree "~/org/journal.org")
+;           "* %?\nEntered on %U\n  %i\n  %a")))
+
     (setq org-capture-templates
-     '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
-            "* TODO %?\n  %i\n  %a")
-       ("j" "Journal" entry (file+datetree "~/org/journal.org")
-            "* %?\nEntered on %U\n  %i\n  %a")))
+     '(("t" "Todo" entry (file+headline "~/Dropbox/org/todo.org" "Tasks")
+            "* TODO %?\n  %i")
+       ("m" "Music download" entry (file+headline "~/Dropbox/org/music_download_and_audition.org" "Download")
+            "* TODO Download \n Composer: %? \n Work: \n Link: %i")
+       ("b" "Books" entry (file+headline "~/Dropbox/org/books.org" "Unclassified")
+            "* TODO Read \n Author: %? \n Title: \n Link: %i")
+       ("e" "Emacs task" checkitem (file+headline "~/Dropbox/org/todo.org" "Emacs tasks")
+            "- [ ] %?\nEntered on %U\n  %i")))
      #+END_SRC
 *** org-agenda
 **** File
@@ -797,20 +801,22 @@ Thanks to finster from #emacs on freenode for providing that code. I added the i
   (when (file-directory-p dir)
     (expand-file-name (car (split-string (shell-command-to-string (format "ls -t %s | head -1" dir)) "\n" t))
                       dir)))
+#+END_SRC
 
-
-
-(defun insert-org-image_new (image-name)
+#+BEGIN_SRC emacs-lisp
+(defun insert-org-image-with-name ()
+  (interactive)
   "Moves image from Dropbox folder to current directory, changing its name."
   (let* ((indir (expand-file-name "/Users/andre0991/Dropbox/Screenshots"))
-         (infile (get-newest-file-from-dir_new indir))
+         (infile (get-newest-file-from-dir indir))
          (outdir (concat (file-name-directory (buffer-file-name)) "/media"))
-         (outfile (expand-file-name (concat image-name ".png") outdir)))
+         (time (current-time))
+         (outfile (expand-file-name (concat time ".png") outdir)))
          ;; (outfilepng (concat outfile ".png"))
     (unless (file-directory-p outdir)
       (make-directory outdir t))
     (rename-file infile outfile))
-  (insert (concat (concat "[[./media/" image-name) ".png]]"))
+  (insert (concat (concat "[[./media/" time) ".png]]"))
   (newline)
   (newline)
   ;; (org-display-inline-images)
