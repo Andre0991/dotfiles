@@ -36,6 +36,7 @@ noremap l :forward<CR>
 noremap J <C-d>
 noremap K <C-u>
 
+
 ; Mnemonics: noscript menu
 nnoremap <leader>nm :noscript popup<CR>
 nnoremap <leader>nt :noscript toggletemp<CR>  
@@ -57,10 +58,16 @@ set focuscontent
 
 " :ignorekeys add mail\\.google\\.com -except :,t,d,b
 " :ignorekeys add inbox\\.google\\.com -except :,t,d,b
-" :ignorekeys add feedly\\.com -except :,t,d,b
+:ignorekeys add feedly\\.com -except :,t,d,b
 
 " let @d = '<M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>'
 noremap @q <M-c>tcambridge.dictionary.org/dictionary/british/<M-v><CR>
+"use on Wikipedia
+noremap gle /English<CR><CR>
+noremap glp /Portugu<CR><CR>
+
+" go to Wikipedia link
+noremap gw /Wikip<CR><CR>
 
 noremap <silent> <leader>g :set gui=navigation<CR>
 noremap <silent> <leader>G :set gui=nonavigation<CR>
@@ -75,10 +82,19 @@ nnoremap gp <A-w>
 " gn<key> opens qmark in a new tab
 qmark h https://news.ycombinator.com/news
 qmark y https://www.youtube.com/feed/subscriptions
-qmark m https://mail.google.com/
+qmark i https://inbox.google.com/
+qmark f https://www.facebook.com/
+qmark h http://www.hardware.com.br/comunidade/area/profissoes-empregos-cursos-e-certificacoes.35/
 
 " Google's I'm feeling lucky
 bmark -t "Google Feeling Lucky Search" -k "goto" http://www.google.com/search?q=%s&btnI=I%27m+Feeling+Lucky
 
 " nnoremap <Up> 5k
 " nnoremap <Down> 5j
+
+" Use reader mode
+ :command reader execute "open about:reader?url=" + content.location.href
+ map <Leader>r :reader <CR>
+
+" reload dotfile
+" :source ~/.vimperatorrc
