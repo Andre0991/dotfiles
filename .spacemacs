@@ -187,7 +187,7 @@ layers configuration."
     (find-file "~/Dropbox/UFABC/8_quad/evolucao_dos_conceitos_matematicos/notes_evolucao_dos_conceitos_matematicos.org")
     (find-file "~/Dropbox/UFABC/8_quad/paradigmas_de_programacao/notes_paradigmas_de_programacao.org")
     (find-file "~/Dropbox/UFABC/8_quad/programacao_matematica/notes_programacao_matematica.org")
-    (find-file "~/Dropbox/UFABC/8_quad/sistemas_operacionais/notes_sistemas_operacionais.org")
+    (find-file "~/Dropbox/UFABC/8_quad/sistemas_operacionais/sistemas_operacionais_notes.org")
     (find-file "~/Dropbox/UFABC/8_quad/tbq_bioquimica/tbq_bioquimica_notes.org")
     (find-file "~/Dropbox/UFABC/8_quad/teoria_dos_grafos/teoria_dos_grafos_notes.org")
 
@@ -229,6 +229,7 @@ layers configuration."
 
    (evil-leader/set-key-for-mode 'org-mode
      "oii" 'insert-org-image
+     "oti" 'org-toggle-inline-images
      )
    ;; Org
 
@@ -313,12 +314,27 @@ layers configuration."
   )
 
 ;; macros
-; (fset 'insert_question_level_2
-   ;; [?i ?* ?* ?  ?Q ?u ?e ?s ?t ?i ?o ?n return return ?* ?* ?* ?  ?A ?n ?s ?w ?e ?r escape ?k])
 
 (evil-set-register ?q  [?i ?* ?* ?  ?Q ?u ?e ?s ?t ?i ?o ?n return return ?* ?* ?* ?  ?A ?n ?s ?w ?e ?r escape ?k])
 
 (evil-set-register ?s  [?i ?< ?s tab ?S ?c ?a ?l ?a escape ?j])
+
+;; do not ask question about following symlinks
+(setq vc-follow-symlinks t)
+
+(defun study-emacs-lisp ()
+(interactive)
+(split-window-right-and-focus)
+(split-window-vertically)
+(shrink-window-horizontally 10)
+(enlarge-window 10)
+(find-file "~/Dropbox/ciencia_da_computacao/emacs_lisp.org")
+(evil-window-down 1)
+(switch-to-buffer "*scratch*")
+(emacs-lisp-mode)
+(evil-window-left 1)
+(bookmark-jump emacs-lisp-intro)
+  )
 
 )
 
