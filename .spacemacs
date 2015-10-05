@@ -42,7 +42,7 @@
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(org-plus-contrib)
+   dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(evil-search-highlight-persist)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -160,11 +160,13 @@ before layers configuration."
   ;; User initialization goes here
   )
 
-(defun dotspacemacs/config ()
+(defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
 
+;   │ `Y` has been remapped to `y$`, if  you don't like this behavior you can │
+;   │ set the variable `dotspacemacs-remap-Y-to-y$` to nil in your dotfile.   │
   ;; Mac OS specificities (todo: change according to OS):
   ;; -   (let* ((indir (expand-file-name "~/Dropbox/Screenshots"))
   ;; -   layer osx
@@ -172,11 +174,15 @@ layers configuration."
 
   ;; Relative numbers
   ;; Use before loading any file.
-  (add-to-hooks 'linum-mode '(org-mode-hook prog-mode-hook))
-  (add-to-hooks 'linum-relative-toggle '(org-mode-hook prog-mode-hook))
+  (spacemacs/add-to-hooks 'linum-mode '(org-mode-hook prog-mode-hook))
+  (spacemacs/add-to-hooks 'linum-relative-toggle '(org-mode-hook prog-mode-hook))
 
   ;; Truncate lines
-  (add-to-hooks 'spacemacs/toggle-truncate-lines '(org-mode-hook))
+  (spacemacs/add-to-hooks 'spacemacs/toggle-truncate-lines '(org-mode-hook))
+  (spacemacs/add-to-hooks 'spacemacs/toggle-truncate-lines '(org-mode-hook))
+
+  ;; auto-fill (80 characters per col)
+  (spacemacs/add-to-hooks 'turn-on-auto-fill '(org-mode-hook))
 
   ;; Automatically open some files
     (find-file "~/Dropbox/ciencia_da_computacao/org/notes_computer_science.org")
@@ -336,6 +342,13 @@ layers configuration."
 (bookmark-jump emacs-lisp-intro)
   )
 
+(setq helm-locate-command
+      (case system-type
+        ('gnu/linux "locate -i -r %s")
+        ('berkeley-unix "locate -i %s")
+        ('windows-nt "es %s")
+        ('darwin "mdfind -name %s %s")
+        (t "locate %s")))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
