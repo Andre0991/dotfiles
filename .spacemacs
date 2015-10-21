@@ -20,6 +20,7 @@
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
+     erc
      themes-megapack
      (auto-completion :variables
                        auto-completion-enable-help-tooltip t
