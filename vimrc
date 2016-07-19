@@ -8,7 +8,7 @@ call vundle#begin('~/.vundle')
 	Plugin 'honza/vim-snippets'
 	Plugin 'scrooloose/nerdcommenter'
 	Plugin 'altercation/vim-colors-solarized'
-	Plugin 'Raimondi/delimitMate'
+	Plugin 'Raimondi/delimitMate'e
 	" Plugin 'Lokaltog/vim-easymotion'
 	" Lightweight alternative to easymotion
 	" Plugin 'justinmk/vim-sneak'
@@ -48,7 +48,7 @@ set t_Co=256
 
 " ===============  General settings  ===============
 set undofile 			" undo in different sessions
-set undodir=/Users/andre0991/.vim/undos " dir should exist
+set undodir=/Users/andre0991/.vim/undos " dir must exist
 set mouse+=a 			" avoid including numbers in mouse selection
 " set clipboard=unnamedplus 	" use system clipboard for all operations (req vim 7.3+)
 set clipboard=unnamed		" use this if the above line does not work properly
