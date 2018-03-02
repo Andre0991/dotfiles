@@ -498,6 +498,7 @@ layers configuration. You are free to put any user code."
 
   (defun andre/reader-mode ()
     "Activates variable pitch mode and scales up the font."
+    (interactive)
     (variable-pitch-mode 1)
     (spacemacs/scale-up-font)
     (spacemacs/scale-up-font))
@@ -705,9 +706,13 @@ layers configuration. You are free to put any user code."
     ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
     ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
 
-    (setq org-hide-emphasis-markers nil)
+    ;; removes markers such as * in *bold*, / in /italic/ etc
+    (setq org-hide-emphasis-markers t)
 
-    ;; org-cliplink
+    ;; show markdown in list of exported formats
+    (require 'ox-md nil t)
+
+    ;; org-cliplink - <Leader> m i c - inserts link with page title
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
       "ic" 'org-cliplink)
 
