@@ -1,35 +1,8 @@
-# iTerm2 -  run 'title example' to make 'example' the title of current session
-function title {
-    echo -ne "\033]0;"$*"\007"
-}
+# z
+. /usr/local/etc/profile.d/z.sh
 
-# Homebrew path comes first
-export PATH="/usr/local/bin:$PATH"
-
-# coreutils
-PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-
-# GNU sed
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH";
-
-GEM_PATH=/Users/andre0991/.rvm/gems/ruby-2.1.0:/Users/andre0991/.rvm/gems/ruby-2.1.0@global
-
-# Add SWI-Prolog to the path
-export PATH=/Applications/SWI-Prolog.app/Contents/MacOS:$PATH
-
-# Add GHC 7.8.3 to the path, via http://ghcformacosx.github.io/
-export GHC_DOT_APP="/Applications/ghc-7.8.3.app"
-if [ -d "$GHC_DOT_APP" ]; then
-    export PATH="${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
-fi
-
-# Terminal colours
-eval $( dircolors -b $HOME/.dir_colors )
-
-# Aliases
-alias ls="ls --color=always"
-alias grep="grep --color=always"
-alias ledger="ledger -f ~/Dropbox/notes/ledger.dat"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# better bash history (from https://sanctum.geek.nz/arabesque/better-bash-history/)
+HISTFILESIZE=1000000           # default maximum number of commands
+HISTSIZE=1000000	       # same
+HISTIGNORE='ls:bg:fg:history'  # don't store those commands
+shopt -s histappend            # append instead of replacing old entries
