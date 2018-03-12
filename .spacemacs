@@ -224,7 +224,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -481,8 +481,8 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
   ;; todo.org folder
-  (setq andre--work-pc nil)
-  (setq andre--home-pc t)
+  (setq andre--work-pc t)
+  (setq andre--home-pc nil)
 
   (setq andre-type-env 'home-mac)
 
@@ -710,6 +710,12 @@ layers configuration. You are free to put any user code."
 
   (with-eval-after-load 'org
 
+    ;; removes markers such as * in *bold*, / in /italic/ etc
+    (setq org-hide-emphasis-markers t)
+
+    ;; show markdown in list of exported formats
+    (require 'ox-md nil t)
+
     ;; fixed width
     ;; see https://github.com/lepisma/rogue/blob/75ab1c3422b409f41daa4c003b931e869eed0914/config.el#L205
     ;; https://lepisma.github.io/2017/10/28/ricing-org-mode/
@@ -726,8 +732,6 @@ layers configuration. You are free to put any user code."
     ;; From https://github.com/syl20bnr/spacemacs/tree/develop/layers/org :
     ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
     ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
-
-    (setq org-hide-emphasis-markers nil)
 
     ;; org-cliplink
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
