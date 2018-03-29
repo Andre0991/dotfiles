@@ -1,0 +1,37 @@
+let mapleader=" "
+nmap <leader>' :action EvaluateExpression<cr>
+nmap <leader>/ :action FindInPath<cr>
+nmap <leader><leader> :action GotoAction<cr>
+nmap <leader><tab> :action Switcher<cr><down>
+nmap <leader>[ :action Back<cr>
+nmap <leader>] :action Forward<cr>
+nmap <leader>b :action Back<cr>
+nmap <leader>bb :action RecentFiles<cr>
+nmap <leader>cl :action CommentByLineComment<cr>
+nmap <leader>ed :action Debug<cr>
+nmap <leader>ef :action ShowIntentionActions<cr>
+nmap <leader>er :action Run<cr>
+nmap <leader>es :action Stop<cr>
+nmap <leader>fs :action SaveDocument<cr>
+nmap <leader>fu :action FindUsages<cr>
+nmap <leader>gd :action GotoDeclaration<cr>
+nmap <leader>js :action GotoSymbol<cr>
+nmap <leader>ji :action FileStructurePopup<cr>
+nmap <leader>pf :action GotoFile<cr>
+nmap <leader>p/ :action FindInPath<cr>
+nmap <leader>pn :action GotoNamespace<cr>
+nmap <leader>rr :action RenameElement<cr>
+nmap <leader>sc :noh<cr>
+nmap <leader>tb :action ToggleLineBreakpoint<cr>
+nmap <leader>ww :action NextSplitter<cr>
+nmap <leader>w/ :action SplitVertically<cr>
+nmap <leader>w- :action SplitHorizontally<cr>
+nmap <leader>wu :action Unsplit<cr>
+nmap <leader>wU :action UnsplitAll<cr>
+set clipboard=unnamed
+set hlsearch 		" highlight the search
+set ignorecase 		" ignore case
+set incsearch		" incremental search
+set relativenumber 
+set smartcase 		" ...unless the search uses uppercase letters
+set surround
