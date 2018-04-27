@@ -10,6 +10,7 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
+Plug 'jimmay5469/vim-spacemacs'
 call plug#end()
 
 " ===============  Display  ===============
@@ -60,4 +61,3 @@ filetype plugin on	" filetype-specific plugins
 " leader is space key
 let mapleader=" "
 " nmap <silent> <leader><space> :nohlsearch<CR>
-
