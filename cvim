@@ -1,0 +1,20 @@
+map B :bookmarks
+map b :buffer<Space>
+map h goBack
+map l goForward
+map H scrollLeft
+map L scrollRight
+map k previousTab
+map j nextTab
+let scrollstep = 140
+set numerichints
+set typelinkhints
+set cncpcompletion
+set showtabindices
+
+let searchengine git = "http://www.github.com/nubank/%s"
+let searchengine yt = "https://www.youtube.com/results?search_query=%s"
+let searchengine dic = "https://dictionary.cambridge.org/us/dictionary/english/%s"
+
+let qmark r = "http://www.reddit.com"
+" configure quay, sourcegraph, gocd
