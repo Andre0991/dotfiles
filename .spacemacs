@@ -920,7 +920,12 @@ details."
     "Convert clipboard contents from HTML to Org and then paste (yank)."
     (interactive)
     (kill-new (shell-command-to-string "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org --wrap=none"))
-    (yank))
+    (yank)
+    ;; replace Unicode Character 'NO-BREAK SPACE'
+    (save-excursion
+      (goto-char 1)
+      (while (re-search-forward "\u00A0" nil t)
+        (replace-match " " nil nil))))
 
   ;; atomic-chrome - https://github.com/alpha22jp/atomic-chrome/blob/master/README.md
   (setq atomic-chrome-default-major-mode 'org-mode)
