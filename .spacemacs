@@ -933,7 +933,8 @@ details."
 
   ;; atomic-chrome - https://github.com/alpha22jp/atomic-chrome/blob/master/README.md
   (setq atomic-chrome-default-major-mode 'markdown-mode)
-  (setq atomic-chrome-url-major-mode-alist '(("\\.cloud\\.databricks\\.com" . scala-mode)))
+  (setq atomic-chrome-url-major-mode-alist '(("\\.cloud\\.databricks\\.com" . scala-mode)
+                                             ("github\\.com" . gfm-mode)))
   (atomic-chrome-start-server)
 
   ;; open default files
