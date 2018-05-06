@@ -501,7 +501,7 @@ layers configuration. You are free to put any user code."
         ((eq andre-type-env 'home-mac) (setq andre--screenshot-folder "~/Dropbox/Screenshots")))
 
   ;; set todo file path
-  (cond ((eq andre-type-env 'work-mac) (setq andre--path-to-org-todo "~/Dropbox/org/todo.org"))
+  (cond ((eq andre-type-env 'work-mac) (setq andre--path-to-org-todo "~/Dropbox/nu/org/todo-work.org"))
         ((eq andre-type-env 'home-mac) (setq andre--path-to-org-todo "~/Dropbox/org/todo.org")))
 
   ;; nov.el (epub reader)
@@ -856,10 +856,9 @@ details."
             ("e" "Emacs" entry (file+headline "~/Dropbox/org/todo.org" "Emacs tasks")
              "* TODO %?\n%U\n %i")))
 
-    (setq org-default-notes-file "~/Dropbox/org/todo.org")
-
     ;; org-agenda
-    (setq org-agenda-files (quote ("~/Dropbox/org/todo.org")))
+    (setq org-default-notes-file andre--path-to-org-todo)
+    (setq org-agenda-files `(,andre--path-to-org-todo))
 
     ;; >= emacs 25
     (setq search-default-mode #'char-fold-to-regexp)
@@ -940,7 +939,7 @@ details."
   ;; open default files
   (find-file andre--path-to-org-todo)
   (when (eq andre-type-env 'work-mac)
-    (find-file "~/Dropbox/org/tech.org")))
+    (find-file "~/Dropbox/nu/org/tech.org")))
 
 ;; clojure
 ;; (setq nrepl-sync-request-timeout 30)
