@@ -508,6 +508,9 @@ layers configuration. You are free to put any user code."
   (cond ((eq andre-type-env 'work-mac) (setq andre--path-to-org-todo andre--work-todo-path))
         ((eq andre-type-env 'home-mac) (setq andre--path-to-org-todo andre--home-todo-path)))
 
+  ;; set other folders
+  (setq andre--path-to-books-file "~/Dropbox/books/books.org")
+
   ;; nov.el (epub reader)
   (push '("\\.epub\\'" . nov-mode) auto-mode-alist)
 
@@ -861,14 +864,20 @@ details."
              "* TODO Download\n%U\nComposer: %? \nWork: \nLink: %i")
             ("i" "Ideas" entry (file+headline andre--path-to-org-todo "Ideas")
              "* %? \n%U\n Description: %i")
-            ("b" "Books" entry (file+headline "~/Dropbox/books/books.org" "Unclassified")
+            ("b" "Books" entry (file+headline andre--path-to-books-file "Unclassified")
              "* TODO %? \n%U\nAuthor: \n [[][Amazon]] %i")
             ("e" "Emacs" entry (file+headline andre--home-todo-path "Emacs tasks")
              "* TODO %?\n%U\n %i")))
 
     ;; org-agenda
     (setq org-default-notes-file andre--path-to-org-todo)
-    (setq org-agenda-files `(,andre--path-to-org-todo))
+    (setq org-agenda-files `(,andre--home-todo-path ,andre--work-todo-path))
+
+    ;; org-refile
+    (setq org-refile-targets `((,andre--home-todo-path :maxlevel . 3)
+                               (,andre--work-todo-path :maxlevel . 3)
+                               (,andre--path-to-books-file :maxlevel . 3)))
+
 
     ;; >= emacs 25
     (setq search-default-mode #'char-fold-to-regexp)
