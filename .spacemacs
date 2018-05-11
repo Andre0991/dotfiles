@@ -912,6 +912,10 @@ details."
     ;; org agenda
     (setq org-agenda-span 'month)
 
+    (setq org-agenda-custom-commands '(("w" "Work tasks" ((tags-todo "work")
+                                                          (org-agenda-prefix-format "$l%t%s")))
+                                       ("h" "Home tasks" tags-todo "home")))
+
     ;; Functions
     ;; Insert image from Screenshot's folder to org-mode buffer
     ;; Thanks to finster from #emacs on freenode for providing that code. I added the insertion and newline.
@@ -1141,7 +1145,7 @@ This function is called at the very end of Spacemacs initialization."
      (360 . "#DC8CC3"))))
  '(vc-annotate-very-old-color "#DC8CC3"))
 (custom-set-faces)
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+;; custom-set-faces was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
