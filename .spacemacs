@@ -578,13 +578,6 @@ layers configuration. You are free to put any user code."
   (fset 'andre/org-babel-indent-and-quit
         (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([escape 32 109 39 103 103 86 71 61 M-return 39 f3 105 backspace escape 106 106 106 106 106 106 106 111 return escape] 1 "%d")) arg)))
 
-  ;; insert question
-  (fset 'insert-question-org-mode
-        [escape ?\[ ?\[ ?a ?Q ?u ?e ?s ?t ?i ?o ?n ?\[ ?a escape ?> ?A ?A ?n ?s ?w ?e ?r escape ?k ?b])
-
-  (evil-set-register ?n
-                     [escape ?\[ ?\[ ?a ?Q ?u ?e ?s ?t ?i ?o ?n ?\[ ?a escape ?> ?A ?A ?n ?s ?w ?e ?r escape ?k ?b])
-
   (evil-set-register ?p "`[v`]\361")
 
   ;; Common Lisp
@@ -613,6 +606,9 @@ layers configuration. You are free to put any user code."
     ;; other
     "ogp" 'andre/add-commit-push
     "ogc" 'org-clock-goto)
+
+  ;; insert mode keybinding
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
 
   ;; Helm
   ;; TODO: won't work
