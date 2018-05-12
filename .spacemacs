@@ -527,6 +527,32 @@ layers configuration. You are free to put any user code."
             (re-search-forward "-" (point-max) "NOERROR")
           (replace-match "_" "FIXEDCASE" "LITERAL")))))
 
+  ;; "he said \"hello world\"\" => 'he said "hello world"'
+  ;; 'he said "hello world"' => "he said \"hello world\"\"
+  (defun andre/swap-literal-quote (@begin @end)
+    "Transform string in region from quoted to literal or vice-versa. Region must include the enclosing quotes."
+    (interactive "r")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region @begin @end)
+        (goto-char (point-min))
+        (let* ((delete-active-region nil)
+               (str-is-literal (char-equal ?' (following-char)))
+               (new-delimiter-quote (if str-is-literal "\"" "'"))
+               (quote-regex "\"")
+               (escaped-quote-regex "\\\\\"")
+               (quote-to-be-replaced-regex (if str-is-literal quote-regex escaped-quote-regex))
+               (new-quote-regex (if str-is-literal escaped-quote-regex quote-regex)))
+          (message new-delimiter-quote)
+          (delete-forward-char 1)
+          (insert new-delimiter-quote)
+          (while
+              (re-search-forward quote-to-be-replaced-regex (point-max) "NOERROR")
+            (replace-match new-quote-regex))
+          (goto-char (point-max))
+          (delete-backward-char 1)
+          (insert new-delimiter-quote)))))
+
   (defun andre//read-lines (filePath)
     "Return a list of lines of a file at filePath."
     (with-temp-buffer (insert-file-contents filePath) (split-string (buffer-string) "\n" t)))
