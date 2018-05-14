@@ -227,7 +227,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -1006,7 +1006,11 @@ details."
   (atomic-chrome-start-server)
 
   (when (file-exists-p andre--workspaces-path)
-    (load-file andre--workspaces-path)))
+    (load-file andre--workspaces-path))
+
+  ;; nu
+  (add-to-load-path-if-exists "~/dev/nu/nudev/ides/emacs/")
+  (require 'nu))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
