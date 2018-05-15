@@ -100,6 +100,7 @@ This function should only modify configuration layer settings."
                                       worf
                                       beacon
                                       google-this
+                                      ix
                                       ;; org-mode
                                       org-alert
                                       org-cliplink
@@ -1007,6 +1008,9 @@ details."
 
   (when (file-exists-p andre--workspaces-path)
     (load-file andre--workspaces-path))
+
+  ;; ix (pastebin like service for sharing snippets of code)
+  (defalias 'andre/pastebin-share-snippet 'ix)
 
   ;; nu
   (add-to-load-path-if-exists "~/dev/nu/nudev/ides/emacs/")
