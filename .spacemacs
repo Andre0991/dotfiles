@@ -53,7 +53,7 @@ This function should only modify configuration layer settings."
      org
      ;; parinfer
      python
-     semantic
+     ;; semantic
      shell-scripts
      scala
      spacemacs-layouts
@@ -68,12 +68,12 @@ This function should only modify configuration layer settings."
      (c-c++ :variables
             c-c++-enable-clang-support t)
      (auto-completion :variables
-                      auto-completion-private-snippets-directory "~/Dropbox/backup/emacs/yasnippet-snippets/"
-                      auto-completion-return-key-behavior nil
-                      auto-completion-tab-key-behavior 'complete
-                      auto-completion-enable-help-tooltip nil
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t
+                      ;; auto-completion-private-snippets-directory "~/Dropbox/backup/emacs/yasnippet-snippets/"
+                      ;; auto-completion-return-key-behavior nil
+                      ;; auto-completion-tab-key-behavior 'complete
+                      ;; auto-completion-enable-help-tooltip nil
+                      ;; auto-completion-enable-sort-by-usage t
+                      ;; auto-completion-enable-snippets-in-popup t
                       :disabled-for latex)
      (spell-checking :variables
                      spell-checking-enable-by-default nil
@@ -185,7 +185,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
 
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
@@ -221,8 +221,6 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(leuven
-                         org-beautify
-                         spacemacs-light
                          gruvbox)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -522,6 +520,10 @@ layers configuration. You are free to put any user code."
   (beacon-mode 1)
   (setq beacon-color 0.3)
 
+  ;; Editing styles
+  (define-key evil-hybrid-state-map (kbd "C-w") 'evil-delete-backward-word)
+
+
   ;; My functions
   ;; modified from http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html
   (defun andre/dash-to-underscore-region (@begin @end)
@@ -627,9 +629,7 @@ layers configuration. You are free to put any user code."
 
   ;; lispy again
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  (eval-after-load "lispy"
-    `(progn
-       (spacemacs/toggle-hybrid-mode-on)))
+  (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
 
   ;; keybindings
   (spacemacs/set-leader-keys "w o" 'andre/switch-to-the-window-that-displays-the-most-recently-selected-buffer)
@@ -840,6 +840,11 @@ layers configuration. You are free to put any user code."
     (setq org-habit-graph-column 55)
     (setq org-habit-show-all-today t) ;; show completed tasks too
 
+    ;; export only subtree
+    (defun andre/org-export-subtree-to-markdown-github ()
+      (interactive)
+      (org-md-export-to-markdown nil t nil))
+
     ;; save the clock history across Emacs sessions
     (setq org-clock-persist 'history)
     (org-clock-persistence-insinuate)
@@ -991,6 +996,31 @@ details."
   ;; see https://github.com/syl20bnr/spacemacs/issues/5875
   ;; (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
   ;; (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
+
+  ;; cider
+  ;; workaround for https://github.com/abo-abo/lispy/issues/418
+  ;; (spacemacs/add-to-hook
+  ;;  'cider-repl-mode-hook
+  ;;  '((lambda ()
+  ;;     (load-file "/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj"))))
+
+
+  ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
+  ;; Prevent '/' (lispy-splice) from being overriden
+  (defun raise-minor-mode (mode)
+    "Make MODE the first on `minor-mode-map-alist'."
+    (let ((x (assq mode minor-mode-map-alist)))
+      (when x
+        (setq minor-mode-map-alist
+              (cons x (delq mode minor-mode-map-alist))))))
+
+  (defun andre/raise-lispy-minor-mode ()
+      (raise-minor-mode 'lispy-mode))
+
+  (spacemacs/add-to-hook
+   'clojure-mode-hook
+   '(andre/raise-lispy-minor-mode))
+
 
   ;; org-mode rich pasting (OSX only)
   ;; https://xiangji.me/2015/07/13/a-few-of-my-org-mode-customizations/
