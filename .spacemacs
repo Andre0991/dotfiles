@@ -69,11 +69,11 @@ This function should only modify configuration layer settings."
             c-c++-enable-clang-support t)
      (auto-completion :variables
                       ;; auto-completion-private-snippets-directory "~/Dropbox/backup/emacs/yasnippet-snippets/"
-                      ;; auto-completion-return-key-behavior nil
-                      ;; auto-completion-tab-key-behavior 'complete
-                      ;; auto-completion-enable-help-tooltip nil
-                      ;; auto-completion-enable-sort-by-usage t
-                      ;; auto-completion-enable-snippets-in-popup t
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-enable-help-tooltip nil
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup nil
                       :disabled-for latex)
      (spell-checking :variables
                      spell-checking-enable-by-default nil
@@ -220,8 +220,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
-                         gruvbox)
+   dotspacemacs-themes '(gruvbox
+                         leuven)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
@@ -248,7 +248,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key nil
+   dotspacemacs-major-mode-leader-key ","
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -589,13 +589,6 @@ layers configuration. You are free to put any user code."
     (when fit-page-p (pdf-view-set-slice-from-bounding-box))
     (ignore-errors
       (bookmark-jump (buffer-name))))
-
-  (defun andre/add-commit-push (commit-message)
-    "Add the current file, ask for commit message and push to origin/master."
-    (interactive "sInsert the commit message: ")
-    (shell-command (concat "git add " (buffer-file-name)))
-    (shell-command (concat "git commit -m '" commit-message "'"))
-    (shell-command "git push -u origin master"))
 
   ;; from http://stackoverflow.com/questions/7937395/select-the-previously-selected-window-in-emacs (user Anders Waldenborg)
   (defun andre/switch-to-the-window-that-displays-the-most-recently-selected-buffer ()
@@ -1004,6 +997,14 @@ details."
   ;;  '((lambda ()
   ;;     (load-file "/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj"))))
 
+  ;; Fuzzy completion
+  ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+
+  (defun andre-lispy-gambiarra ()
+    (interactive)
+    (insert "(load-file \"/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj\")"))
 
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
@@ -1015,12 +1016,28 @@ details."
               (cons x (delq mode minor-mode-map-alist))))))
 
   (defun andre/raise-lispy-minor-mode ()
-      (raise-minor-mode 'lispy-mode))
+    (raise-minor-mode 'lispy-mode))
 
   (spacemacs/add-to-hook
    'clojure-mode-hook
    '(andre/raise-lispy-minor-mode))
 
+  ;; lispy keybindings
+  (defun andre/lispy-backward-and-go-to-insert-mode ()
+    (interactive)
+    (lispy-backward 0)
+    (evil-insert 0))
+  (defun andre/lispy-forward-and-go-to-insert-mode ()
+    (interactive)
+    (lispy-forward 1)
+    (evil-insert 0))
+
+  ;; (eval-after-load "lispy"
+  ;;   '(define-key lispy-mode-map (kbd "g") 'imenu))
+
+  (evil-define-key 'normal lispy-mode-map
+    (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
+    (kbd "]") 'andre/lispy-forward-and-go-to-insert-mode)
 
   ;; org-mode rich pasting (OSX only)
   ;; https://xiangji.me/2015/07/13/a-few-of-my-org-mode-customizations/
