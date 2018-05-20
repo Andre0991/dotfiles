@@ -1031,9 +1031,18 @@ details."
     (interactive)
     (lispy-forward 1)
     (evil-insert 0))
+  ;; 'g' requires tag setup, so let's just use imenu instead
+  (defun andre/lispy-imenu-fallback ()
+    (interactive)
+    (call-interactively 'counsel-imenu)
+    ;; (if (eql major-mode 'clojure-mode)
+    ;;     (call-interactively 'imenu)
+    ;;   (lispy-goto-mode))
+    )
 
-  ;; (eval-after-load "lispy"
-  ;;   '(define-key lispy-mode-map (kbd "g") 'imenu))
+  (eval-after-load "lispy"
+    `(progn
+       (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)))
 
   (evil-define-key 'normal lispy-mode-map
     (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
