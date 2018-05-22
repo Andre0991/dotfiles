@@ -613,14 +613,6 @@ layers configuration. You are free to put any user code."
   (setq inferior-lisp-program "/usr/local/bin/clisp")
 
   ;; lispy
-  ;; (define-key evil-hybrid-state-map (kbd "M-n") 'lispy-mark-symbol)
-  ;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  ;; (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))
-  ;; (require 'evil-lispy)
-  ;; (add-hook 'emacs-lisp-mode-hook #'evil-lispy-mode)
-  ;; (add-hook 'lisp-mode-hook #'evil-lispy-mode)
-
-  ;; lispy again
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
 
@@ -990,12 +982,7 @@ details."
   ;; (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
   ;; (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
 
-  ;; cider
-  ;; workaround for https://github.com/abo-abo/lispy/issues/418
-  ;; (spacemacs/add-to-hook
-  ;;  'cider-repl-mode-hook
-  ;;  '((lambda ()
-  ;;     (load-file "/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj"))))
+  ;; Cider
 
   ;; Fuzzy completion
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
@@ -1022,6 +1009,9 @@ details."
    'clojure-mode-hook
    '(andre/raise-lispy-minor-mode))
 
+  ;; default was `find-file-in-project` (https://github.com/technomancy/find-file-in-project)
+  (setq lispy-visit-method 'projectile-find-file)
+
   ;; lispy keybindings
   (defun andre/lispy-backward-and-go-to-insert-mode ()
     (interactive)
@@ -1031,7 +1021,7 @@ details."
     (interactive)
     (lispy-forward 1)
     (evil-insert 0))
-  ;; 'g' requires tag setup, so let's just use imenu instead
+  ;; 'g' requires tags setup, so let's just use imenu instead
   (defun andre/lispy-imenu-fallback ()
     (interactive)
     (call-interactively 'counsel-imenu)
@@ -1101,7 +1091,11 @@ details."
   ;; nu
   (when (file-directory-p "~/dev/nu/nudev/ides/emacs/")
     (add-to-load-path "~/dev/nu/nudev/ides/emacs/")
-    (require 'nu)))
+    (require 'nu))
+
+  ;; dired keybinding
+  (evil-define-key 'normal dired-mode-map
+    (kbd "[") 'dired-up-directory))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
