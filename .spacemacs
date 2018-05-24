@@ -1095,6 +1095,7 @@ details."
 
   ;; dired keybinding
   (evil-define-key 'normal dired-mode-map
+    (kbd "J") 'swiper
     (kbd "[") 'dired-up-directory))
 
 ;; Do not write anything past this comment. This is where Emacs will
