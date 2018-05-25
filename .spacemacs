@@ -103,6 +103,7 @@ This function should only modify configuration layer settings."
                                       ix
                                       lispy
                                       ;; org-mode
+                                      org-beautify-theme
                                       org-alert
                                       org-cliplink
                                       org-gcal ox-epub
@@ -975,7 +976,15 @@ details."
           (rename-file infile outfile)
           (insert (concat (concat "[[./media/" (file-name-nondirectory outfile)) "]]")))
         (newline)
-        (newline))))
+        (newline)))
+
+    ;; org-beautify
+    (setq org-beautify-theme-use-box-hack nil)
+    ;; (load-theme spacemacs--cur-theme)
+    ;; (load-theme 'org-beautify)
+    )
+  ;; (add-hook 'spacemacs-post-theme-change-hook
+  ;;           '(lambda () (load-theme 'org-beautify)))
 
   ;; those keybindings don't work unless they are defined here - not sure why
   ;; see https://github.com/syl20bnr/spacemacs/issues/5875
@@ -989,9 +998,18 @@ details."
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
 
-  (defun andre-lispy-gambiarra ()
-    (interactive)
-    (insert "(load-file \"/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj\")"))
+  (defun andre-cider-hook ()
+    ;; TODO: remove when https://github.com/abo-abo/lispy/issues/418 is fixed
+    (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+    ;; prevent tests from evaluating when using `cider-refresh`
+    ;; TODO: do this only for appropriate projects
+    (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
+    (spacemacs/split-window-horizontally-and-switch))
+
+  (add-hook 'cider-connected-hook 'andre-cider-hook)
+
+  ;; (add-function :after (symbol-function 'lispy-flow) '(lambda (arg)
+  ;;                                                       (evil-insert 0)))
 
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
@@ -1096,7 +1114,9 @@ details."
   ;; dired keybinding
   (evil-define-key 'normal dired-mode-map
     (kbd "J") 'swiper
-    (kbd "[") 'dired-up-directory))
+    (kbd "[") 'dired-up-directory)
+
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
