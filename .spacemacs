@@ -104,7 +104,7 @@ This function should only modify configuration layer settings."
                                       lispy
                                       ;; org-mode
                                       org-beautify-theme
-                                      org-alert
+                                      ;; org-alert
                                       org-cliplink
                                       org-gcal ox-epub
                                       org-pdfview
@@ -1002,10 +1002,21 @@ details."
   (defun andre-cider-hook ()
     ;; TODO: remove when https://github.com/abo-abo/lispy/issues/418 is fixed
     (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+    (persp-remove-buffer (current-buffer)
+                         (persp-get-by-name
+                          (spacemacs//current-layout-name)))
     ;; prevent tests from evaluating when using `cider-refresh`
     ;; TODO: do this only for appropriate projects
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
-    (spacemacs/split-window-horizontally-and-switch))
+    (split-window-vertically)
+    (cider-switch-to-repl-buffer)
+    (persp-add-buffer (current-buffer)
+                      (persp-get-by-name
+                       (spacemacs//current-layout-name)))
+    (spacemacs/shrink-window 10)
+    (cider-switch-to-last-clojure-buffer)
+    (split-window-horizontally)
+    (cider-refresh))
 
   (add-hook 'cider-connected-hook 'andre-cider-hook)
 
@@ -1115,9 +1126,7 @@ details."
   ;; dired keybinding
   (evil-define-key 'normal dired-mode-map
     (kbd "J") 'swiper
-    (kbd "[") 'dired-up-directory)
-
-  )
+    (kbd "[") 'dired-up-directory))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
