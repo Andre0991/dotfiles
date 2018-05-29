@@ -221,8 +221,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gruvbox
-                         sanityinc-solarized-light)
+   dotspacemacs-themes '(sanityinc-solarized-light
+                         gruvbox)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
@@ -995,6 +995,7 @@ details."
   ;; (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
   ;; (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
 
+
   ;; Cider
 
   ;; Fuzzy completion
@@ -1002,6 +1003,9 @@ details."
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-connected-hook 'andre-cider-hook)
+
+  ;; stop asking "Active processes exist; kill them and exit anyway"
+  (setq confirm-kill-processes nil)
 
   (defun andre-cider-hook ()
     ;; TODO: remove this when https://github.com/abo-abo/lispy/issues/418 is fixed
@@ -1011,14 +1015,11 @@ details."
                           (spacemacs//current-layout-name)))
     ;; prevent tests from evaluating when using `cider-refresh`
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
-    (split-window-vertically)
+    (split-window-horizontally)
     (cider-switch-to-repl-buffer)
     (persp-add-buffer (current-buffer)
                       (persp-get-by-name
                        (spacemacs//current-layout-name)))
-    (spacemacs/shrink-window 10)
-    (cider-switch-to-last-clojure-buffer)
-    (split-window-horizontally)
     (cider-refresh))
 
   ;; (add-function :after (symbol-function 'lispy-flow) '(lambda (arg)
