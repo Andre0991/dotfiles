@@ -1069,7 +1069,7 @@ details."
   (eval-after-load "lispy"
     `(progn
        (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
-       (lispy-define-key lispy-mode-map "v" evil-scroll-line-to-center)))
+       (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)))
 
   (evil-define-key 'normal lispy-mode-map
     (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
