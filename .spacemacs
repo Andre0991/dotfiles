@@ -1046,8 +1046,12 @@ details."
    '(andre/raise-lispy-minor-mode))
 
   ;; default was `find-file-in-project` (https://github.com/technomancy/find-file-in-project)
-  (setq lispy-visit-method 'projectile-find-file)
+  (defun andre/display-ansi-colours ()
+    (interactive)
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
 
+  (setq lispy-visit-method 'projectile-find-file)
   ;; lispy keybindings
   (defun andre/lispy-backward-and-go-to-insert-mode ()
     (interactive)
@@ -1058,6 +1062,7 @@ details."
     (lispy-forward 1)
     (evil-insert 0))
   ;; 'g' requires tags setup, so let's just use imenu instead
+
   (defun andre/lispy-imenu-fallback ()
     (interactive)
     (call-interactively 'counsel-imenu)
@@ -1066,20 +1071,30 @@ details."
     ;;   (lispy-goto-mode))
     )
 
+  ;; Midje messages use ansi colours
+  (defun andre/lispy-coloured-message (orig-fun &rest args)
+    (if (or (> (length (car args)) 4000) (> (cl-count ?\n (car args)) (or 14 (* (window-height (frame-root-window)) max-mini-window-height))))
+        ;; using ansi-color-apply won't work for all colours
+        (progn
+          (apply orig-fun args)
+          (with-current-buffer (pop-to-buffer "*lispy-message*")
+            (andre/display-ansi-colours)))
+      (progn
+          (message "it's small :(")
+          (apply orig-fun (list (ansi-color-apply (car args)))))))
+
   (eval-after-load "lispy"
-    `(progn
-       (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
-       (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)))
+    `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
+            (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
+            ;; (lispy-define-key lispy-mode-map ", f" 'cider-eval-defun-at-point)
+            (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)))
 
   (evil-define-key 'normal lispy-mode-map
     (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
     (kbd "]") 'andre/lispy-forward-and-go-to-insert-mode)
 
   ;; from https://stackoverflow.com/questions/23378271/how-do-i-display-ansi-color-codes-in-emacs-for-any-mode
-  (defun andre/display-ansi-colours ()
-    (interactive)
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max))))
+
 
   ;; org-mode rich pasting (OSX only)
   ;; https://xiangji.me/2015/07/13/a-few-of-my-org-mode-customizations/
