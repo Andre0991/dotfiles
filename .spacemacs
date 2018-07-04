@@ -1029,6 +1029,20 @@ details."
   ;; (add-function :after (symbol-function 'lispy-flow) '(lambda (arg)
   ;;                                                       (evil-insert 0)))
 
+  ;; make let bindings global (HACKISH)
+  (setq andre--catpure-let-binding "(defmacro my-locals [] (let [my-bindings (seq (into {} (map (juxt (comp keyword name) identity)) (keys &env)))] (for [[my-name value] my-bindings] (list 'def (symbol (name my-name)) value))))")
+  (defun andre--but-last (str)
+    (substring str 0 (- (length str) 1)))
+
+  (defun andre-make-let-bindings-global ()
+    (interactive)
+    (let* ((b-str (lispy--string-dwim))
+           ;; (let [a b] foo) -> (let [a b] foo (my-locals))
+           (form-with-macro (concat (andre--but-last b-str) " (my-locals))")))
+      (message form-with-macro)
+      (cider-nrepl-sync-request:eval andre--catpure-let-binding)
+      (cider-nrepl-sync-request:eval form-with-macro)))
+
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
   (defun raise-minor-mode (mode)
