@@ -1,4 +1,7 @@
+;; -*- lexical-binding: t -*-
 ;; -*- mode: emacs-lisp -*-
+
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -1170,23 +1173,23 @@ details."
     (kbd "[") 'dired-up-directory)
 
   ;; ivy
-  ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
-  ;; TODO: terminar
-  (defun andre/counsel-rg-ignore-tests ()
+  ;; requires lexical binding (set at the top of the file)
+  (defun andre/counsel-rg-src ()
     (interactive)
     (let ((search-str (ivy--input)))
-      ;; works
-      (message (concat "input: " search-str))
-      ;; Error: (void-variable search-str)
+      ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
       (ivy-quit-and-run
         (counsel-rg search-str (projectile-project-root) "--iglob '!test*' --iglob '!postman*'"))))
 
-  (defun andre/counsel-rg-ignore-test-alternative ()
+  (defun andre/counsel-rg-src-and-tests ()
     (interactive)
-    (setq ivy--all-candidates
-          (ivy--filter ivy-text ivy--all-candidates)))
+    (let ((search-str (ivy--input)))
+      ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
+      (ivy-quit-and-run
+        (counsel-rg search-str (projectile-project-root)))))
 
-  (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-ignore-tests)
+  (define-key ivy-minibuffer-map (kbd "C-s") #'andre/counsel-rg-src)
+  (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-src-and-tests)
 
   ;; projectile
   (with-eval-after-load 'projectile
