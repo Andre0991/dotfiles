@@ -1087,6 +1087,7 @@ details."
 
   ;; Midje messages use ansi colours
   (defun andre/lispy-coloured-message (orig-fun &rest args)
+    ;; TODO: check clojure mode!
     (if (or (> (length (car args)) 4000) (> (cl-count ?\n (car args)) (or 14 (* (window-height (frame-root-window)) max-mini-window-height))))
         ;; using ansi-color-apply won't work for all colours
         (progn
@@ -1094,8 +1095,7 @@ details."
           (with-current-buffer (pop-to-buffer "*lispy-message*")
             (andre/display-ansi-colours)))
       (progn
-          (message "it's small :(")
-          (apply orig-fun (list (ansi-color-apply (car args)))))))
+        (apply orig-fun (list (ansi-color-apply (car args)))))))
 
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
@@ -1167,15 +1167,33 @@ details."
 
   ;; dired keybinding
   (evil-define-key 'normal dired-mode-map
-    (kbd "J") 'swiper
     (kbd "[") 'dired-up-directory)
+
+  ;; ivy
+  ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
+  ;; TODO: terminar
+  (defun andre/counsel-rg-ignore-tests ()
+    (interactive)
+    (let ((search-str (ivy--input)))
+      ;; works
+      (message (concat "input: " search-str))
+      ;; Error: (void-variable search-str)
+      (ivy-quit-and-run
+        (counsel-rg search-str (projectile-project-root) "--iglob '!test*' --iglob '!postman*'"))))
+
+  (defun andre/counsel-rg-ignore-test-alternative ()
+    (interactive)
+    (setq ivy--all-candidates
+          (ivy--filter ivy-text ivy--all-candidates)))
+
+  (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-ignore-tests)
 
   ;; projectile
   (with-eval-after-load 'projectile
     (projectile-register-project-type 'lein-test '("project.clj")
                                       :compile "lein compile"
                                       :test "lein nu-test :autotest"
-                                      :run "npm start"
+                                      :run "lein run"
                                       :test-suffix "_test")))
 
 ;; Do not write anything past this comment. This is where Emacs will
