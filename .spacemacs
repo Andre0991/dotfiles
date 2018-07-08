@@ -1,4 +1,7 @@
+;; -*- lexical-binding: t -*-
 ;; -*- mode: emacs-lisp -*-
+
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -48,12 +51,12 @@ This function should only modify configuration layer settings."
      html
      ivy
      javascript
-     latex
+     ;; latex
      markdown
      org
-     ;; parinfer
-     python
-     ;; semantic
+     osx
+     plantuml
+     ;; python
      shell-scripts
      scala
      spacemacs-layouts
@@ -103,7 +106,8 @@ This function should only modify configuration layer settings."
                                       ix
                                       lispy
                                       ;; org-mode
-                                      org-alert
+                                      org-beautify-theme
+                                      ;; org-alert
                                       org-cliplink
                                       org-gcal ox-epub
                                       org-pdfview
@@ -125,14 +129,14 @@ This function should only modify configuration layer settings."
    ;; (default is `used-only')
    dotspacemacs-install-packages 'used-only)
 
-
   ;; OS-specific layers
-  (when (spacemacs/system-is-mswindows)
-    (append dotspacemacs-configuration-layers
-            '(autohotkey)))
-  (when (spacemacs/system-is-mac)
-    (append dotspacemacs-configuration-layers
-            '(osx))))
+  ;; (when (spacemacs/system-is-mswindows)
+  ;;   (append dotspacemacs-configuration-layers
+  ;;           '(autohotkey)))
+  ;; (when (spacemacs/system-is-mac)
+  ;;   (append dotspacemacs-configuration-layers
+  ;;           '(osx)))
+  )
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -220,15 +224,15 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gruvbox
-                         sanityinc-solarized-light)
+   dotspacemacs-themes '(sanityinc-solarized-light
+                         gruvbox)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -508,7 +512,7 @@ layers configuration. You are free to put any user code."
         ((eq andre-type-env 'home-mac) (setq andre--path-to-org-todo andre--home-todo-path)))
 
   ;; set other folders
-  (setq andre--path-to-books-file "~/Dropbox/books/books.org")
+  (setq andre--path-to-books-file "~/Dropbox/org/books.org")
 
   ;; nov.el (epub reader)
   (push '("\\.epub\\'" . nov-mode) auto-mode-alist)
@@ -724,30 +728,6 @@ layers configuration. You are free to put any user code."
   ;; Yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
-  ;; Org keybindings
-  (evil-define-key 'normal org-mode-map
-    (kbd "[") 'andre/go-to-worf-in-previous-heading
-    (kbd "]") 'andre/go-to-worf-in-next-heading
-    (kbd "M-[") 'andre-brackets)
-
-  (evil-define-key 'insert org-mode-map
-    (kbd "M-[") 'andre-brackets)
-
-  (defun andre/go-to-worf-in-previous-heading ()
-    (interactive)
-    (worf-backward)
-    (evil-insert 0))
-
-  (defun andre/go-to-worf-in-next-heading ()
-    (interactive)
-    (worf-forward)
-    (evil-insert 0))
-
-  ;; from https://github.com/abo-abo/worf/issues/31
-  (defun andre-brackets ()
-    (interactive)
-    (insert "[]")
-    (backward-char))
 
   ;; Aux function
   (defun andre/indent-buffer ()
@@ -764,6 +744,23 @@ layers configuration. You are free to put any user code."
     (org-edit-src-exit))
 
   (with-eval-after-load 'org
+
+    ;; Org keybindings
+    (evil-define-key 'normal org-mode-map
+      (kbd "[") 'andre/go-to-worf-in-previous-heading
+      (kbd "]") 'andre/go-to-worf-in-next-heading)
+
+
+    (defun andre/go-to-worf-in-previous-heading ()
+      (interactive)
+      (worf-backward)
+      (evil-insert 0))
+
+    (defun andre/go-to-worf-in-next-heading ()
+      (interactive)
+      (worf-forward)
+      (evil-insert 0))
+
     ;; removes markers such as * in *bold*, / in /italic/ etc
     (setq org-hide-emphasis-markers t)
 
@@ -775,9 +772,10 @@ layers configuration. You are free to put any user code."
     (setq org-variable-pitch-fixed-font "Source Code Pro")
 
     ;; org-alert
-    (require 'org-alert)
-    (setq alert-default-style 'osx-notifier)
-    (org-alert-enable)
+    ;; bug is enlarging window (??)
+    ;; (require 'org-alert)
+    ;; (setq alert-default-style 'osx-notifier)
+    ;; (org-alert-enable)
 
 
     ;; org-mode leader key keybindings
@@ -882,7 +880,7 @@ details."
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((emacs-lisp . t)
-       (sh . t)))
+       (shell . t)))
 
     (setq org-confirm-babel-evaluate nil)
 
@@ -919,7 +917,7 @@ details."
              "* %? \n%U\n Description: %i")
             ("b" "Books" entry (file+headline andre--path-to-books-file "Unclassified")
              "* TODO %? \n%U\nAuthor: \n [[][Amazon]] %i")
-            ("e" "Emacs" entry (file+headline andre--home-todo-path "Emacs tasks")
+            ("e" "Emacs" entry (file+headline "~/Dropbox/org/emacs.org" "Emacs tasks")
              "* TODO %?\n%U\n %i")))
 
     ;; org-agenda
@@ -975,12 +973,31 @@ details."
           (rename-file infile outfile)
           (insert (concat (concat "[[./media/" (file-name-nondirectory outfile)) "]]")))
         (newline)
-        (newline))))
+        (newline)))
+
+    ;; org-beautify
+    (setq org-beautify-theme-use-box-hack nil)
+    ;; (load-theme spacemacs--cur-theme)
+    ;; (load-theme 'org-beautify)
+
+    ;; from https://github.com/abo-abo/worf/issues/31
+    (defun andre-brackets ()
+      (interactive)
+      (message "hi people")
+      (insert "[]")
+      (backward-char))
+
+    (evil-define-key 'insert evil-org-mode-map
+      (kbd "}") 'andre-brackets))
+
+  ;; (add-hook 'spacemacs-post-theme-change-hook
+  ;;           '(lambda () (load-theme 'org-beautify)))
 
   ;; those keybindings don't work unless they are defined here - not sure why
   ;; see https://github.com/syl20bnr/spacemacs/issues/5875
   ;; (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
   ;; (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
+
 
   ;; Cider
 
@@ -988,10 +1005,46 @@ details."
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-connected-hook 'andre-cider-hook)
 
-  (defun andre-lispy-gambiarra ()
+  ;; stop asking "Active processes exist; kill them and exit anyway"
+  (setq confirm-kill-processes nil)
+
+  (defun andre-cider-hook ()
+    ;; TODO: remove this when https://github.com/abo-abo/lispy/issues/418 is fixed
+    (let* ((project-name (projectile-project-name))
+           (cider-repl-name (concat "*cider-repl " project-name "*")))
+      ;; (cider-nrepl-sync-request:eval "(load-file \"/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj\")")
+      (switch-to-buffer cider-repl-name)
+      (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+      (switch-to-buffer cider-repl-name)
+      ;; (persp-remove-buffer (current-buffer)
+      ;;                      (persp-get-by-name
+      ;;                       (spacemacs//current-layout-name)))
+      ;; prevent tests from evaluating when using `cider-refresh`
+      (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
+      ;; (cider-switch-to-repl-buffer)
+      (persp-add-buffer (current-buffer)
+                        (persp-get-by-name
+                         (spacemacs//current-layout-name)))
+      (cider-refresh)))
+
+  ;; (add-function :after (symbol-function 'lispy-flow) '(lambda (arg)
+  ;;                                                       (evil-insert 0)))
+
+  ;; make let bindings global (HACKISH)
+  (setq andre--catpure-let-binding "(defmacro my-locals [] (let [my-bindings (seq (into {} (map (juxt (comp keyword name) identity)) (keys &env)))] (for [[my-name value] my-bindings] (list 'def (symbol (name my-name)) value))))")
+  (defun andre--but-last (str)
+    (substring str 0 (- (length str) 1)))
+
+  (defun andre-make-let-bindings-global ()
     (interactive)
-    (insert "(load-file \"/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj\")"))
+    (let* ((b-str (lispy--string-dwim))
+           ;; (let [a b] foo) -> (let [a b] foo (my-locals))
+           (form-with-macro (concat (andre--but-last b-str) " (my-locals))")))
+      (message form-with-macro)
+      (cider-nrepl-sync-request:eval andre--catpure-let-binding)
+      (cider-nrepl-sync-request:eval form-with-macro)))
 
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
@@ -1010,8 +1063,12 @@ details."
    '(andre/raise-lispy-minor-mode))
 
   ;; default was `find-file-in-project` (https://github.com/technomancy/find-file-in-project)
-  (setq lispy-visit-method 'projectile-find-file)
+  (defun andre/display-ansi-colours ()
+    (interactive)
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
 
+  (setq lispy-visit-method 'projectile-find-file)
   ;; lispy keybindings
   (defun andre/lispy-backward-and-go-to-insert-mode ()
     (interactive)
@@ -1022,6 +1079,7 @@ details."
     (lispy-forward 1)
     (evil-insert 0))
   ;; 'g' requires tags setup, so let's just use imenu instead
+
   (defun andre/lispy-imenu-fallback ()
     (interactive)
     (call-interactively 'counsel-imenu)
@@ -1030,13 +1088,30 @@ details."
     ;;   (lispy-goto-mode))
     )
 
+  ;; Midje messages use ansi colours
+  (defun andre/lispy-coloured-message (orig-fun &rest args)
+    ;; TODO: check clojure mode!
+    (if (or (> (length (car args)) 4000) (> (cl-count ?\n (car args)) (or 14 (* (window-height (frame-root-window)) max-mini-window-height))))
+        ;; using ansi-color-apply won't work for all colours
+        (progn
+          (apply orig-fun args)
+          (with-current-buffer (pop-to-buffer "*lispy-message*")
+            (andre/display-ansi-colours)))
+      (progn
+        (apply orig-fun (list (ansi-color-apply (car args)))))))
+
   (eval-after-load "lispy"
-    `(progn
-       (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)))
+    `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
+            (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
+            ;; (lispy-define-key lispy-mode-map ", f" 'cider-eval-defun-at-point)
+            (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)))
 
   (evil-define-key 'normal lispy-mode-map
     (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
     (kbd "]") 'andre/lispy-forward-and-go-to-insert-mode)
+
+  ;; from https://stackoverflow.com/questions/23378271/how-do-i-display-ansi-color-codes-in-emacs-for-any-mode
+
 
   ;; org-mode rich pasting (OSX only)
   ;; https://xiangji.me/2015/07/13/a-few-of-my-org-mode-customizations/
@@ -1095,8 +1170,34 @@ details."
 
   ;; dired keybinding
   (evil-define-key 'normal dired-mode-map
-    (kbd "J") 'swiper
-    (kbd "[") 'dired-up-directory))
+    (kbd "[") 'dired-up-directory)
+
+  ;; ivy
+  ;; requires lexical binding (set at the top of the file)
+  (defun andre/counsel-rg-src ()
+    (interactive)
+    (let ((search-str (ivy--input)))
+      ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
+      (ivy-quit-and-run
+        (counsel-rg search-str (projectile-project-root) "--iglob '!test*' --iglob '!postman*'"))))
+
+  (defun andre/counsel-rg-src-and-tests ()
+    (interactive)
+    (let ((search-str (ivy--input)))
+      ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
+      (ivy-quit-and-run
+        (counsel-rg search-str (projectile-project-root)))))
+
+  (define-key ivy-minibuffer-map (kbd "C-s") #'andre/counsel-rg-src)
+  (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-src-and-tests)
+
+  ;; projectile
+  (with-eval-after-load 'projectile
+    (projectile-register-project-type 'lein-test '("project.clj")
+                                      :compile "lein compile"
+                                      :test "lein nu-test :autotest"
+                                      :run "lein run"
+                                      :test-suffix "_test")))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -1176,7 +1277,7 @@ This function is called at the very end of Spacemacs initialization."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-drill)))
  '(package-selected-packages
    (quote
-    (auctex-latexmk yasnippet-snippets symon string-inflection spaceline-all-the-icons all-the-icons memoize sayid realgud test-simple loc-changes load-relative pippel password-generator parinfer overseer org-brain nameless ivy-xref ivy-rtags ivy-purpose window-purpose imenu-list importmagic epc ctable concurrent impatient-mode google-c-style flycheck-rtags evil-org evil-lion evil-cleverparens editorconfig counsel-css company-rtags rtags clojure-cheatsheet centered-cursor-mode browse-at-remote font-lock+ zenburn-theme zen-and-art-theme yapfify xterm-color ws-butler worf zoutline winum white-sand-theme which-key wgrep web-mode web-beautify w32-browser volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor spaceline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slime-company slime slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme restart-emacs rebecca-theme rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el paradox ox-epub ox-clip orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro org-pdfview pdf-tools tablist org-mime org-gcal alert request-deferred request deferred log4e gntp org-download org-cliplink org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme neotree naquadah-theme mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow magit-gh-pulls madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode skewer-mode live-py-mode linum-relative link-hint light-soap-theme less-css-mode ledger-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc jbeans-theme jazz-theme ivy-hydra ir-black-theme inkpot-theme indent-guide hyperbole hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation heroku-theme hemisu-theme helm-make helm helm-core hc-zenburn-theme haml-mode gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gist gh marshal logito pcache ht gh-md gandalf-theme fuzzy flyspell-popup flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck-ledger flycheck flx-ido flx flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exotica-theme exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit ghub let-alist with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree espresso-theme eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav elfeed-web simple-httpd elfeed-org org-plus-contrib elfeed-goodies ace-jump-mode noflet powerline popwin elfeed dumb-jump dracula-theme django-theme disaster diminish diff-hl define-word darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme counsel-projectile projectile counsel swiper ivy company-web web-completion-data company-tern dash-functional tern company-statistics company-c-headers company-auctex company-anaconda company common-lisp-snippets column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode cmake-mode clues-theme clojure-snippets clj-refactor hydra inflections edn multiple-cursors paredit peg clean-aindent-mode clang-format cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme bind-map bind-key badwolf-theme auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed auctex atomic-chrome websocket async apropospriate-theme anti-zenburn-theme anaconda-mode pythonic f dash s ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup)))
+    (nov meghanada kaolin-themes ivy-yasnippet evil-goggles doom-themes dotenv-mode yasnippet-snippets symon string-inflection spaceline-all-the-icons all-the-icons memoize sayid realgud test-simple loc-changes load-relative pippel password-generator parinfer overseer org-brain nameless ivy-xref ivy-rtags ivy-purpose window-purpose imenu-list importmagic epc ctable concurrent impatient-mode google-c-style flycheck-rtags evil-org evil-lion evil-cleverparens editorconfig counsel-css company-rtags rtags clojure-cheatsheet centered-cursor-mode browse-at-remote font-lock+ zenburn-theme zen-and-art-theme yapfify xterm-color ws-butler worf zoutline winum white-sand-theme which-key wgrep web-mode web-beautify w32-browser volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor spaceline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slime-company slime slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme restart-emacs rebecca-theme rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el paradox ox-epub ox-clip orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro org-pdfview pdf-tools tablist org-mime org-gcal alert request-deferred request deferred log4e gntp org-download org-cliplink org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme neotree naquadah-theme mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow magit-gh-pulls madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode skewer-mode live-py-mode linum-relative link-hint light-soap-theme less-css-mode ledger-mode json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc jbeans-theme jazz-theme ivy-hydra ir-black-theme inkpot-theme indent-guide hyperbole hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation heroku-theme hemisu-theme helm-make helm helm-core hc-zenburn-theme haml-mode gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gist gh marshal logito pcache ht gh-md gandalf-theme fuzzy flyspell-popup flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck-ledger flycheck flx-ido flx flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exotica-theme exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit ghub let-alist with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree espresso-theme eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav elfeed-web simple-httpd elfeed-org org-plus-contrib elfeed-goodies ace-jump-mode noflet powerline popwin elfeed dumb-jump dracula-theme django-theme disaster diminish diff-hl define-word darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme counsel-projectile projectile counsel swiper ivy company-web web-completion-data company-tern dash-functional tern company-statistics company-c-headers company-auctex company-anaconda company common-lisp-snippets column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode cmake-mode clues-theme clojure-snippets clj-refactor hydra inflections edn multiple-cursors paredit peg clean-aindent-mode clang-format cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme bind-map bind-key badwolf-theme auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed auctex atomic-chrome websocket async apropospriate-theme anti-zenburn-theme anaconda-mode pythonic f dash s ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup)))
  '(paradox-github-token t)
  '(send-mail-function (quote smtpmail-send-it))
  '(vc-annotate-background "#2B2B2B")
