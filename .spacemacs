@@ -1022,37 +1022,20 @@ details."
 
 
   ;; Cider
-
   ;; Fuzzy completion
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
+
+  (defun andre-cider-hook ()
+    (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+    (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
+    (cider-refresh))
+
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-  ;; (add-hook 'cider-connected-hook 'andre-cider-hook)
+  (add-hook 'cider-connected-hook 'andre-cider-hook)
 
   ;; stop asking "Active processes exist; kill them and exit anyway"
   (setq confirm-kill-processes nil)
-
-  ;; (defun andre-cider-hook ()
-  ;;   ;; TODO: remove this when https://github.com/abo-abo/lispy/issues/418 is fixed
-  ;;   (let* ((project-name (projectile-project-name))
-  ;;          (cider-repl-name (concat "*cider-repl " project-name "*")))
-  ;;     ;; (cider-nrepl-sync-request:eval "(load-file \"/Users/andreperictavares/.emacs.d/elpa/25.3/develop/lispy-20180516.826/lispy-clojure.clj\")")
-  ;;     (switch-to-buffer cider-repl-name)
-  ;;     (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
-  ;;     (switch-to-buffer cider-repl-name)
-  ;;     ;; (persp-remove-buffer (current-buffer)
-  ;;     ;;                      (persp-get-by-name
-  ;;     ;;                       (spacemacs//current-layout-name)))
-  ;;     ;; prevent tests from evaluating when using `cider-refresh`
-  ;;     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
-  ;;     ;; (cider-switch-to-repl-buffer)
-  ;;     (persp-add-buffer (current-buffer)
-  ;;                       (persp-get-by-name
-  ;;                        (spacemacs//current-layout-name)))
-  ;;     (cider-refresh)))
-
-  ;; (add-function :after (symbol-function 'lispy-flow) '(lambda (arg)
-  ;;                                                       (evil-insert 0)))
 
   ;; make let bindings global (HACKISH)
   (setq andre--catpure-let-binding "(defmacro my-locals [] (let [my-bindings (seq (into {} (map (juxt (comp keyword name) identity)) (keys &env)))] (for [[my-name value] my-bindings] (list 'def (symbol (name my-name)) value))))")
