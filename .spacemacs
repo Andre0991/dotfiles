@@ -540,9 +540,10 @@ layers configuration. You are free to put any user code."
   ;; workspaces.el path
   (setq andre--workspaces-path "~/Dropbox/backup/emacs/workspaces.el")
 
+  ;; Borks Emacs when clojure exception buffer pops up (???)
   ;; beacon
-  (beacon-mode 1)
-  (setq beacon-color 0.3)
+  ;; (beacon-mode 1)
+  ;; (setq beacon-color 0.3)
 
   ;; Editing styles
   (define-key evil-hybrid-state-map (kbd "C-w") 'evil-delete-backward-word)
