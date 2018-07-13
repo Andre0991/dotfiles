@@ -72,7 +72,7 @@ This function should only modify configuration layer settings."
      (c-c++ :variables
             c-c++-enable-clang-support t)
      (auto-completion :variables
-                      ;; auto-completion-private-snippets-directory "~/Dropbox/backup/emacs/yasnippet-snippets/"
+                      auto-completion-private-snippets-directory "~/Dropbox/backup/emacs/yasnippet-snippets/"
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
                       auto-completion-enable-help-tooltip nil
@@ -238,7 +238,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 18
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
