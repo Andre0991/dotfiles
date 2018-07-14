@@ -541,32 +541,22 @@ layers configuration. You are free to put any user code."
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
 
-  ;; todo.org folder
+  ;; set folders
   (setq andre-type-env (if (file-exists-p "~/.emacs-work") 'work-mac 'home-mac))
   (setq andre--home-todo-path "~/Dropbox/org/todo-home.org")
   (setq andre--work-todo-path "~/Dropbox/nu/org/todo-work.org")
-
-  ;; set todo file path
-  (cond ((eq andre-type-env 'work-mac) (setq andre--path-to-org-todo andre--work-todo-path))
-        ((eq andre-type-env 'home-mac) (setq andre--path-to-org-todo andre--home-todo-path)))
-
-  ;; set other folders
+  (cond ((eq andre-type-env 'work-mac)
+         (setq andre--path-to-org-todo andre--work-todo-path))
+        ((eq andre-type-env 'home-mac)
+         (setq andre--path-to-org-todo andre--home-todo-path)))
   (setq andre--path-to-books-file "~/Dropbox/org/books.org")
+  (setq andre--workspaces-path "~/Dropbox/backup/emacs/workspaces.el")
 
   ;; nov.el (epub reader)
   (push '("\\.epub\\'" . nov-mode) auto-mode-alist)
 
-  ;; workspaces.el path
-  (setq andre--workspaces-path "~/Dropbox/backup/emacs/workspaces.el")
-
-  ;; Borks Emacs when clojure exception buffer pops up (???)
-  ;; beacon
-  ;; (beacon-mode 1)
-  ;; (setq beacon-color 0.3)
-
   ;; Editing styles
   (define-key evil-hybrid-state-map (kbd "C-w") 'evil-delete-backward-word)
-
 
   ;; My functions
   ;; modified from http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html
@@ -611,12 +601,6 @@ layers configuration. You are free to put any user code."
     "Return a list of lines of a file at filePath."
     (with-temp-buffer (insert-file-contents filePath) (split-string (buffer-string) "\n" t)))
 
-  (defun andre/reader-mode ()
-    "Activates variable pitch mode and scales up the font."
-    (variable-pitch-mode 1)
-    (spacemacs/scale-up-font)
-    (spacemacs/scale-up-font))
-
   (defun andre/convert-file-name-to-my-standard-format (filename)
     "Change given string to lower case and replace , to _."
     (interactive "s")
@@ -634,85 +618,28 @@ layers configuration. You are free to put any user code."
     (ignore-errors
       (bookmark-jump (buffer-name))))
 
-  ;; from http://stackoverflow.com/questions/7937395/select-the-previously-selected-window-in-emacs (user Anders Waldenborg)
-  (defun andre/switch-to-the-window-that-displays-the-most-recently-selected-buffer ()
-    (interactive)
-    (let* ((buflist (buffer-list (selected-frame))) ; get buffer list in this frames ordered
-           (buflist (delq (current-buffer) buflist)) ; if there are multiple windows showing same buffer.
-           (winlist (mapcar 'get-buffer-window buflist)) ; buf->win
-           (winlist (delq nil winlist)) ; remove non displayed windows
-           (winlist (delq (selected-window) winlist))) ; remove current-window
-      (if winlist
-          (select-window (car winlist))
-        (message "Couldn't find a suitable window to switch to"))))
-
-  ;; macros
-  ;; indent pasted text
-  (fset 'andre/org-babel-indent-and-quit
-        (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([escape 32 109 39 103 103 86 71 61 M-return 39 f3 105 backspace escape 106 106 106 106 106 106 106 111 return escape] 1 "%d")) arg)))
-
-  (evil-set-register ?p "`[v`]\361")
-
   ;; Common Lisp
   (setq inferior-lisp-program "/usr/local/bin/clisp")
 
-  ;; lispy
+  ;; Lispy
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
 
-
-  ;; test clj refactor
-  ;; (setq cljr-middleware-ignored-paths '("test.*"))
-  ;; (setq cljr-middleware-ignored-paths nil)
-
   ;; keybindings
-  (spacemacs/set-leader-keys "w o" 'andre/switch-to-the-window-that-displays-the-most-recently-selected-buffer
-    "p d" 'deadgrep)
-
-  ;; Original jumps to next difference
-  ;; (define-key ediff-mode-map "SPC" 'ediff-previous-difference)
-
   (global-set-key (kbd "C-x C-l") 'evil-complete-next-line)
+  (spacemacs/set-leader-keys "p d" 'deadgrep)
   (evil-leader/set-key
-    ;; files
-    "oft" '(lambda () (interactive) (find-file andre--path-to-org-todo))
     ;; org
-    "oa" 'org-agenda
-    "oc" 'counsel-org-capture
+    "oft" '(lambda () (interactive) (find-file andre--path-to-org-todo))
+    "oa"  'org-agenda
+    "oc"  'counsel-org-capture
     "oji" 'counsel-org-goto-all
-    ;; other
-    "ogp" 'andre/add-commit-push
     "ogc" 'org-clock-goto)
-
-  ;; insert mode keybinding
+  ;; insert mode
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
-
-  ;; Helm
-  ;; TODO: won't work
-  (setq helm-locate-fuzzy-match nil)
-  (with-eval-after-load 'helm-mode
-    ;; save last command, even if it failed
-    (setq helm-M-x-always-save-history t)
-    (define-key helm-map (kbd "s-8")  'helm-select-action)
-    (define-key helm-map (kbd "M-f")  'helm-enlarge-window))
-
-  ;; Company
+  ;; company
   (with-eval-after-load 'company
-    ;; TODO: 8 gets in the way very often. Find a better key.
-    ;; (define-key company-active-map "8" 'helm-company)
     (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
-
-  ;; TODO: Check whether it's still necessary to set fuzzy match nil on Darwin
-  ;; needed to make mdfind work on helm
-  (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
-  (setq helm-locate-command
-        (case system-type
-          ('gnu/linux "locate %s %s")
-          ;; ('gnu/linux "locate -i -r %s")
-          ('berkeley-unix "locate -i %s")
-          ('windows-nt "es %s %s")
-          ('darwin "mdfind -name %s %s")
-          (t "locate %s %s")))
 
   ;; Smartparens
   (smartparens-global-mode t)
@@ -720,18 +647,12 @@ layers configuration. You are free to put any user code."
   (setq sp-highlight-wrap-overlay nil)
   (setq sp-highlight-wrap-tag-overlay nil)
 
-  ;; do not ask question about following symlinks
-  (setq vc-follow-symlinks t)
-
-  ;; Doc-view
-  (setq large-file-warning-threshold nil)
-
-  ;; Spelling - flyspell
-  ;; (setq ispell-dictionary "british")
+  ;; Misc
+  (setq vc-follow-symlinks t) ;; do not ask question about following symlinks
+  (setq large-file-warning-threshold nil) ;; doc-view
   (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
-
-  ;; Holidays
-  ;; Do not use all default holidays.
+  (setq confirm-kill-processes nil) ;; stop asking "Active processes exist; kill them and exit anyway"
+  ;; holidays
   (setq holiday-christian-holidays nil)
   (setq holiday-hebrew-holidays nil)
   (setq holiday-islamic-holidays nil)
@@ -777,7 +698,6 @@ layers configuration. You are free to put any user code."
   ;; Yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
-
   ;; Aux function
   (defun andre/indent-buffer ()
     "Indents current buffer"
@@ -800,6 +720,7 @@ layers configuration. You are free to put any user code."
       (let ((media-dir (concat default-directory "media")))
         (unless (file-directory-p media-dir)
           (make-directory media-dir t))
+        ;; this var is buffer local
         (setq org-download-image-dir media-dir)))
     (advice-add 'org-download-screenshot :before #'andre-maybe-create-and-set-screenshot-dir)
 
@@ -807,7 +728,6 @@ layers configuration. You are free to put any user code."
     (evil-define-key 'normal org-mode-map
       (kbd "[") 'andre/go-to-worf-in-previous-heading
       (kbd "]") 'andre/go-to-worf-in-next-heading)
-
 
     (defun andre/go-to-worf-in-previous-heading ()
       (interactive)
@@ -1005,14 +925,6 @@ details."
     (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
     (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
 
-    ;; config from user 'basphemy' in #emacs
-    (defvar bas/last-org-gcal-sync nil)
-
-    ;; org-beautify
-    (setq org-beautify-theme-use-box-hack nil)
-    ;; (load-theme spacemacs--cur-theme)
-    ;; (load-theme 'org-beautify)
-
     ;; from https://github.com/abo-abo/worf/issues/31
     (defun andre-brackets ()
       (interactive)
@@ -1023,19 +935,9 @@ details."
     (evil-define-key 'insert evil-org-mode-map
       (kbd "}") 'andre-brackets))
 
-  ;; (add-hook 'spacemacs-post-theme-change-hook
-  ;;           '(lambda () (load-theme 'org-beautify)))
-
-  ;; those keybindings don't work unless they are defined here - not sure why
-  ;; see https://github.com/syl20bnr/spacemacs/issues/5875
-  ;; (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
-  ;; (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
-
-
   ;; Cider
   ;; Fuzzy completion
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
-
   (defun andre-cider-hook ()
     (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
@@ -1045,14 +947,10 @@ details."
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-connected-hook 'andre-cider-hook)
 
-  ;; stop asking "Active processes exist; kill them and exit anyway"
-  (setq confirm-kill-processes nil)
-
   ;; make let bindings global (HACKISH)
   (setq andre--catpure-let-binding "(defmacro my-locals [] (let [my-bindings (seq (into {} (map (juxt (comp keyword name) identity)) (keys &env)))] (for [[my-name value] my-bindings] (list 'def (symbol (name my-name)) value))))")
   (defun andre--but-last (str)
     (substring str 0 (- (length str) 1)))
-
   (defun andre-make-let-bindings-global ()
     (interactive)
     (let* ((b-str (lispy--string-dwim))
@@ -1062,6 +960,7 @@ details."
       (cider-nrepl-sync-request:eval andre--catpure-let-binding)
       (cider-nrepl-sync-request:eval form-with-macro)))
 
+  ;; Lispy
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
   (defun raise-minor-mode (mode)
@@ -1238,7 +1137,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (lispy hl-todo color-theme-sanityinc-tomorrow anti-zenburn-theme helm helm-core cider zenburn-theme zen-and-art-theme yasnippet-snippets xterm-color ws-butler worf winum white-sand-theme which-key wgrep web-mode web-beautify w32-browser volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon sx sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slime-company slim-mode shr-tag-pre-highlight shell-pop seti-theme sesman scss-mode sayid sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme queue purple-haze-theme pug-mode professional-theme plantuml-mode planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el password-generator paradox ox-epub ox-clip overseer osx-trash osx-dictionary orgit organic-green-theme org-variable-pitch org-trello org-projectile org-present org-pomodoro org-pdfview org-mime org-gcal org-download org-cliplink org-bullets org-brain org-beautify-theme open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nov noctilux-theme neotree naquadah-theme nameless mvn mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme magithub magit-svn magit-gitflow magit-gh-pulls madhat2r-theme lush-theme lorem-ipsum livid-mode link-hint light-soap-theme launchctl kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ix ivy-yasnippet ivy-xref ivy-rtags ivy-purpose ivy-hydra ir-black-theme insert-shebang inkpot-theme indent-guide impatient-mode hyperbole hungry-delete highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate google-this google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md gandalf-theme fuzzy font-lock+ flyspell-popup flyspell-correct-ivy flycheck-rtags flycheck-pos-tip flycheck-bashate flx-ido flatui-theme flatland-theme fish-mode fill-column-indicator farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-cleverparens evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks ensime emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies editorconfig dumb-jump dracula-theme dotenv-mode doom-themes django-theme disaster diminish diff-hl deadgrep darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme csv-mode counsel-projectile counsel-css company-web company-tern company-statistics company-shell company-rtags company-emacs-eclim company-c-headers common-lisp-snippets column-enforce-mode color-theme-sanityinc-solarized clues-theme clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme browse-at-remote birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile atomic-chrome apropospriate-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-window ac-ispell))))
+    (wgrep org-brain lispy hl-todo deadgrep counsel-projectile color-theme-sanityinc-tomorrow anti-zenburn-theme counsel elfeed helm helm-core magit git-commit cider swiper ivy zenburn-theme zen-and-art-theme yasnippet-snippets xterm-color ws-butler worf winum white-sand-theme which-key web-mode web-beautify w32-browser volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon sx sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slime-company slim-mode shr-tag-pre-highlight shell-pop seti-theme sesman scss-mode sayid sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme queue purple-haze-theme pug-mode professional-theme plantuml-mode planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el password-generator paradox ox-epub ox-clip overseer osx-trash osx-dictionary orgit organic-green-theme org-variable-pitch org-trello org-projectile org-present org-pomodoro org-pdfview org-mime org-gcal org-download org-cliplink org-bullets org-beautify-theme open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nov noctilux-theme neotree naquadah-theme nameless mvn mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme magithub magit-svn magit-gitflow magit-gh-pulls madhat2r-theme lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme less-css-mode launchctl kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ix ivy-yasnippet ivy-xref ivy-rtags ivy-purpose ivy-hydra ir-black-theme insert-shebang inkpot-theme indent-guide impatient-mode hyperbole hungry-delete highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate google-this google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md gandalf-theme fuzzy font-lock+ flyspell-popup flyspell-correct-ivy flycheck-rtags flycheck-pos-tip flycheck-bashate flx-ido flatui-theme flatland-theme fish-mode fill-column-indicator farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-cleverparens evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks ensime emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies editorconfig dumb-jump dracula-theme dotenv-mode doom-themes django-theme disaster diminish diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme csv-mode counsel-css company-web company-tern company-statistics company-shell company-rtags company-emacs-eclim company-c-headers common-lisp-snippets column-enforce-mode color-theme-sanityinc-solarized clues-theme clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme browse-at-remote birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile atomic-chrome apropospriate-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-window ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
