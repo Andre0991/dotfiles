@@ -659,9 +659,11 @@ layers configuration. You are free to put any user code."
   (setq holiday-bahai-holidays nil)
   (setq holiday-oriental-holidays nil)
 
-  ;; Truncate lines
-  (spacemacs/add-to-hooks 'spacemacs/toggle-truncate-lines '(org-mode-hook markdown-mode-hook))
+  ;; Truncate lines (if like is greater than screen, break it visually)
+  (spacemacs/add-to-hooks 'spacemacs/toggle-truncate-lines-off '(org-mode-hook markdown-mode-hook))
+  (add-hook 'text-mode-hook #'toggle-word-wrap)
   (spacemacs/add-to-hooks 'worf-mode '(org-mode-hook))
+
 
   ;; Packages misc
   ;; scheme
