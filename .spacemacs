@@ -252,7 +252,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gruvbox
+   dotspacemacs-themes '(leuven
+                         gruvbox
                          sanityinc-solarized-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
 
@@ -522,8 +523,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (interactive)
     (setq line-spacing 0.1)
     (variable-pitch-mode))
+
   (spacemacs/add-to-hooks 'org-variable-pitch-minor-mode '(org-mode-hook))
-  (spacemacs/add-to-hooks 'andre/org-mode-readable '(org-mode-hook markdown-mode-hook)))
+  (spacemacs/add-to-hooks 'andre/org-mode-readable '(markdown-mode-hook))
+  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -732,7 +735,6 @@ layers configuration. You are free to put any user code."
       "oti" 'org-toggle-inline-images
       "o'"  'org-babel-indent-and-quit
       "ocf" 'org-capture-finalize
-      "oi"  'andre/insert-org-image
       "n"   'org-cycle-agenda-files)
 
     ;; Org
@@ -1003,9 +1005,13 @@ layers configuration. You are free to put any user code."
     (add-to-load-path "~/dev/nu/nudev/ides/emacs/")
     (require 'nu))
 
-  ;; dired keybinding
+  ;; dired
   (evil-define-key 'normal dired-mode-map
     (kbd "[") 'dired-up-directory)
+  (defun andre-dired-mode-hide-details ()
+    (dired-hide-details-mode 1))
+  (add-hook 'dired-mode-hook 'andre-dired-mode-hide-details)
+
 
   ;; ivy
   ;; requires lexical binding (set at the top of the file)
