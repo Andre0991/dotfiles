@@ -41,12 +41,11 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ;; helm
-     ;; pdf-tools
      ;; latex
      ;; python
      clojure
-     csv
      common-lisp
+     csv
      emacs-lisp
      erc
      git
@@ -57,6 +56,7 @@ This function should only modify configuration layer settings."
      markdown
      org
      osx
+     pdf
      plantuml
      scala
      shell-scripts
@@ -87,6 +87,7 @@ This function should only modify configuration layer settings."
      andre-erc
      andre-eww
      andre-ivy
+     ;; andre-pdf-tools
      ;; andre-slack
      ;; slack
      nov)
@@ -516,13 +517,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (org-insert-heading-after-current)
     (org-promote))
 
+  ;; Variable pitch
   (defun andre/org-mode-readable ()
     (interactive)
     (setq line-spacing 0.1)
     (variable-pitch-mode))
-
   (spacemacs/add-to-hooks 'org-variable-pitch-minor-mode '(org-mode-hook))
-
   (spacemacs/add-to-hooks 'andre/org-mode-readable '(org-mode-hook markdown-mode-hook)))
 
 (defun dotspacemacs/user-load ()
@@ -663,39 +663,10 @@ layers configuration. You are free to put any user code."
   (spacemacs/add-to-hooks 'spacemacs/toggle-truncate-lines '(org-mode-hook markdown-mode-hook))
   (spacemacs/add-to-hooks 'worf-mode '(org-mode-hook))
 
+  ;; Packages misc
   ;; scheme
   (setq scheme-program-name  "/usr/local/bin/mit-scheme")
-
-  ;; Pdf-tools
-  ;; work around for the fact that pdf goes back to page 1 due to
-  ;; `image-mode' behaviour
-  ;; this snippet makes it switch back to the page it was before
-  ;; note that it doesn't work if the previous page was the first
-  (defun andre//pdf-view-restore ()
-    (cl-loop for win in (window-list)
-             do (with-selected-window win
-                  (when (eql major-mode 'pdf-view-mode)
-                    (let ((current-page (image-mode-window-get 'page)))
-                      (when
-                          (not (eq current-page 1))
-                        (setq-local last-viewed-page current-page))
-                      (when
-                          (and
-                           (eq current-page 1)
-                           (boundp 'last-viewed-page))
-                        (pdf-view-goto-page last-viewed-page)
-                        (bookmark-set (buffer-name))))))))
-  (spacemacs/add-to-hook 'window-configuration-change-hook '(andre//pdf-view-restore))
-
-  (defun andre//pdf-tools--jump-to-last-page-viewed-in-last-session ()
-    (bookmark-maybe-load-default-file)
-    (condition-case err
-        (bookmark-jump (buffer-name))
-      (error
-       (princ (format "Unable to get to last bookmark. Error: %s" err)))))
-  (spacemacs/add-to-hook 'pdf-view-mode-hook '(andre//pdf-tools--jump-to-last-page-viewed-in-last-session))
-
-  ;; Yasnippet
+  ;; yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
   ;; Aux function
@@ -712,9 +683,12 @@ layers configuration. You are free to put any user code."
     (andre/indent-buffer)
     (org-edit-src-exit))
 
+  ;; From https://github.com/syl20bnr/spacemacs/tree/develop/layers/org :
+  ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
+  ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
   (with-eval-after-load 'org
     ;; org-download
-    ;; macOS commnd
+    ;; macOS command
     (setq org-download-screenshot-method "screencapture -i %s")
     (defun andre-maybe-create-and-set-screenshot-dir ()
       (let ((media-dir (concat default-directory "media")))
@@ -723,11 +697,6 @@ layers configuration. You are free to put any user code."
         ;; this var is buffer local
         (setq org-download-image-dir media-dir)))
     (advice-add 'org-download-screenshot :before #'andre-maybe-create-and-set-screenshot-dir)
-
-    ;; Org keybindings
-    (evil-define-key 'normal org-mode-map
-      (kbd "[") 'andre/go-to-worf-in-previous-heading
-      (kbd "]") 'andre/go-to-worf-in-next-heading)
 
     (defun andre/go-to-worf-in-previous-heading ()
       (interactive)
@@ -739,24 +708,18 @@ layers configuration. You are free to put any user code."
       (worf-forward)
       (evil-insert 0))
 
-    ;; removes markers such as * in *bold*, / in /italic/ etc
-    (setq org-hide-emphasis-markers t)
-
-    ;; show markdown in list of exported formats
-    (require 'ox-md nil t)
-
+    (setq org-hide-emphasis-markers t) ;; removes markers such as * in *bold*, / in /italic/ etc
+    (require 'ox-md nil t) ;; show markdown in list of exported formats
     ;; From https://github.com/cadadr/elisp/blob/master/org-variable-pitch.el
     (require 'org-variable-pitch)
     (setq org-variable-pitch-fixed-font "Source Code Pro")
 
-    ;; org-alert
-    ;; bug is enlarging window (??)
-    ;; (require 'org-alert)
-    ;; (setq alert-default-style 'osx-notifier)
-    ;; (org-alert-enable)
+    ;; org normal mode keybindings
+    (evil-define-key 'normal org-mode-map
+      (kbd "[") 'andre/go-to-worf-in-previous-heading
+      (kbd "]") 'andre/go-to-worf-in-next-heading)
 
-
-    ;; org-mode leader key keybindings
+    ;; org leader keybindings
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
       "ji"  'counsel-org-goto
       "jI"  'counsel-org-goto-all
@@ -770,31 +733,14 @@ layers configuration. You are free to put any user code."
       "oi"  'andre/insert-org-image
       "n"   'org-cycle-agenda-files)
 
-    ;; From https://github.com/syl20bnr/spacemacs/tree/develop/layers/org :
-    ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
-    ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
-
-
     ;; Org
     (setq org-columns-default-format
           "%45ITEM %TODO %3PRIORITY %TIMESTAMP")
-
     (setq org-startup-indented t)
-    ;; hard wrap
-    ;; (spacemacs/add-to-hooks 'turn-on-auto-fill '(org-mode-hook))
-
-    ;; soft wrap (won't work...)
-    ;; (spacemacs/add-to-hooks 'visual-fill-column-mode '(visual-line-mode-hook))
-    ;; (spacemacs/add-to-hooks 'turn-on-visual-line-mode '(org-mode-hook))
-    ;; (setq fill-column 80)
-
-    ;; truncate lines (based on window size)
-    (setq org-startup-truncated t)
-
+    (setq org-startup-truncated t) ;; truncate lines (based on window size)
     ;; see http://orgmode.org/manual/Initial-visibility.html
     (setq org-startup-folded "showeverything")
     (setq org-agenda-inhibit-startup nil)
-
     ;; org-habit
     (setq org-habit-following-days 0)
     (setq org-habit-preceding-days 7)
@@ -804,39 +750,16 @@ layers configuration. You are free to put any user code."
     ;; export only subtree
     (defun andre/org-export-subtree-to-markdown-github ()
       (interactive)
-      (org-md-export-to-markdown nil t nil))
+      (org-md-export-to-markdown nil t nil)
+      (save-excursion
+        (let ((exported-file (org-export-output-file-name ".md")))
+          (find-file exported-file)
+          (clipboard-kill-ring-save (point-min) (point-max)))))
 
     ;; save the clock history across Emacs sessions
     (setq org-clock-persist 'history)
     (org-clock-persistence-insinuate)
     (spacemacs/toggle-mode-line-org-clock-on)
-
-    ;; comments org.el line to prevent org drill bug
-    ;; from https://bitbucket.org/eeeickythump/org-drill/issues/30/random-blank-buffer-2
-    ;; created by Joe Schafer
-    (defun andre/work-around-org-window-drill-bug ()
-      (interactive)
-      "Comment out a troublesome line in `org-toggle-latex-fragment'.
-See https://bitbucket.org/eeeickythump/org-drill/issues/30 for
-details."
-      (save-excursion
-        (let ((org-library-location (concat
-                                     (locate-library "org" 'nosuffix)
-                                     ".el")))
-          (with-current-buffer (find-file-noselect org-library-location)
-            (goto-char (point-min))
-            (search-forward "(set-window-start nil window-start)")
-            (back-to-indentation)
-            (if (looking-at ";; ")
-                (message "Already modified `org-toggle-latex-fragment' for `org-drill'")
-              (insert ";; ")
-              (save-buffer)
-              (byte-compile-file org-library-location)
-              (elisp--eval-defun)
-              (message "Modified `org-toggle-latex-fragment' for `org-drill'"))))))
-
-    ;; (setq org-todo-keywords
-    ;;       '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "DONE(d)")))
 
     ;; Multi-state worflows: http://orgmode.org/guide/Multi_002dstate-workflows.html
     ;; Options for each state:
@@ -861,23 +784,15 @@ details."
        (shell . t)))
 
     (setq org-confirm-babel-evaluate nil)
-
     (setq org-confirm-shell-link-function nil)
     (setq org-confirm-elisp-link-function nil)
-
     ;; Make org-mode consider the line above the image path indicating its
     ;; size and use it inline and when exporting.
     (setq org-image-actual-width nil)
-    ;; (setq org-image-actual-width t)
-
-    ;; Pretify Special symbols as UTF-8 characters
-    ;; (setq org-pretty-entities t)
 
     ;; org-drill
-
-    ;; From the org-drill manual: "By default, you will be prompted to save all unsaved buffers at the end of a drill session. If you don't like this behaviour, use the following setting:"
+    ;; "By default, you will be prompted to save all unsaved buffers at the end of a drill session. If you don't like this behaviour, use the following setting:"
     (setq org-drill-save-buffers-after-drill-sessions-p nil)
-
     ;; The lower, the more frequently items appear. Default is 0.5.
     (setq org-drill-learn-fraction 0.4)
 
@@ -934,6 +849,7 @@ details."
 
     (evil-define-key 'insert evil-org-mode-map
       (kbd "}") 'andre-brackets))
+
 
   ;; Cider
   ;; Fuzzy completion
