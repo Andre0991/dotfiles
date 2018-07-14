@@ -536,19 +536,15 @@ dump."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  ;; exec-path-from-shell
+  ;; Spacemacs has a mechanism for getting env vars,
+  ;; but it didn't actually work in my setup
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
 
   ;; todo.org folder
   (setq andre-type-env (if (file-exists-p "~/.emacs-work") 'work-mac 'home-mac))
-
   (setq andre--home-todo-path "~/Dropbox/org/todo-home.org")
   (setq andre--work-todo-path "~/Dropbox/nu/org/todo-work.org")
-
-  ;; set screenshot folder
-  (cond ((eq andre-type-env 'work-mac) (setq andre--screenshot-folder "~/Screenshots"))
-        ((eq andre-type-env 'home-mac) (setq andre--screenshot-folder "~/Dropbox/Screenshots")))
 
   ;; set todo file path
   (cond ((eq andre-type-env 'work-mac) (setq andre--path-to-org-todo andre--work-todo-path))
@@ -797,6 +793,15 @@ layers configuration. You are free to put any user code."
     (org-edit-src-exit))
 
   (with-eval-after-load 'org
+    ;; org-download
+    ;; macOS commnd
+    (setq org-download-screenshot-method "screencapture -i %s")
+    (defun andre-maybe-create-and-set-screenshot-dir ()
+      (let ((media-dir (concat default-directory "media")))
+        (unless (file-directory-p media-dir)
+          (make-directory media-dir t))
+        (setq org-download-image-dir media-dir)))
+    (advice-add 'org-download-screenshot :before #'andre-maybe-create-and-set-screenshot-dir)
 
     ;; Org keybindings
     (evil-define-key 'normal org-mode-map
@@ -993,15 +998,6 @@ details."
                                                           (org-agenda-prefix-format "$l%t%s")))
                                        ("h" "Home tasks" tags-todo "home")))
 
-    ;; Functions
-    ;; Insert image from Screenshot's folder to org-mode buffer
-    ;; Thanks to finster from #emacs on freenode for providing that code. I added the insertion and newline.
-    ;; (defun get-newest-file-from-dir (dir)
-    ;;   "Return the file name of the newes file in DIR."
-    ;;   (when (file-directory-p dir)
-    ;;     (expand-file-name (car (split-string (shell-command-to-string (format "ls -t %s | head -1" dir)) "\n" t))
-    ;;                       dir)))
-
     ;; org-pdfview
     ;; from org-pdfview.el
     (require 'org-pdfview)
@@ -1011,22 +1007,6 @@ details."
 
     ;; config from user 'basphemy' in #emacs
     (defvar bas/last-org-gcal-sync nil)
-
-    (defun andre/insert-org-image ()
-      "Moves image from Dropbox folder to ./media, inserting org-mode link"
-      (interactive)
-      (cl-labels ((get-newest-file-from-dir  (path)
-                                             (car (directory-files path 'full nil #'file-newer-than-file-p))))
-        (let* ((indir (expand-file-name andre--screenshot-folder))
-               (infile (get-newest-file-from-dir indir))
-               (outdir (concat (file-name-directory (buffer-file-name)) "/media"))
-               (outfile (expand-file-name (file-name-nondirectory infile) outdir)))
-          (unless (file-directory-p outdir)
-            (make-directory outdir t))
-          (rename-file infile outfile)
-          (insert (concat (concat "[[./media/" (file-name-nondirectory outfile)) "]]")))
-        (newline)
-        (newline)))
 
     ;; org-beautify
     (setq org-beautify-theme-use-box-hack nil)
