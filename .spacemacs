@@ -1005,6 +1005,9 @@ layers configuration. You are free to put any user code."
     (add-to-load-path "~/dev/nu/nudev/ides/emacs/")
     (require 'nu))
 
+  (when (file-exists-p "~/Dropbox/nu/emacs-lisp/nu-andre.el")
+    (load-file "~/Dropbox/nu/emacs-lisp/nu-andre.el"))
+
   ;; dired
   (evil-define-key 'normal dired-mode-map
     (kbd "[") 'dired-up-directory)
