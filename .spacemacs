@@ -690,6 +690,14 @@ layers configuration. You are free to put any user code."
     (andre/indent-buffer)
     (org-edit-src-exit))
 
+  ;; Required for buffers with variable pitch - otherwise the number column length will vary
+  (set-face-attribute 'line-number nil
+                      :font "Source Code Pro"
+                      :family "Monospace")
+  (set-face-attribute 'line-number-current-line nil
+                      :font "Source Code Pro"
+                      :family "Monospace")
+
   ;; From https://github.com/syl20bnr/spacemacs/tree/develop/layers/org :
   ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
   ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
