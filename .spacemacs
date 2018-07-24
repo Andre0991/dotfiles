@@ -563,6 +563,12 @@ layers configuration. You are free to put any user code."
   (setq find-function-C-source-directory "~/Dropbox/ciencia_da_computacao/emacs/source/emacs-26.1/src")
 
   ;; My functions
+  (defun andre/clear-compilation-buffer ()
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)))
+  (define-key compilation-mode-map (kbd "C-l") 'andre/clear-compilation-buffer)
+
   ;; modified from http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html
   (defun andre/dash-to-underscore-region (@begin @end)
     "Change dash char to underscore."
