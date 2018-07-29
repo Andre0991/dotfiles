@@ -717,13 +717,7 @@ layers configuration. You are free to put any user code."
     ;; org-download
     ;; macOS command
     (setq org-download-screenshot-method "screencapture -i %s")
-    (defun andre-maybe-create-and-set-screenshot-dir ()
-      (let ((media-dir (concat default-directory "media")))
-        (unless (file-directory-p media-dir)
-          (make-directory media-dir t))
-        ;; this var is buffer local
-        (setq org-download-image-dir media-dir)))
-    (advice-add 'org-download-screenshot :before #'andre-maybe-create-and-set-screenshot-dir)
+    (setq org-download-image-dir "~/Dropbox/org/images")
 
     (defun andre/go-to-worf-in-previous-heading ()
       (interactive)
