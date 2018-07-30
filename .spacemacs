@@ -717,7 +717,12 @@ layers configuration. You are free to put any user code."
     ;; org-download
     ;; macOS command
     (setq org-download-screenshot-method "screencapture -i %s")
-    (setq org-download-image-dir "~/Dropbox/org/images")
+    (defun andre-org-download-setup ()
+      (setq org-download-image-dir "~/Dropbox/org/images/")
+      ;; do not create a folder with the heading name; save all images in the same dir
+      (setq org-download-heading-lvl nil))
+    (advice-add 'org-download-screenshot :before #'andre-org-download-setup)
+
 
     (defun andre/go-to-worf-in-previous-heading ()
       (interactive)
