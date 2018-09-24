@@ -633,6 +633,8 @@ layers configuration. You are free to put any user code."
   ;; Lispy
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+  (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
+
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char) ; was help
@@ -774,11 +776,12 @@ layers configuration. You are free to put any user code."
     ;; export only subtree
     (defun andre/org-export-subtree-to-markdown-github ()
       (interactive)
-      (org-md-export-to-markdown nil t nil)
-      (save-excursion
-        (let ((exported-file (org-export-output-file-name ".md")))
-          (find-file exported-file)
-          (clipboard-kill-ring-save (point-min) (point-max)))))
+      (let ((org-export-with-toc nil))
+        (org-md-export-to-markdown nil t nil)
+        (save-excursion
+          (let* ((exported-file (org-export-output-file-name ".md")))
+            (find-file exported-file)
+            (clipboard-kill-ring-save (point-min) (point-max))))))
 
     ;; save the clock history across Emacs sessions
     (setq org-clock-persist 'history)
@@ -881,6 +884,18 @@ layers configuration. You are free to put any user code."
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-connected-hook 'andre-cider-hook)
+  ;; (remove-hook 'cider-connected-hook 'andre-cider-hook)
+
+
+  (defun andre-cider-clear-buffer-and-eval-top-level-form ()
+    (interactive)
+    (save-excursion
+      (cider-switch-to-repl-buffer)
+      (cider-repl-clear-buffer))
+    (cider-eval-defun-at-point))
+
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode
+    "et"  'andre-cider-clear-buffer-and-eval-top-level-form)
 
   ;; make let bindings global (HACKISH)
   (setq andre--catpure-let-binding "(defmacro my-locals [] (let [my-bindings (seq (into {} (map (juxt (comp keyword name) identity)) (keys &env)))] (for [[my-name value] my-bindings] (list 'def (symbol (name my-name)) value))))")
@@ -1050,6 +1065,9 @@ layers configuration. You are free to put any user code."
   (define-key ivy-minibuffer-map (kbd "C-s") #'andre/counsel-rg-src)
   (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-src-and-tests)
 
+  ;; shell
+  (define-key shell-mode-map (kbd "C-l") #'comint-clear-buffer)
+
   ;; eshell
   ;; this has to be defined within the hook as eshell-mode-map doesn't exist before that
   (add-hook 'eshell-mode-hook #'(lambda ()
@@ -1077,7 +1095,8 @@ layers configuration. You are free to put any user code."
   (when (eq andre-type-env 'work-mac)
     (find-file "~/Dropbox/nu/org/todo-work.org")
     (find-file "~/Dropbox/nu/org/tech.org")
-    (find-file "~/Dropbox/ciencia_da_computacao/datomic/datomic-notes.org")))
+    (find-file "~/Dropbox/ciencia_da_computacao/datomic/datomic-notes.org")
+    (find-file "/Users/andreperictavares/Dropbox/ciencia_da_computacao/programming_languages/bash/notes_bash.org")))
 
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
