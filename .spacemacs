@@ -634,7 +634,9 @@ layers configuration. You are free to put any user code."
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
-
+  
+  ;; M-i (use "SPC s e" when you don't want to restrict the scope)
+  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char) ; was help
