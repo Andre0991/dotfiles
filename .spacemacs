@@ -634,6 +634,8 @@ layers configuration. You are free to put any user code."
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
 
+  ;; M-i (use "SPC s e" when you don't want to restrict the scope)
+  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char) ; was help
@@ -880,6 +882,7 @@ layers configuration. You are free to put any user code."
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
     (cider-ns-refresh))
 
+  (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-connected-hook 'andre-cider-hook)
