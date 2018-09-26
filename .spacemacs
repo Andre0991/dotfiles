@@ -253,9 +253,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
-                         gruvbox
-                         sanityinc-solarized-light)
+   dotspacemacs-themes '(gruvbox
+                         leuven)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -634,9 +633,7 @@ layers configuration. You are free to put any user code."
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
-  
-  ;; M-i (use "SPC s e" when you don't want to restrict the scope)
-  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
+
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char) ; was help
