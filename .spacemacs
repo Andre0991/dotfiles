@@ -1,5 +1,3 @@
-;; -*- mode: emacs-lisp; lexical-binding: t -*-
-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -56,7 +54,7 @@ This function should only modify configuration layer settings."
      (org :variables
           org-enable-bootstrap-support t)
      osx
-     pdf
+     ;; pdf
      plantuml
      scala
      shell-scripts
@@ -640,8 +638,9 @@ layers configuration. You are free to put any user code."
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
 
   ;; imenu-everywhere
-  ;; (setq imenu-anywhere-buffer-filter-functions
-  ;;       '(imenu-anywhere-same-mode-p imenu-anywhere-friendly-mode-p))
+  (setq imenu-anywhere-buffer-filter-functions
+        '(imenu-anywhere-same-project-p))
+  ;; was (imenu-anywhere-same-mode-p imenu-anywhere-friendly-mode-p imenu-anywhere-same-project-p)
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char)
@@ -894,6 +893,7 @@ layers configuration. You are free to put any user code."
   (add-hook 'cider-connected-hook 'andre-cider-hook)
   ;; (remove-hook 'cider-connected-hook 'andre-cider-hook)
 
+  (setq cljr-middleware-ignored-paths '(".*/test/.*"))
 
   (defun andre-cider-clear-buffer-and-eval-top-level-form ()
     (interactive)
@@ -1052,6 +1052,14 @@ layers configuration. You are free to put any user code."
   (when (file-exists-p "~/Dropbox/nu/emacs-lisp/nu-andre.el")
     (load-file "~/Dropbox/nu/emacs-lisp/nu-andre.el"))
 
+  (defun andre-gambiarra-reload-componente-agreement-history ()
+    (interactive)
+    (save-excursion
+      (with-current-buffer "agreements_history_widget.cljs"
+        (evil-goto-line)
+        (insert ";; magia")
+        (save-buffer))))
+
   ;; dired
   (evil-define-key 'normal dired-mode-map
     (kbd "[") 'dired-up-directory)
@@ -1110,11 +1118,7 @@ layers configuration. You are free to put any user code."
     (find-file "~/Dropbox/nu/org/todo-work.org")
     (find-file "~/Dropbox/nu/org/tech.org")
     (find-file "~/Dropbox/ciencia_da_computacao/datomic/datomic-notes.org")
-    (find-file "/Users/andreperictavares/Dropbox/ciencia_da_computacao/programming_languages/bash/notes_bash.org"))
-
-  ;; beautify org mode (https://github.com/jonnay/org-beautify-theme)
-  (load-theme 'org-beautify)
-  (load-theme (first dotspacemacs-themes)))
+    (find-file "/Users/andreperictavares/Dropbox/ciencia_da_computacao/programming_languages/bash/notes_bash.org")))
 
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1130,10 +1134,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
+ '(package-selected-packages
    (quote
-    ("cd4d1a0656fee24dc062b997f54d6f9b7da8f6dc8053ac858f15820f9a04a679" "e297f54d0dc0575a9271bb0b64dad2c05cff50b510a518f5144925f627bb5832" default)))
- '(evil-want-Y-yank-to-eol nil))
+    (ox-twbs zenburn-theme zen-and-art-theme yasnippet-snippets xterm-color ws-butler worf winum white-sand-theme wgrep web-mode web-beautify w32-browser volatile-highlights vi-tilde-fringe uuidgen underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon sx sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spaceline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slime-company slime slim-mode shr-tag-pre-highlight language-detection shell-pop seti-theme scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme purple-haze-theme pug-mode professional-theme plantuml-mode planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode password-generator paradox ox-epub ox-clip overseer osx-trash osx-dictionary orgit organic-green-theme org-variable-pitch org-projectile org-category-capture org-present org-pomodoro org-pdfview pdf-tools tablist org-mime org-gcal alert request-deferred request deferred log4e gntp org-download org-cliplink org-bullets org-brain org-beautify-theme open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nov esxml noctilux-theme neotree naquadah-theme nameless mvn mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme magithub markdown-mode ghub+ apiwrap magit-svn magit-gitflow magit-gh-pulls madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode skewer-mode lispy zoutline link-hint light-soap-theme launchctl kaolin-themes json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc jbeans-theme jazz-theme ix grapnel ivy-yasnippet ivy-xref ivy-rtags ivy-purpose window-purpose imenu-list ivy-hydra ir-black-theme insert-shebang inkpot-theme indent-guide impatient-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation heroku-theme hemisu-theme helm-make hc-zenburn-theme haml-mode gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate google-this google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gist gh marshal logito pcache ht gh-md gandalf-theme fuzzy flyspell-popup flyspell-correct-ivy flyspell-correct flycheck-rtags flycheck-pos-tip pos-tip flycheck-bashate flycheck flx-ido flx flatui-theme flatland-theme fish-mode fill-column-indicator farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit ghub treepy graphql with-editor evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-cleverparens smartparens evil-args evil-anzu anzu espresso-theme eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks ensime sbt-mode scala-mode emmet-mode elisp-slime-nav elfeed-web simple-httpd elfeed-org elfeed-goodies ace-jump-mode noflet powerline popwin elfeed editorconfig dumb-jump dracula-theme doom-themes django-theme disaster diff-hl deadgrep darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-projectile company-web web-completion-data company-tern dash-functional tern company-statistics company-shell company-rtags rtags company-emacs-eclim eclim company-c-headers company common-lisp-snippets column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clojure-snippets clojure-cheatsheet helm helm-core clj-refactor inflections edn multiple-cursors paredit peg clean-aindent-mode clang-format cider-eval-sexp-fu eval-sexp-fu highlight cider sesman clojure-mode cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme browse-at-remote birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed atomic-chrome websocket apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-window ace-link avy ac-ispell auto-complete popup counsel swiper ivy projectile pkg-info epl all-the-icons memoize f s dash which-key use-package pcre2el org-plus-contrib hydra dotenv-mode diminish bind-map bind-key async evil goto-chg undo-tree spinner queue prettier-js mmm-mode imenu-anywhere hyperbole font-lock+ evil-unimpaired evil-ediff doom-modeline csv-mode counsel-css))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
