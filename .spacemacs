@@ -636,6 +636,11 @@ layers configuration. You are free to put any user code."
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
 
+
+  ;; default is message
+  ;; (setq lispy-eval-display-style 'message)
+  (setq lispy-eval-display-style 'overlay)
+
   ;; M-i (use "SPC s e" when you don't want to restrict the scope)
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
 
@@ -1041,9 +1046,10 @@ layers configuration. You are free to put any user code."
                                                                (call-interactively 'org-table-create-or-convert-from-region))))
 
   ;; nu
-  (when (file-directory-p "~/dev/nu/nudev/ides/emacs/")
-    (add-to-load-path "~/dev/nu/nudev/ides/emacs/")
-    (require 'nu))
+  (let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
+    (when (file-directory-p nudev-emacs-path)
+      (add-to-load-path nudev-emacs-path)
+      (require 'nu)))
 
 
   (let ((nu-coll-path "~/dev/nu/playbooks/squads/collections/dev/emacs/"))
