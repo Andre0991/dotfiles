@@ -565,10 +565,9 @@ layers configuration. You are free to put any user code."
   ;; My functions
   (defun andre-open-k2pdfopt-shell ()
     (interactive)
-    (let* (pdf-file (read-file-name "PDF file: "))
-      (shell)
-      (insert "cd /Users/andreperictavares/Dropbox/kindle/ && ./k2pdfopt")
-      (comint-send-input)))
+    (shell)
+    (insert "cd /Users/andreperictavares/Dropbox/kindle/ && ./k2pdfopt")
+    (comint-send-input))
 
   (defun andre/clear-compilation-buffer ()
     (interactive)
