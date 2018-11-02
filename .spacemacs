@@ -908,6 +908,11 @@ layers configuration. You are free to put any user code."
 
   (setq cljr-middleware-ignored-paths '(".*/test/.*"))
 
+  (setq cider-repl-use-pretty-printing t)
+
+  ;; default was 'both
+  (setq cider-use-overlays t)
+
   (defun andre-cider-clear-buffer-and-eval-top-level-form ()
     (interactive)
     (save-excursion
@@ -932,6 +937,12 @@ layers configuration. You are free to put any user code."
       (cider-nrepl-sync-request:eval form-with-macro)))
 
   ;; Lispy
+
+  ;; lispy-mark-symbol is off by one char if we don't get to insert mode first
+  (defun andre-evil-insert-lispy ()
+    (evil-insert 0))
+  (advice-add 'lispy-mark-symbol :before #'andre-evil-insert-lispy)
+
   ;; From https://oremacs.com/2014/12/31/keymap-arms-race/
   ;; Prevent '/' (lispy-splice) from being overriden
   (defun raise-minor-mode (mode)
@@ -992,7 +1003,7 @@ layers configuration. You are free to put any user code."
             ;; (lispy-define-key lispy-mode-map ", f" 'cider-eval-defun-at-point)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
             ;; originally M-n, which clashes with Spacemacs
-            (define-key lispy-mode-map (kbd "M-n") 'lispy-mark-symbol)))
+            (define-key lispy-mode-map (kbd "M-l") 'lispy-mark-symbol)))
 
   (evil-define-key 'normal lispy-mode-map
     (kbd "[") 'andre/lispy-backward-and-go-to-insert-mode
