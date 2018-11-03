@@ -672,7 +672,9 @@ layers configuration. You are free to put any user code."
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   ;; company
   (with-eval-after-load 'company
-    (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
+    (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word)
+    ;; TODO: won't reload the completions after deleting the char
+    (define-key company-active-map (kbd "C-h") 'evil-delete-backward-char))
 
   ;; ;; Smartparens
   ;; TODO: Buggy on org-mode: = and ~ move the pointer wrongly
@@ -891,6 +893,11 @@ layers configuration. You are free to put any user code."
       (insert "[]")
       (backward-char)))
 
+  ;; occur
+
+  ;; center after selecting item in occur
+  ;; https://emacs.stackexchange.com/questions/30516/show-the-matching-line-in-the-center-of-the-screen-instead-of-the-bottom-when-op
+  (setq next-error-recenter '(4))
 
   ;; Cider
   ;; Fuzzy completion
