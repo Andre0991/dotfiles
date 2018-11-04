@@ -1091,14 +1091,6 @@ layers configuration. You are free to put any user code."
   (when (file-exists-p "~/Dropbox/nu/emacs-lisp/nu-andre.el")
     (load-file "~/Dropbox/nu/emacs-lisp/nu-andre.el"))
 
-  (defun andre-gambiarra-reload-componente-agreement-history ()
-    (interactive)
-    (save-excursion
-      (with-current-buffer "agreements_history_widget.cljs"
-        (evil-goto-line)
-        (insert ";; magia")
-        (save-buffer))))
-
   ;; dired
   (evil-define-key 'normal dired-mode-map
     (kbd "[") 'dired-up-directory)
