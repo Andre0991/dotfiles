@@ -1004,11 +1004,18 @@ layers configuration. You are free to put any user code."
       (progn
         (apply orig-fun (list (ansi-color-apply (car args)))))))
 
+  (defun andre-lispy-pprint ()
+    (interactive)
+    (lispy-different)
+    (cider-pprint-eval-last-sexp)
+    (lispy-different))
+
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
             (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
             ;; (lispy-define-key lispy-mode-map ", f" 'cider-eval-defun-at-point)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
+            (lispy-define-key lispy-mode-map "X" 'andre-lispy-pprint)
             ;; originally M-n, which clashes with Spacemacs
             (define-key lispy-mode-map (kbd "M-l") 'lispy-mark-symbol)))
 
