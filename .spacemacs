@@ -556,6 +556,12 @@ layers configuration. You are free to put any user code."
   (setq andre--path-to-books-file "~/Dropbox/org/books.org")
   (setq andre--workspaces-path "~/Dropbox/backup/emacs/workspaces.el")
 
+  ;; modeline
+  (spaceline-define-segment buffer-id
+    (if (buffer-file-name)
+        (abbreviate-file-name (buffer-file-name))
+      (powerline-buffer-id)))
+
   ;; Editing styles
   (define-key evil-hybrid-state-map (kbd "C-w") 'evil-delete-backward-word)
 
@@ -702,10 +708,16 @@ layers configuration. You are free to put any user code."
   (add-hook 'text-mode-hook #'toggle-word-wrap)
   (spacemacs/add-to-hooks 'worf-mode '(org-mode-hook))
 
+
   ;; Packages misc
-  ;; scheme
+  ;; Scheme
   (setq scheme-program-name  "/usr/local/bin/mit-scheme")
-  ;; yasnippet
+
+  ;; Magit
+  ;; see https://magit.vc/manual/magit/Wip-Modes.html
+  (magit-wip-after-save-mode)
+
+  ;; Yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
   ;; Aux function
@@ -1008,7 +1020,10 @@ layers configuration. You are free to put any user code."
     (interactive)
     (lispy-different)
     (cider-pprint-eval-last-sexp)
-    (lispy-different))
+    (lispy-different)
+    (with-current-buffer (pop-to-buffer "*cider-result*")
+      (evil-goto-first-line))
+    (pop-to-buffer "*cider-result*"))
 
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
@@ -1025,6 +1040,8 @@ layers configuration. You are free to put any user code."
 
   ;; from https://stackoverflow.com/questions/23378271/how-do-i-display-ansi-color-codes-in-emacs-for-any-mode
 
+  ;; git link
+  (setq git-link-use-commit t)
 
   ;; org-mode rich pasting (OSX only)
   ;; https://xiangji.me/2015/07/13/a-few-of-my-org-mode-customizations/
@@ -1056,32 +1073,35 @@ layers configuration. You are free to put any user code."
   ;; org table
   ;; `org-table-create-or-convert-from-region` uses a different number of the
   ;; universal prefix for using different separator. Remembering that is just beyound human ability
-  (defalias 'andre/create-org-table-using-space-separator '(lambda ()
-                                                             (interactive)
-                                                             (call-interactively 'org-table-create-or-convert-from-region)))
+  (defalias 'andre/create-org-table-using-space-separator
+    '(lambda ()
+       (interactive)
+       (call-interactively 'org-table-create-or-convert-from-region)))
 
-  (defalias 'andre/create-org-table-using-comma-separator '(lambda ()
-                                                             (interactive)
-                                                             (let ((current-prefix-arg '(4)))
-                                                               (call-interactively 'org-table-create-or-convert-from-region))))
+  (defalias 'andre/create-org-table-using-comma-separator
+    '(lambda ()
+       (interactive)
+       (let ((current-prefix-arg '(4)))
+         (call-interactively 'org-table-create-or-convert-from-region))))
 
-  (defalias 'andre/create-org-table-using-tab-separator '(lambda ()
-                                                           (interactive)
-                                                           (let ((current-prefix-arg '(16)))
-                                                             (call-interactively 'org-table-create-or-convert-from-region))))
+  (defalias 'andre/create-org-table-using-tab-separator
+    '(lambda ()
+       (interactive)
+       (let ((current-prefix-arg '(16)))
+         (call-interactively 'org-table-create-or-convert-from-region))))
 
 
-  (defalias 'andre/create-org-table-using-regex-separator '(lambda ()
-                                                             (interactive)
-                                                             (let ((current-prefix-arg '(64)))
-                                                               (call-interactively 'org-table-create-or-convert-from-region))))
+  (defalias 'andre/create-org-table-using-regex-separator
+    '(lambda ()
+       (interactive)
+       (let ((current-prefix-arg '(64)))
+         (call-interactively 'org-table-create-or-convert-from-region))))
 
   ;; nu
   (let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
     (when (file-directory-p nudev-emacs-path)
       (add-to-load-path nudev-emacs-path)
       (require 'nu)))
-
 
   (let ((nu-coll-path "~/dev/nu/playbooks/squads/collections/dev/emacs/"))
     (when (file-directory-p nu-coll-path)
@@ -1097,7 +1117,6 @@ layers configuration. You are free to put any user code."
   (defun andre-dired-mode-hide-details ()
     (dired-hide-details-mode 1))
   (add-hook 'dired-mode-hook 'andre-dired-mode-hide-details)
-
 
   ;; ivy
   ;; requires lexical binding (set at the top of the file)
