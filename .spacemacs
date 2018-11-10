@@ -909,7 +909,7 @@ layers configuration. You are free to put any user code."
   ;; Fuzzy completion
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
   (defun andre-cider-hook ()
-    (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+    ;; (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
     (cider-ns-refresh))
 
