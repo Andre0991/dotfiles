@@ -909,7 +909,7 @@ layers configuration. You are free to put any user code."
   ;; Fuzzy completion
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
   (defun andre-cider-hook ()
-    ;; (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
+    (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
     (cider-ns-refresh))
 
@@ -1020,10 +1020,12 @@ layers configuration. You are free to put any user code."
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
             (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
-            ;; (lispy-define-key lispy-mode-map ", f" 'cider-eval-defun-at-point)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
             (lispy-define-key lispy-mode-map "X" 'andre-lispy-pprint)
             (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp)
+            (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
+            (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
+            (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
             ;; originally M-n, which clashes with Spacemacs
             (define-key lispy-mode-map (kbd "M-l") 'lispy-mark-symbol)))
 
@@ -1185,5 +1187,4 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
-)
+ ))
