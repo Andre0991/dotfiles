@@ -643,12 +643,13 @@ layers configuration. You are free to put any user code."
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
 
 
-  ;; default is message
+  ;; default was message
   ;; (setq lispy-eval-display-style 'message)
   (setq lispy-eval-display-style 'overlay)
 
-  ;; M-i (use "SPC s e" when you don't want to restrict the scope)
+  ;; M-i for local scope editing, C-M-i for top level refactoring
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
+  (define-key lispy-mode-map (kbd "C-M-i") 'evil-iedit-state/iedit-mode)
 
   ;; imenu-everywhere
   (setq imenu-anywhere-buffer-filter-functions
@@ -674,7 +675,9 @@ layers configuration. You are free to put any user code."
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word)
     ;; TODO: won't reload the completions after deleting the char
-    (define-key company-active-map (kbd "C-h") 'evil-delete-backward-char))
+    (define-key company-active-map (kbd "C-h") 'evil-delete-backward-char)
+    ;; was C-M-i (default completion-at-point keybinding)
+    (define-key company-active-map (kbd "<tab>") 'completion-at-point))
 
   ;; ;; Smartparens
   ;; TODO: Buggy on org-mode: = and ~ move the pointer wrongly
