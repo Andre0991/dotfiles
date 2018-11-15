@@ -649,7 +649,7 @@ layers configuration. You are free to put any user code."
 
   ;; M-i for local scope editing, C-M-i for top level refactoring
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
-  (define-key lispy-mode-map (kbd "C-M-i") 'evil-iedit-state/iedit-mode)
+  
 
   ;; imenu-everywhere
   (setq imenu-anywhere-buffer-filter-functions
@@ -1029,6 +1029,7 @@ layers configuration. You are free to put any user code."
             (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
             (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
             (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
+            (define-key lispy-mode-map (kbd "C-M-i") 'evil-iedit-state/iedit-mode)
             ;; originally M-n, which clashes with Spacemacs
             (define-key lispy-mode-map (kbd "M-l") 'lispy-mark-symbol)))
 
