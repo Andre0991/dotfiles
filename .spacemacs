@@ -1029,6 +1029,7 @@ layers configuration. You are free to put any user code."
             (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
             (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
             (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
+            (lispy-define-key lispy-mode-map "I" 'cider-inspect-last-result)
             (define-key lispy-mode-map (kbd "C-M-i") 'evil-iedit-state/iedit-mode)
             ;; originally M-n, which clashes with Spacemacs
             (define-key lispy-mode-map (kbd "M-l") 'lispy-mark-symbol)))
@@ -1138,6 +1139,7 @@ layers configuration. You are free to put any user code."
 
   ;; shell
   (define-key shell-mode-map (kbd "C-l") #'comint-clear-buffer)
+  (define-key shell-mode-map (kbd "C-r") #'counsel-shell-history)
 
   ;; eshell
   ;; this has to be defined within the hook as eshell-mode-map doesn't exist before that
