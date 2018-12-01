@@ -792,7 +792,7 @@ layers configuration. You are free to put any user code."
     (spacemacs/set-leader-keys-for-major-mode 'org-mode
       "ji"  'counsel-org-goto
       "jI"  'counsel-org-goto-all
-      "ic"  'org-cliplink
+      "iL"  'org-cliplink
       "ip"  'andre/paste-html2org-clipboard
       "iq"  'andre/org-insert-question
       "od"  'org-drill
@@ -814,6 +814,10 @@ layers configuration. You are free to put any user code."
     (setq org-habit-preceding-days 7)
     (setq org-habit-graph-column 55)
     (setq org-habit-show-all-today t) ;; show completed tasks too
+
+    ;; export options
+    (setq org-export-with-toc nil)
+    (setq org-export-with-section-numbers nil)
 
     ;; export only subtree
     (defun andre/org-export-subtree-to-markdown-github ()
