@@ -45,14 +45,15 @@ This function should only modify configuration layer settings."
      common-lisp
      csv
      emacs-lisp
-     erc
      epub
+     erc
      git
      github
      html
      ivy
      javascript
      markdown
+     pdf
      (org :variables
           org-enable-bootstrap-support t
           org-enable-github-support t)
@@ -85,10 +86,10 @@ This function should only modify configuration layer settings."
                      enable-flyspell-auto-completion t)
      andre-common-lisp
      andre-elfeed
+     andre-epub
      andre-erc
      andre-eww
      andre-ivy
-     andre-epub
      ;; andre-pdf-tools
      ;; andre-slack
      ;; slack
