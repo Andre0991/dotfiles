@@ -767,7 +767,7 @@ layers configuration. You are free to put any user code."
       (setq org-download-heading-lvl nil))
     (advice-add 'org-download-screenshot :before #'andre-org-download-setup)
 
-
+    ;; worf
     (defun andre/go-to-worf-in-previous-heading ()
       (interactive)
       (worf-backward)
@@ -777,6 +777,14 @@ layers configuration. You are free to put any user code."
       (interactive)
       (worf-forward)
       (evil-insert 0))
+
+    (defun andre-insert-line-above (&rest args)
+      (interactive)
+      (save-excursion
+        (end-of-line 0)
+        (open-line 1)))
+
+    (advice-add 'worf-add :after #'andre-insert-line-above)
 
     (setq org-hide-emphasis-markers t) ;; removes markers such as * in *bold*, / in /italic/ etc
     (require 'ox-md nil t) ;; show markdown in list of exported formats
