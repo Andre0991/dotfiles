@@ -549,6 +549,10 @@ layers configuration. You are free to put any user code."
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
 
+  ;; my packages
+  (push "~/Dropbox/backup/emacs/packages/ob-splunk" load-path)
+  (require 'ob-splunk)
+
   ;; set folders
   (setq andre-type-env (if (file-exists-p "~/.emacs-work") 'work-mac 'home-mac))
   (setq andre--home-todo-path "~/Dropbox/org/todo-home.org")
