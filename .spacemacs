@@ -753,6 +753,8 @@ layers configuration. You are free to put any user code."
   ;; "Since version 0.104, spacemacs uses the org version from the org ELPA repository instead of the one shipped with emacs. Then, any org related code should not be loaded before dotspacemacs/user-config, otherwise both versions will be loaded and will conflict.
   ;; Because of autoloading, calling to org functions will trigger the loading up of the org shipped with emacs wich will induce conflicts. One way to avoid conflict is to wrap your org config code in a with-eval-after-load block like this:"
   (with-eval-after-load 'org
+    (org-babel-load-file "/Users/andreperictavares/Dropbox/org/routine.org")
+
     (org-defkey org-mode-map (kbd "}") #'andre-brackets)
 
     ;; org-download
