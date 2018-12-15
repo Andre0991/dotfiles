@@ -544,6 +544,9 @@ dump."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  ;; spaceline
+  (spaceline-toggle-minor-modes-off)
+
   ;; Spacemacs has a mechanism for getting env vars,
   ;; but it didn't actually work in my setup
   (when (memq window-system '(mac ns x))
