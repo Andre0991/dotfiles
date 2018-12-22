@@ -945,22 +945,26 @@ layers configuration. You are free to put any user code."
   (eval-after-load 'cider
     #'emidje-setup)
 
-  (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
-  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-connected-hook 'andre-cider-connected-hook)
-  ;; (remove-hook 'cider-connected-hook 'andre-cider-connected-hook)
-
-  (setq cljr-middleware-ignored-paths '(".*/test/.*"))
-
-  (setq cider-repl-use-pretty-printing t)
-
   (defun andre-cider-require ()
     (interactive)
     (left-char)
     (cljr-slash)
     (delete-forward-char 1))
-  (define-key cider-mode-map (kbd "C-r") 'andre-cider-require)
+
+  (defun andre-cider-hook ()
+    (define-key cider-mode-map (kbd "C-r") 'andre-cider-require)
+    (cider-company-enable-fuzzy-completion))
+
+  (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'andre-cider-hook)
+  (add-hook 'cider-connected-hook 'andre-cider-connected-hook)
+
+  ;; (remove-hook 'cider-connected-hook 'andre-cider-connected-hook)
+
+  (setq cljr-middleware-ignored-paths '(".*/test/.*"))
+
+  (setq cider-repl-use-pretty-printing t)
 
   ;; default was 'both
   (setq cider-use-overlays t)
