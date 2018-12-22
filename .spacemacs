@@ -572,12 +572,6 @@ layers configuration. You are free to put any user code."
   (setq find-function-C-source-directory "~/Dropbox/ciencia_da_computacao/emacs/source/emacs-26.1/src")
 
   ;; My functions
-  (defun andre-open-k2pdfopt-shell ()
-    (interactive)
-    (shell)
-    (insert "cd /Users/andreperictavares/Dropbox/kindle/ && ./k2pdfopt")
-    (comint-send-input))
-
   (defun andre/clear-compilation-buffer ()
     (interactive)
     (let ((inhibit-read-only t))
@@ -622,10 +616,6 @@ layers configuration. You are free to put any user code."
           (delete-backward-char 1)
           (insert new-delimiter-quote)))))
 
-  (defun andre//read-lines (filePath)
-    "Return a list of lines of a file at filePath."
-    (with-temp-buffer (insert-file-contents filePath) (split-string (buffer-string) "\n" t)))
-
   (defun andre/convert-file-name-to-my-standard-format (filename)
     "Change given string to lower case and replace , to _."
     (interactive "s")
@@ -650,7 +640,6 @@ layers configuration. You are free to put any user code."
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode (lambda () (lispy-mode 1)))
-
 
   ;; default was message
   ;; (setq lispy-eval-display-style 'message)
@@ -718,12 +707,6 @@ layers configuration. You are free to put any user code."
 
   ;; Yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
-
-  ;; Aux functions
-  (defun andre/indent-buffer ()
-    "Indents current buffer"
-    (interactive)
-    (indent-region (point-min) (point-max)))
 
   (defun andre//read-lines (filePath)
     "Return a list of lines of a file at filePath."
@@ -829,21 +812,6 @@ layers configuration. You are free to put any user code."
     (setq org-export-with-toc nil)
     (setq org-export-with-section-numbers nil)
 
-    ;; export only subtree
-    (defun andre/org-export-subtree-to-markdown-github ()
-      (interactive)
-      (let ((org-export-with-toc nil))
-        (org-md-export-to-markdown nil t nil)
-        (save-excursion
-          (let* ((exported-file (org-export-output-file-name ".md")))
-            (find-file exported-file)
-            (clipboard-kill-ring-save (point-min) (point-max))))))
-
-    ;; save the clock history across Emacs sessions
-    (setq org-clock-persist 'history)
-    (org-clock-persistence-insinuate)
-    (spacemacs/toggle-mode-line-org-clock-on)
-
     ;; Multi-state worflows: http://orgmode.org/guide/Multi_002dstate-workflows.html
     ;; Options for each state:
     ;;   "!" adds timestamp for state logging
@@ -857,7 +825,6 @@ layers configuration. You are free to put any user code."
     ;; This is not a good approach, because if the header name is modified, the link gets broken.
     ;; Setting this variable to true makes ~org-store-link~ create =:PROPERTIES= (thus, an ID). So we can link to the ID instead of the name of heading - much less fragile.
     (setq org-id-link-to-org-use-id t)
-
 
     ;; babel
     ;; List of languages that can be executed with <C-c><C-c>.
@@ -924,7 +891,6 @@ layers configuration. You are free to put any user code."
     ;; from https://github.com/abo-abo/worf/issues/31
     (defun andre-brackets ()
       (interactive)
-      (message "hi people")
       (insert "[]")
       (backward-char)))
 
@@ -968,7 +934,6 @@ layers configuration. You are free to put any user code."
 
   ;; default was 'both
   (setq cider-use-overlays t)
-
 
   (defun andre--but-last (str)
     (substring str 0 (- (length str) 1)))
@@ -1034,18 +999,17 @@ layers configuration. You are free to put any user code."
       (progn
         (apply orig-fun (list (ansi-color-apply (car args)))))))
 
-  (defun andre-lispy-pprint ()
+  (defun andre-lispy-cider-pprint ()
     (interactive)
     (lispy-different)
     (cider-pprint-eval-last-sexp)
     (lispy-different))
 
-
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
             (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
-            (lispy-define-key lispy-mode-map "X" 'andre-lispy-pprint)
+            (lispy-define-key lispy-mode-map "X" 'andre-lispy-cider-pprint)
             (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp)
             (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
             (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
