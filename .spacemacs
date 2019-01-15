@@ -573,6 +573,10 @@ layers configuration. You are free to put any user code."
   (setq find-function-C-source-directory "~/Dropbox/ciencia_da_computacao/emacs/source/emacs-26.1/src")
 
   ;; My functions
+  (defun andre/open-with-vim ()
+    (interactive)
+    (async-shell-command (format "mvim %s" (shell-quote-argument buffer-file-name))))
+
   (defun andre/clear-compilation-buffer ()
     (interactive)
     (let ((inhibit-read-only t))
