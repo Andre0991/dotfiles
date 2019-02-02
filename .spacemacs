@@ -57,7 +57,8 @@ This function should only modify configuration layer settings."
      ;; pdf
      (org :variables
           org-enable-bootstrap-support t
-          org-enable-github-support t)
+          org-enable-github-support t
+          org-export-with-sub-superscripts nil)
      osx
      ;; pdf
      plantuml
