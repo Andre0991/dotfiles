@@ -552,6 +552,9 @@ layers configuration. You are free to put any user code."
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
 
+  ;; spaceline
+  (setq spaceline-minor-modes-p nil)
+
   ;; my packages
   (push "~/Dropbox/backup/emacs/packages/ob-splunk" load-path)
   (require 'ob-splunk)
