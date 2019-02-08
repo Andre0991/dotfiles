@@ -1163,6 +1163,7 @@ layers configuration. You are free to put any user code."
   ;; default files
   (when (eq andre-type-env 'work-mac)
     (find-file "~/Dropbox/nu/org/tech.org")
+    (find-file "~/Dropbox/org/splunk/splunk.org")
     (find-file "~/Dropbox/ciencia_da_computacao/datomic/datomic-notes.org")
     (find-file "~/Dropbox/ciencia_da_computacao/programming_languages/bash/notes_bash.org")
     (find-file "~/Dropbox/nu/org/todo-work.org")
