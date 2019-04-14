@@ -670,6 +670,7 @@ layers configuration. You are free to put any user code."
 
   ;; keybindings
   (global-set-key "\C-h" 'delete-backward-char)
+  (spacemacs/set-leader-keys "&" 'andre/open-externally)
   (global-set-key (kbd "C-x C-l") 'evil-complete-next-line)
   (spacemacs/set-leader-keys "p d" 'deadgrep)
   (evil-leader/set-key
