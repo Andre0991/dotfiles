@@ -1030,6 +1030,13 @@ layers configuration. You are free to put any user code."
       (forward-char)
       (cider-grimoire-lookup (cider-symbol-at-point))))
 
+  (defun andre-debug-clojure-variable ()
+    (interactive)
+    (let ((symbol-at-point (thing-at-point 'symbol))
+          (bounds (bounds-of-thing-at-point 'symbol)))
+      (delete-region (car bounds) (cdr bounds))
+      (insert (format "(def debug-%s %s)" symbol-at-point symbol-at-point))))
+
   (defun andre-lispy-cider-pprint ()
     (interactive)
     (lispy-different)
