@@ -928,8 +928,12 @@ layers configuration. You are free to put any user code."
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
     (cider-ns-refresh))
 
+  (defun setup-emidje ()
+    (emidje-setup)
+    (setq emidje-load-facts-on-eval 't))
+
   (eval-after-load 'cider
-    #'emidje-setup)
+    #'setup-emidje)
 
   (defun andre-cider-require ()
     (interactive)
@@ -939,7 +943,8 @@ layers configuration. You are free to put any user code."
 
   (defun andre-cider-hook ()
     (define-key cider-mode-map (kbd "C-r") 'andre-cider-require)
-    (cider-company-enable-fuzzy-completion))
+    (cider-company-enable-fuzzy-completion)
+    (setq nrepl-sync-request-timeout 20))
 
   (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
@@ -1078,6 +1083,13 @@ layers configuration. You are free to put any user code."
 
   (when (file-exists-p andre--workspaces-path)
     (load-file andre--workspaces-path))
+
+  (defun andre/ident-html ()
+    (interactive)
+    (web-mode)
+    (let ((inhibit-read-only 't))
+      (sgml-pretty-print (point-min)
+                         (point-max))))
 
   ;; ix (pastebin like service for sharing snippets of code)
   (defalias 'andre/pastebin-share-snippet 'ix)
