@@ -699,7 +699,7 @@ layers configuration. You are free to put any user code."
   ;; Misc
   (setq vc-follow-symlinks t) ;; do not ask question about following symlinks
   (setq large-file-warning-threshold nil) ;; doc-view
-  (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
+  ;; (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell) ; freezes emacs on mac os mojave
   (setq confirm-kill-processes nil) ;; stop asking "Active processes exist; kill them and exit anyway"
   ;; holidays
   (setq holiday-christian-holidays nil)
@@ -1143,8 +1143,18 @@ layers configuration. You are free to put any user code."
   (when (file-exists-p "~/Dropbox/nu/emacs-lisp/nu-andre.el")
     (load-file "~/Dropbox/nu/emacs-lisp/nu-andre.el"))
 
+  ;; from https://stackoverflow.com/questions/6845005/how-can-i-open-files-externally-in-emacs-dired-mode
+  (defun andre-dired-open-file ()
+    "In dired, open the file named on this line."
+    (interactive)
+    (let* ((file (dired-get-filename nil t)))
+      (message "Opening %s..." file)
+      (call-process "open" nil 0 nil file)
+      (message "Opening %s done" file)))
+
   ;; dired
   (evil-define-key 'normal dired-mode-map
+    (kbd "!") 'andre-dired-open-file
     (kbd "[") 'dired-up-directory)
   (defun andre-dired-mode-hide-details ()
     (dired-hide-details-mode 1))
