@@ -1042,7 +1042,9 @@ layers configuration. You are free to put any user code."
     (interactive)
     (lispy-different)
     (cider-pprint-eval-last-sexp)
-    (lispy-different))
+    (lispy-different)
+    (with-current-buffer "*cider-result*"
+      (read-only-mode -1)))
 
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
