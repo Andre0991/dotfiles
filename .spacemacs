@@ -665,8 +665,11 @@ layers configuration. You are free to put any user code."
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
 
   ;; imenu-everywhere
+  ;; Prevent imenu-everywhere from considering functions from other projects
+  ;; https://github.com/vspinu/imenu-anywhere/issues/21
+  (setq-default imenu-anywhere-buffer-list-function 'projectile-project-buffers)
   (setq imenu-anywhere-buffer-filter-functions
-        '(imenu-anywhere-same-project-p))
+        '(imenu-anywhere-same-mode-p imenu-anywhere-friendly-mode-p))
   ;; was (imenu-anywhere-same-mode-p imenu-anywhere-friendly-mode-p imenu-anywhere-same-project-p)
 
   ;; keybindings
@@ -1036,15 +1039,13 @@ layers configuration. You are free to put any user code."
     (let ((symbol-at-point (thing-at-point 'symbol))
           (bounds (bounds-of-thing-at-point 'symbol)))
       (delete-region (car bounds) (cdr bounds))
-      (insert (format "(def debug-%s %s)" symbol-at-point symbol-at-point))))
+      (insert (format "(def %s %s)" symbol-at-point symbol-at-point))))
 
   (defun andre-lispy-cider-pprint ()
     (interactive)
     (lispy-different)
     (cider-pprint-eval-last-sexp)
-    (lispy-different)
-    (with-current-buffer "*cider-result*"
-      (read-only-mode -1)))
+    (lispy-different))
 
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
@@ -1171,6 +1172,13 @@ layers configuration. You are free to put any user code."
       (ivy-quit-and-run
         (counsel-rg search-str (projectile-project-root) "--iglob '!test*' --iglob '!postman*'"))))
 
+  (defun andre/counsel-rg-clj ()
+    (interactive)
+    (let ((search-str (ivy--input)))
+      ;; https://emacs.stackexchange.com/questions/20974/exit-minibuffer-and-execute-a-command-afterwards
+      (ivy-quit-and-run
+        (counsel-rg search-str (projectile-project-root) "-tclojure"))))
+
   (defun andre/counsel-rg-src-and-tests ()
     (interactive)
     (let ((search-str (ivy--input)))
@@ -1179,6 +1187,7 @@ layers configuration. You are free to put any user code."
         (counsel-rg search-str (projectile-project-root)))))
 
   (define-key ivy-minibuffer-map (kbd "C-s") #'andre/counsel-rg-src)
+  (define-key ivy-minibuffer-map (kbd "C-q") #'andre/counsel-rg-clj)
   (define-key ivy-minibuffer-map (kbd "C-t") #'andre/counsel-rg-src-and-tests)
 
   ;; shell
