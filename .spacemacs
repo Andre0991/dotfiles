@@ -944,6 +944,15 @@ layers configuration. You are free to put any user code."
     (cljr-slash)
     (delete-forward-char 1))
 
+  ;; ", <key>" won't work property (which-key won't update the display), so just use ","
+  ;; https://gitter.im/syl20bnr/spacemacs?at=5cf32abd5de053468bf930dd
+  (defun display-clj-mode-which-key ()
+    (interactive)
+    (evil-normal-state)
+    (forward-char)
+    (setq unread-command-events
+          (listify-key-sequence (kbd ","))))
+
   (defun andre-cider-hook ()
     (define-key clojure-mode-map (kbd "M-u") 'andre-debug-clojure-variable)
     (define-key cider-mode-map (kbd "C-r") 'andre-cider-require)
@@ -1049,6 +1058,7 @@ layers configuration. You are free to put any user code."
 
   (eval-after-load "lispy"
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
+            (lispy-define-key lispy-mode-map "," 'display-clj-mode-which-key)
             (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
             (lispy-define-key lispy-mode-map "G" 'andre-cider-grimoire)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
