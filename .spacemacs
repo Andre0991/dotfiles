@@ -953,6 +953,14 @@ layers configuration. You are free to put any user code."
     (setq unread-command-events
           (listify-key-sequence (kbd ","))))
 
+  ;;;;;;;;
+  ;; (define-key clojure-mode-map (kbd "C-e") 'andre-cider-eval)
+  ;; (defun andre-cider-eval ()
+  ;;   (interactive)
+  ;;   (cider-interactive-eval "(visual-flow.spitter/spit-index
+  ;;                        (index-html @all-events))"))
+  ;;;;;;;;
+
   (defun andre-cider-hook ()
     (define-key clojure-mode-map (kbd "M-u") 'andre-debug-clojure-variable)
     (define-key cider-mode-map (kbd "C-r") 'andre-cider-require)
