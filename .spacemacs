@@ -934,6 +934,7 @@ layers configuration. You are free to put any user code."
   (defun andre-cider-connected-hook ()
     (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
     (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
+    ;; (clojure.tools.namespace.repl/set-refresh-dirs "src" "test")
     (cider-ns-refresh))
 
   (defun setup-emidje ()
