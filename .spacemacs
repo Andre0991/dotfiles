@@ -1192,6 +1192,15 @@ layers configuration. You are free to put any user code."
     (dired-hide-details-mode 1))
   (add-hook 'dired-mode-hook 'andre-dired-mode-hide-details)
 
+  ;; Clojure
+  (defun lint-fix ()
+    (interactive)
+    (async-shell-command (format "cd %s && lein lint-fix" (projectile-project-root))))
+
+  (defun lein-test ()
+    (interactive)
+    (async-shell-command (format "cd %s && lein test" (projectile-project-root))))
+
   ;; ivy
   ;; requires lexical binding (set at the top of the file)
   (defun andre/counsel-rg-src ()
