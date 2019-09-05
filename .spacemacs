@@ -54,19 +54,17 @@ This function should only modify configuration layer settings."
      ivy
      javascript
      markdown
-     ;; pdf
      (org :variables
           org-enable-bootstrap-support t
           org-enable-github-support t
           org-export-with-sub-superscripts nil)
      osx
-     ;; pdf
      plantuml
      scala
      shell-scripts
      spacemacs-layouts
-     syntax-checking
      swift
+     syntax-checking
      themes-megapack
      theming
      version-control
@@ -93,7 +91,6 @@ This function should only modify configuration layer settings."
      andre-erc
      andre-eww
      andre-ivy
-     ;; andre-pdf-tools
      ;; andre-slack
      ;; slack
      )
@@ -933,16 +930,17 @@ layers configuration. You are free to put any user code."
   ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
   (defun andre-cider-connected-hook ()
     (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
-    (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
+    ;; (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
     ;; (clojure.tools.namespace.repl/set-refresh-dirs "src" "test")
-    (cider-ns-refresh))
+    ;; (cider-ns-refresh)
+    )
 
   (defun setup-emidje ()
     (emidje-setup)
     (setq emidje-load-facts-on-eval 't))
 
-  (eval-after-load 'cider
-    #'setup-emidje)
+  ;; (eval-after-load 'cider
+  ;;   #'setup-emidje)
 
   (defun andre-cider-require ()
     (interactive)
@@ -962,14 +960,6 @@ layers configuration. You are free to put any user code."
   (defmacro comment (&rest body)
     "Comment out one or more s-expressions."
     nil)
-
-  (comment
-   (define-key clojure-mode-map (kbd "C-e") 'andre-cider-eval)
-   (defun andre-cider-eval ()
-     (interactive)
-     (cider-interactive-eval "(visual-flow.spitter/spit-index
-                         (index-html @all-events))")
-     (browse-url "/Users/andreperictavares/dev/nu/sr-barriga/visual-flow/index.html")))
 
   (defun andre-cider-hook ()
     (define-key clojure-mode-map (kbd "M-u") 'andre-debug-clojure-variable)
@@ -1047,7 +1037,9 @@ layers configuration. You are free to put any user code."
   ;; Midje messages use ansi colours
   (defun andre/lispy-coloured-message (orig-fun &rest args)
     ;; TODO: check clojure mode!
-    (if (or (> (length (car args)) 4000) (> (cl-count ?\n (car args)) (or 14 (* (window-height (frame-root-window)) max-mini-window-height))))
+    (if (or (> (length (car args)) 4000)
+            (> (cl-count ?\n (car args))
+               (or 14 (* (window-height (frame-root-window)) max-mini-window-height))))
         ;; using ansi-color-apply won't work for all colours
         (progn
           (apply orig-fun args)
@@ -1056,11 +1048,12 @@ layers configuration. You are free to put any user code."
       (progn
         (apply orig-fun (list (ansi-color-apply (car args)))))))
 
-  (defun andre-cider-grimoire ()
+  (defun andre-cider-clojuredocs ()
     (interactive)
     (save-excursion
       (forward-char)
-      (cider-grimoire-lookup (cider-symbol-at-point))))
+      (let ((cider-prompt-for-symbol nil))
+        (cider-clojuredocs))))
 
   (defun andre-debug-clojure-variable ()
     (interactive)
@@ -1079,7 +1072,7 @@ layers configuration. You are free to put any user code."
     `(progn (advice-add 'lispy-message :around #'andre/lispy-coloured-message)
             (lispy-define-key lispy-mode-map "," 'display-clj-mode-which-key)
             (lispy-define-key lispy-mode-map "g" 'andre/lispy-imenu-fallback)
-            (lispy-define-key lispy-mode-map "G" 'andre-cider-grimoire)
+            (lispy-define-key lispy-mode-map "G" 'andre-cider-clojuredocs)
             (lispy-define-key lispy-mode-map "v" 'evil-scroll-line-to-center)
             (lispy-define-key lispy-mode-map "X" 'andre-lispy-cider-pprint)
             (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp)
