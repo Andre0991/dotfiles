@@ -1,2 +1,7 @@
 map j nextTab
 map k previousTab
+map b Vomnibar.activateTabSelection
+map h goBack
+map l goForward
+map H scrollLeft
+map L scrollRight
