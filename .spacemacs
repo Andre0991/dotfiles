@@ -42,7 +42,8 @@ This function should only modify configuration layer settings."
      ;; latex
      ;; python
      (clojure :variables
-              clojure-enable-clj-refactor t)
+              clojure-enable-clj-refactor t
+              clojure-enable-linters 'clj-kondo)
      common-lisp
      csv
      emacs-lisp
@@ -925,16 +926,6 @@ layers configuration. You are free to put any user code."
   ;; https://emacs.stackexchange.com/questions/30516/show-the-matching-line-in-the-center-of-the-screen-instead-of-the-bottom-when-op
   (setq next-error-recenter '(4))
 
-  ;; Cider
-  ;; Fuzzy completion
-  ;; https://github.com/alexander-yakushev/compliment/wiki/Examples
-  (defun andre-cider-connected-hook ()
-    (cider-load-file (expand-file-name "lispy-clojure.clj" lispy-site-directory))
-    ;; (cider-nrepl-sync-request:eval "(clojure.tools.namespace.repl/set-refresh-dirs \"src\")")
-    ;; (clojure.tools.namespace.repl/set-refresh-dirs "src" "test")
-    ;; (cider-ns-refresh)
-    )
-
   (defun setup-emidje ()
     (emidje-setup)
     (setq emidje-load-facts-on-eval 't))
@@ -971,9 +962,6 @@ layers configuration. You are free to put any user code."
   (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'andre-cider-hook)
-  (add-hook 'cider-connected-hook 'andre-cider-connected-hook)
-
-  ;; (remove-hook 'cider-connected-hook 'andre-cider-connected-hook)
 
   (setq cljr-middleware-ignored-paths '("/test/"))
 
@@ -1014,12 +1002,15 @@ layers configuration. You are free to put any user code."
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region (point-min) (point-max))))
 
+
   (setq lispy-visit-method 'projectile-find-file)
+
   ;; lispy keybindings
   (defun andre/lispy-backward-and-go-to-insert-mode ()
     (interactive)
     (lispy-backward 0)
     (evil-insert 0))
+
   (defun andre/lispy-forward-and-go-to-insert-mode ()
     (interactive)
     (lispy-forward 1)
@@ -1189,6 +1180,10 @@ layers configuration. You are free to put any user code."
   (defun lint-fix ()
     (interactive)
     (async-shell-command (format "cd %s && lein lint-fix" (projectile-project-root))))
+
+  (defun lein-test ()
+    (interactive)
+    (async-shell-command (format "cd %s && lein test" (projectile-project-root))))
 
   (defun lein-test ()
     (interactive)
