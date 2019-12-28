@@ -264,9 +264,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-one
-                         gruvbox
-                         leuven)
+   dotspacemacs-themes '(leuven
+                         doom-one
+                         gruvbox)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -729,6 +729,13 @@ layers configuration. You are free to put any user code."
   (magit-wip-after-save-mode)
   (setq magit-save-repository-buffers 'dontask)
 
+  ;; see https://emacs.stackexchange.com/questions/20154/how-can-i-stage-all-changes-and-commit-them-without-displaying-commit-message-bu
+  (defun andre-magit-stage-all-and-commit (message)
+    (interactive "sCommit Message: ")
+    (magit-stage-modified)
+    (magit-commit (list "-m" message)))
+
+
   ;; Yasnippet
   (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
@@ -958,6 +965,19 @@ layers configuration. You are free to put any user code."
     (cider-company-enable-fuzzy-completion)
     (setq cider-save-file-on-load t)
     (setq nrepl-sync-request-timeout 20))
+
+  (setq andre-cider-eval-command nil)
+
+  (defun andre-set-cider-eval-command (begin end)
+    (interactive "r")
+    (if (use-region-p)
+        (let ((text (buffer-substring-no-properties begin end)))
+          (setq andre-cider-eval-command text))
+      (message "region must be active")))
+
+  (defun andre-cider-eval ()
+    (interactive)
+    (cider-interactive-eval andre-cider-eval-command))
 
   (add-hook 'cider-repl-mode-hook (lambda () (lispy-mode 1)))
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
