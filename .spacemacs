@@ -1205,10 +1205,6 @@ layers configuration. You are free to put any user code."
     (interactive)
     (async-shell-command (format "cd %s && lein test" (projectile-project-root))))
 
-  (defun lein-test ()
-    (interactive)
-    (async-shell-command (format "cd %s && lein test" (projectile-project-root))))
-
   ;; ivy
   ;; requires lexical binding (set at the top of the file)
   (defun andre/counsel-rg-src ()
@@ -1262,16 +1258,7 @@ layers configuration. You are free to put any user code."
                                       :compile "lein compile"
                                       :test "lein nu-test :autotest"
                                       :run "lein run"
-                                      :test-suffix "_test"))
-  ;; default files
-  (when (eq andre-type-env 'work-mac)
-    (find-file "~/Dropbox/nu/org/tech.org")
-    (find-file "~/Dropbox/org/splunk/splunk.org")
-    (find-file "~/Dropbox/ciencia_da_computacao/data_science/spark-scala.org")
-    (find-file "~/Dropbox/ciencia_da_computacao/datomic/datomic-notes.org")
-    (find-file "~/Dropbox/ciencia_da_computacao/programming_languages/bash/notes_bash.org")
-    (find-file "~/Dropbox/nu/org/todo-work.org")
-    (spacemacs/switch-to-scratch-buffer)))
+                                      :test-suffix "_test")))
 
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
