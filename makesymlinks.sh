@@ -8,6 +8,6 @@
 
 git clone https://github.com/Andre0991/dotfiles .
 
-# new
 ln -s ~/dotfiles/.spacemacs ~/.spacemacs
 ln -s ~/dotfiles/.vimrc ~/.vimrc
+ln -s ~/dotfiles/.doom.d ~/.doom.d
