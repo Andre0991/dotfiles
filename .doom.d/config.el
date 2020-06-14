@@ -58,9 +58,19 @@
 (map! "C-h" #'delete-backward-char)
 (setq doom-localleader-key ",")
 
+;; helpers
+
+(defun raise-minor-mode (mode)
+    "Make MODE the first on `minor-mode-map-alist'."
+    (let ((x (assq mode minor-mode-map-alist)))
+      (when x
+        (setq minor-mode-map-alist
+              (cons x (delq mode minor-mode-map-alist))))))
+
 ;; lispy
 
 (after! lispy
+  (raise-minor-mode 'lispy-mode)
   (setq lispy-eval-display-style 'overlay)
   (defun andre/lispy-backward ()
     (interactive)
