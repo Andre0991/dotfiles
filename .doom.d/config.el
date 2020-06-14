@@ -56,6 +56,7 @@
 ;; general keybindings
 
 (map! "C-h" #'delete-backward-char)
+(setq doom-localleader-key ",")
 
 ;; lispy
 
