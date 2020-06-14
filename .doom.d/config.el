@@ -70,7 +70,6 @@
 ;; lispy
 
 (after! lispy
-  (raise-minor-mode 'lispy-mode)
   (setq lispy-eval-display-style 'overlay)
   (defun andre/lispy-backward ()
     (interactive)
@@ -80,7 +79,13 @@
     (interactive)
     (lispy-forward 1)
     (evil-insert 0))
+  ;; prevents `/` (`lispy-splice`) from being overriden
+  (raise-minor-mode 'lispy-mode)
   (map! :map lispy-mode-map
         :n "[" 'andre/lispy-backward)
   (map! :map lispy-mode-map
-        :n "]" 'andre/lispy-forward))
+        :n "]" 'andre/lispy-forward)
+  (map! :map lispy-mode-map
+        :i "C-d" 'lispy-delete)
+  (map! :map lispy-mode-map
+        :i "C-k" 'lispy-kill))
