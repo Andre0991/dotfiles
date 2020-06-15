@@ -98,3 +98,7 @@
 (after! cider
   ;; https://github.com/clojure-emacs/cider/issues/2808
   (setq cider-enhanced-cljs-completion-p nil))
+
+(after! magit
+  (setq git-commit-style-convention-checks
+        (remove 'overlong-summary-line git-commit-style-convention-checks)))
