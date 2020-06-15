@@ -67,7 +67,12 @@
         (setq minor-mode-map-alist
               (cons x (delq mode minor-mode-map-alist))))))
 
-;; lispy
+;; nu
+(let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
+  (when (file-directory-p nudev-emacs-path)
+    (add-to-list 'load-path nudev-emacs-path)
+    (require 'nu)))
+
 
 (after! lispy
   (setq lispy-eval-display-style 'overlay)
