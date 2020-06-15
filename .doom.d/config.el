@@ -94,3 +94,7 @@
         :i "C-d" 'lispy-delete)
   (map! :map lispy-mode-map
         :i "C-k" 'lispy-kill))
+
+(after! cider
+  ;; https://github.com/clojure-emacs/cider/issues/2808
+  (setq cider-enhanced-cljs-completion-p nil))
