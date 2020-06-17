@@ -67,11 +67,13 @@
         (setq minor-mode-map-alist
               (cons x (delq mode minor-mode-map-alist))))))
 
-;; nu
+;; local packages
+
 (let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
   (when (file-directory-p nudev-emacs-path)
     (add-to-list 'load-path nudev-emacs-path)
     (require 'nu)))
+(load! "~/Dropbox/nu/emacs-lisp/nu-andre.el" nil t)
 
 
 (after! lispy
