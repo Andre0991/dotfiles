@@ -109,8 +109,12 @@
 (after! magit
   (setq git-commit-style-convention-checks
         (remove 'overlong-summary-line git-commit-style-convention-checks)))
+
 (after! evil-snipe
   ;; use the 's' key for `evil-substitute` instead of `evil-snipe`
   ;; `evil-snipe` highlights still work
   (evil-snipe-mode -1))
 
+(after! projectile
+  ;; used by `projectile-discover-projects-in-search-path'
+  (setq projectile-project-search-path '("~/dev/nu")))
