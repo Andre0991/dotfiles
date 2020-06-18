@@ -79,6 +79,8 @@
 
 (after! lispy
   (setq lispy-eval-display-style 'overlay)
+  ;; M-i for `lispy-iedit' (local) and C-; for iedit (buffer)
+  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
   (defun andre/lispy-backward ()
     (interactive)
     (lispy-backward 0)
