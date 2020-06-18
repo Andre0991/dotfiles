@@ -114,6 +114,10 @@
   (setq git-commit-style-convention-checks
         (remove 'overlong-summary-line git-commit-style-convention-checks)))
 
+(after! company
+  (map! :map company-active-map
+        :g "C-h" 'evil-delete-backward-char))
+
 (after! evil-snipe
   ;; use the 's' key for `evil-substitute` instead of `evil-snipe`
   ;; `evil-snipe` highlights still work
