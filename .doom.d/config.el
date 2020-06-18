@@ -106,7 +106,9 @@
 
 (after! clojure
   (map! :map clojure-mode-map
-        :n ", f l" 'clojure-align))
+        :localleader
+        :desc "Align sexp"
+        "f l" #'clojure-align))
 
 (after! magit
   (setq git-commit-style-convention-checks
