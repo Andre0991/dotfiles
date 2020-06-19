@@ -125,4 +125,7 @@
 
 (after! projectile
   ;; used by `projectile-discover-projects-in-search-path'
-  (setq projectile-project-search-path '("~/dev/nu")))
+  (setq projectile-project-search-path '("~/dev/nu"))
+  (map! :leader
+        :desc "Toggle impl and test"
+        "p t" #'projectile-toggle-between-implementation-and-test))
