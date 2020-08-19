@@ -25,7 +25,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-one-light)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -58,14 +58,18 @@
 (map! "C-h" #'delete-backward-char)
 (setq doom-localleader-key ",")
 
+;; general settings
+
+(setq confirm-kill-processes nil)
+
 ;; helpers
 
 (defun raise-minor-mode (mode)
-    "Make MODE the first on `minor-mode-map-alist'."
-    (let ((x (assq mode minor-mode-map-alist)))
-      (when x
-        (setq minor-mode-map-alist
-              (cons x (delq mode minor-mode-map-alist))))))
+  "Make MODE the first on `minor-mode-map-alist'."
+  (let ((x (assq mode minor-mode-map-alist)))
+    (when x
+      (setq minor-mode-map-alist
+            (cons x (delq mode minor-mode-map-alist))))))
 
 ;; local packages
 
@@ -89,6 +93,17 @@
     (interactive)
     (lispy-forward 1)
     (evil-insert 0))
+  (defun andre/lispy-cider-pprint ()
+    (interactive)
+    (lispy-different)
+    (cider-pprint-eval-last-sexp)
+    (lispy-different))
+  (defun andre/cider-clojuredocs ()
+    (interactive)
+    (save-excursion
+      (forward-char)
+      (let ((cider-prompt-for-symbol nil))
+        (cider-clojuredocs))))
   ;; prevents `/` (`lispy-splice`) from being overriden
   (raise-minor-mode 'lispy-mode)
   (map! :map lispy-mode-map
@@ -98,13 +113,42 @@
   (map! :map lispy-mode-map
         :i "C-d" 'lispy-delete)
   (map! :map lispy-mode-map
-        :i "C-k" 'lispy-kill))
+        :i "C-k" 'lispy-kill)
+  (map! :map lispy-mode-map
+        :i "C-y" 'lispy-yank)
+  (map! :map lispy-mode-map
+        :i "X" 'andre/lispy-cider-pprint)
+  (map! :map lispy-mode-map
+        :i "G" 'andre/cider-clojuredocs)
+  (map! :map lispy-mode-map
+        :i "K" 'lispy-up-slurp)
+  (map! :map lispy-mode-map
+        :i "J" 'lispy-down-slurp)
+  (map! :map lispy-mode-map
+        :i "W" 'lispy-move-left)
+  (map! :map lispy-mode-map
+        :i "S" 'lispy-move-right)
+  ;; (map! :map lispy-mode-map
+  ;;       :i "v" 'evil-scroll-line-to-center)
+  )
 
 (after! cider
+  (defun andre/cider-require ()
+    (interactive)
+    (left-char)
+    (cljr-slash)
+    (delete-forward-char 1))
   ;; https://github.com/clojure-emacs/cider/issues/2808
-  (setq cider-enhanced-cljs-completion-p nil))
+  (setq cider-enhanced-cljs-completion-p nil)
+  (map! :map cider-mode-map
+        :i "C-r" #'andre/cider-require))
 
 (after! clojure
+  (defun andre/cider-require ()
+    (interactive)
+    (left-char)
+    (cljr-slash)
+    (delete-forward-char 1))
   (map! :map clojure-mode-map
         :localleader
         :desc "Align sexp"
