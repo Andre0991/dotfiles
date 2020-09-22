@@ -33,7 +33,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type 't)
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -116,21 +116,12 @@
         :i "C-k" 'lispy-kill)
   (map! :map lispy-mode-map
         :i "C-y" 'lispy-yank)
-  (map! :map lispy-mode-map
-        :i "X" 'andre/lispy-cider-pprint)
-  (map! :map lispy-mode-map
-        :i "G" 'andre/cider-clojuredocs)
-  (map! :map lispy-mode-map
-        :i "K" 'lispy-up-slurp)
-  (map! :map lispy-mode-map
-        :i "J" 'lispy-down-slurp)
-  (map! :map lispy-mode-map
-        :i "W" 'lispy-move-left)
-  (map! :map lispy-mode-map
-        :i "S" 'lispy-move-right)
-  ;; (map! :map lispy-mode-map
-  ;;       :i "v" 'evil-scroll-line-to-center)
-  )
+  (lispy-define-key lispy-mode-map "X" 'andre/lispy-cider-pprint)
+  (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
+  (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
+  (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
+  (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
+  (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp))
 
 (after! cider
   (defun andre/cider-require ()
