@@ -169,3 +169,6 @@
   (map! :leader
         :desc "counsel-yank-pop"
         "y" #'counsel-yank-pop))
+
+(after! evil
+  (map! :n "C-k" 'kill-line))
