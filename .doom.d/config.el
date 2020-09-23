@@ -164,3 +164,8 @@
   (map! :leader
         :desc "Toggle impl and test"
         "p t" #'projectile-toggle-between-implementation-and-test))
+
+(after! swiper
+  (map! :leader
+        :desc "counsel-yank-pop"
+        "y" #'counsel-yank-pop))
