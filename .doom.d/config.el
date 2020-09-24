@@ -170,5 +170,6 @@
         :desc "counsel-yank-pop"
         "y" #'counsel-yank-pop))
 
-(after! evil
-  (map! :n "C-k" 'kill-line))
+;; conflicts with lispy
+;; (after! evil
+;;   (map! :n "C-k" 'kill-line))
