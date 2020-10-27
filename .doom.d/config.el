@@ -71,6 +71,9 @@
       (setq minor-mode-map-alist
             (cons x (delq mode minor-mode-map-alist))))))
 
+;; auth sources
+(add-to-list 'auth-sources "~/.authinfo")
+
 ;; local packages
 
 (let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
@@ -169,6 +172,9 @@
   (map! :leader
         :desc "counsel-yank-pop"
         "y" #'counsel-yank-pop))
+
+(after! lsp-mode
+  (setq lsp-file-watch-threshold 9999))
 
 ;; conflicts with lispy
 ;; (after! evil
