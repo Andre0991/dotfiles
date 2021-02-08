@@ -80,6 +80,7 @@
   (when (file-directory-p nudev-emacs-path)
     (add-to-list 'load-path nudev-emacs-path)
     (require 'nu)))
+
 (load! "~/Dropbox/nu/emacs-lisp/nu-andre.el" nil t)
 
 ;; packages
@@ -173,8 +174,23 @@
         :desc "counsel-yank-pop"
         "y" #'counsel-yank-pop))
 
+(after! browse-at-remote
+  ;; Permanent SHA link.
+  (setq browse-at-remote-prefer-symbolic nil))
+
 (after! lsp-mode
-  (setq lsp-file-watch-threshold 9999))
+  (setq lsp-file-watch-ignored (append lsp-file-watch-ignored
+                                       nu-lsp-ignore-dirs)))
+(use-package theme-changer
+  :config
+  (setq calendar-location-name "Sao Paulo, SP")
+  (setq calendar-latitude 23.55)
+  (setq calendar-longitude 46.6)
+  (change-theme 'doom-one-light 'doom-one))
+
+;; TODO: won't work
+;; (after! markdown-mode
+;;   (setq markdown-header-scaling t))
 
 ;; conflicts with lispy
 ;; (after! evil
