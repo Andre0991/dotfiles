@@ -181,13 +181,6 @@
 (after! lsp-mode
   (setq lsp-file-watch-ignored (append lsp-file-watch-ignored
                                        nu-lsp-ignore-dirs)))
-(use-package theme-changer
-  :config
-  (setq calendar-location-name "Sao Paulo, SP")
-  (setq calendar-latitude 23.55)
-  (setq calendar-longitude 46.6)
-  (change-theme 'doom-one-light 'doom-one))
-
 ;; TODO: won't work
 ;; (after! markdown-mode
 ;;   (setq markdown-header-scaling t))
