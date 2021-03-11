@@ -180,7 +180,8 @@
 
 (after! lsp-mode
   (setq lsp-file-watch-ignored (append lsp-file-watch-ignored
-                                       nu-lsp-ignore-dirs)))
+                                       nu-lsp-ignore-dirs))
+  (setq lsp-ui-sideline-show-code-actions nil))
 ;; TODO: won't work
 ;; (after! markdown-mode
 ;;   (setq markdown-header-scaling t))
