@@ -83,6 +83,10 @@
 
 (load! "~/Dropbox/nu/emacs-lisp/nu-andre.el" nil t)
 
+(use-package nucli
+  :commands (nucli)
+  :load-path ("~/dev/nu/nucli.el/src"))
+
 ;; packages
 
 (after! lispy

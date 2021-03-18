@@ -48,3 +48,7 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+
+;; nucli.el deps (see https://github.com/nubank/nucli.el/blob/main/src/nucli.el#L5)
+(package! docopt)
+(package! parsec)
