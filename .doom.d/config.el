@@ -84,6 +84,7 @@
 (load! "~/Dropbox/nu/emacs-lisp/nu-andre.el" nil t)
 
 (use-package nucli
+  :init (setq nucli-commands-per-section 28)
   :commands (nucli)
   :load-path ("~/dev/nu/nucli.el/src"))
 
@@ -193,3 +194,18 @@
 ;; conflicts with lispy
 ;; (after! evil
 ;;   (map! :n "C-k" 'kill-line))
+
+;; adapted from https://stackoverflow.com/questions/14760567/emacs-auto-load-color-theme-by-time
+(defun synchronize-theme ()
+  (let* ((light-theme 'doom-one-light)
+         (dark-theme 'doom-one)
+         (start-time-light-theme 6)
+         (end-time-light-theme 18)
+         (hour (string-to-number (substring (current-time-string) 11 13)))
+         (next-theme (if (member hour (number-sequence start-time-light-theme end-time-light-theme))
+                         light-theme dark-theme)))
+    (when (not (equal doom-theme next-theme))
+      (setq doom-theme next-theme)
+      (load-theme next-theme))))
+
+(run-with-timer 0 900 'synchronize-theme)
