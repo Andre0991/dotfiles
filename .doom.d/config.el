@@ -154,6 +154,12 @@
         :desc "Align sexp"
         "f l" #'clojure-align))
 
+(after! flycheck
+  (map! :leader
+        :desc "Next error" "c ]" #'flycheck-next-error)
+  (map! :leader
+        :desc "Previous error" "c [" #'flycheck-previous-error))
+
 (after! magit
   (setq git-commit-style-convention-checks
         (remove 'overlong-summary-line git-commit-style-convention-checks)))
