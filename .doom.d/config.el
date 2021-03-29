@@ -132,17 +132,6 @@
   (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
   (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp))
 
-(after! cider
-  (defun andre/cider-require ()
-    (interactive)
-    (left-char)
-    (cljr-slash)
-    (delete-forward-char 1))
-  ;; https://github.com/clojure-emacs/cider/issues/2808
-  (setq cider-enhanced-cljs-completion-p nil)
-  (map! :map cider-mode-map
-        :i "C-r" #'andre/cider-require))
-
 (after! clojure
   (defun andre/cider-require ()
     (interactive)
@@ -153,6 +142,11 @@
         :localleader
         :desc "Align sexp"
         "f l" #'clojure-align))
+
+(after! cider
+  (map! :map cider-repl-mode-map
+        :localleader
+        "s" #'cider-switch-to-last-clojure-buffer))
 
 (after! flycheck
   (map! :leader
@@ -190,8 +184,8 @@
   (setq browse-at-remote-prefer-symbolic nil))
 
 (after! lsp-mode
-  (setq lsp-file-watch-ignored (append lsp-file-watch-ignored
-                                       nu-lsp-ignore-dirs))
+  (setq lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories
+                                                   nu-lsp-ignore-dirs))
   (setq lsp-ui-sideline-show-code-actions nil))
 ;; TODO: won't work
 ;; (after! markdown-mode
