@@ -49,6 +49,9 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+;; extra packages
+(package! embark)
+
 ;; nucli.el deps (see https://github.com/nubank/nucli.el/blob/main/src/nucli.el#L5)
 (package! docopt)
 (package! parsec)

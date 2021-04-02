@@ -162,6 +162,10 @@
   (map! :map company-active-map
         :g "C-h" 'evil-delete-backward-char))
 
+(after! embark
+  (map! :map embark-meta-map
+        :g "C-a" 'embark-keymap-help))
+
 (after! evil-snipe
   ;; use the 's' key for `evil-substitute` instead of `evil-snipe`
   ;; `evil-snipe` highlights still work
