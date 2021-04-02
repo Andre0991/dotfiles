@@ -92,6 +92,7 @@
 
 (after! lispy
   (setq lispy-eval-display-style 'overlay)
+  (setq lispy-clojure-middleware-tests nil)
   ;; M-i for `lispy-iedit' (local) and C-; for iedit (buffer)
   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
   (defun andre/lispy-backward ()
