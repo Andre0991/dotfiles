@@ -61,6 +61,7 @@
 ;; general settings
 
 (setq confirm-kill-processes nil)
+(setq doom-scratch-initial-major-mode 'markdown-mode)
 
 ;; helpers
 
