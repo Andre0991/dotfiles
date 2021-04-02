@@ -218,3 +218,9 @@
       (load-theme next-theme))))
 
 (run-with-timer 0 200 'synchronize-theme)
+
+;; utils
+
+(defmacro comment (&rest body)
+  "Comment out one or more s-expressions."
+  nil)
