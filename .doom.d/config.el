@@ -178,7 +178,10 @@
   (setq projectile-project-search-path '("~/dev/nu"))
   (map! :leader
         :desc "Toggle impl and test"
-        "p t" #'projectile-toggle-between-implementation-and-test))
+        "p t" #'projectile-toggle-between-implementation-and-test)
+  (map! :leader
+        :desc "Replace literal string"
+        "p %" #'projectile-replace))
 
 (after! swiper
   (map! :leader
