@@ -20,7 +20,7 @@
 
        :completion
        ;; TODO: Maybe remove childframe after https://twitter.com/yonchovski/status/1376237915412574210
-       (company +childframe) ; the ultimate code completion backend
+       (company) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ivy                 ; a search engine for love and life
