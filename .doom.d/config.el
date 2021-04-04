@@ -150,6 +150,32 @@
         :localleader
         "s" #'cider-switch-to-last-clojure-buffer))
 
+(after! inf-clojure
+  (map! (:localleader
+         (:map (clojure-mode-map clojurescript-mode-map)
+          "'"  #'inf-clojure
+          "c"  #'inf-clojure-connect
+          "m"  #'inf-clojure-macroexpand
+          "M"  #'cider-macroexpand-all
+          (:prefix ("e" . "eval")
+           "b" #'inf-clojure-eval-buffer
+           "d" #'inf-clojure-eval-defun
+           "D" #'inf-clojure-eval-defun-and-go
+           "e" #'inf-clojure-eval-last-sexp
+           "r" #'inf-clojure-eval-region
+           "R" #'inf-clojure-eval-region-and-go)
+          (:prefix ("h" . "help")
+           "a" #'inf-clojure-apropos)
+          (:prefix ("r" . "repl")
+           "n" #'inf-clojure-set-ns
+           "q" #'inf-clojure-quit
+           "R" #'inf-clojure-restart
+           "b" #'inf-clojure-switch-to-repl
+           ;; TODO: implement for inf clojure
+           ;; "B" #'+clojure/cider-switch-to-repl-buffer-and-switch-ns
+           "c" #'inf-clojure-clear-repl-buffer))
+        ;; TODO: repl bindings
+         )))
 (after! flycheck
   (map! :leader
         :desc "Next error" "c ]" #'flycheck-next-error)
