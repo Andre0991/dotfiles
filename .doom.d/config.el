@@ -175,6 +175,11 @@
            "c" #'inf-clojure-clear-repl-buffer))
         ;; TODO: repl bindings
          )))
+
+(after! eglot
+  (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp")))
+  (setq eglot-connect-timeout 300))
+
 (after! flycheck
   (map! :leader
         :desc "Next error" "c ]" #'flycheck-next-error)
