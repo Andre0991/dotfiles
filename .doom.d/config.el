@@ -139,11 +139,6 @@
   (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp))
 
 (after! clojure
-  (defun andre/cider-require ()
-    (interactive)
-    (left-char)
-    (cljr-slash)
-    (delete-forward-char 1))
   (map! :map clojure-mode-map
         :localleader
         :desc "Align sexp"
