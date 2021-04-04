@@ -51,8 +51,9 @@
 
 ;; extra packages
 (package! embark)
+(package! iedit)
 
 ;; nucli.el deps (see https://github.com/nubank/nucli.el/blob/main/src/nucli.el#L5)
 (package! docopt)
 (package! parsec)
-(package! google-this)
+
