@@ -65,6 +65,10 @@
 
 ;; helpers
 
+(defmacro comment (&rest body)
+  "Comment out one or more s-expressions."
+  nil)
+
 (defun raise-minor-mode (mode)
   "Make MODE the first on `minor-mode-map-alist'."
   (let ((x (assq mode minor-mode-map-alist)))
@@ -245,8 +249,3 @@
 
 (run-with-timer 0 200 'synchronize-theme)
 
-;; utils
-
-(defmacro comment (&rest body)
-  "Comment out one or more s-expressions."
-  nil)
