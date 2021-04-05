@@ -58,3 +58,5 @@
 (package! docopt)
 (package! parsec)
 
+;; See https://github.com/justbur/emacs-which-key/issues/252
+(package! which-key :disable t)
