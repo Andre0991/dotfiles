@@ -102,46 +102,35 @@
    :config (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode))
 
 (after! lispy
-   (setq lispy-eval-display-style 'overlay)
-   ;; M-i for `lispy-iedit' (local) and C-; for iedit (buffer)
-   (advice-add 'lispy-iedit :after #'iedit-restrict-function)
-   (comment (defun andre/lispy-backward ()
-              (interactive)
-              (lispy-backward 0)
-              (evil-insert 0))
-            (defun andre/lispy-forward ()
-              (interactive)
-              (lispy-forward 1)
-              (evil-insert 0)))
-   (defun andre/lispy-cider-pprint ()
-     (interactive)
-     (lispy-different)
-     (cider-pprint-eval-last-sexp)
-     (lispy-different))
-   (defun andre/cider-clojuredocs ()
-     (interactive)
-     (save-excursion
-       (forward-char)
-       (let ((cider-prompt-for-symbol nil))
-         (cider-clojuredocs))))
-   ;; prevents `/` (`lispy-splice`) from being overriden
-   (raise-minor-mode 'lispy-mode)
-   (comment (map! :map lispy-mode-map
-                  :n "[" 'andre/lispy-backward)
-            (map! :map lispy-mode-map
-                  :n "]" 'andre/lispy-forward))
-   (map! :map lispy-mode-map
-         :i "C-d" 'lispy-delete)
-   (map! :map lispy-mode-map
-         :i "C-k" 'lispy-kill)
-   (map! :map lispy-mode-map
-         :i "C-y" 'lispy-yank)
-   (lispy-define-key lispy-mode-map "X" 'andre/lispy-cider-pprint)
-   (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
-   (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
-   (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
-   (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
-   (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp))
+  (setq lispy-eval-display-style 'overlay)
+  ;; M-i for `lispy-iedit' (local) and C-; for iedit (buffer)
+  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
+  (defun andre/lispy-cider-pprint ()
+    (interactive)
+    (lispy-different)
+    (cider-pprint-eval-last-sexp)
+    (lispy-different))
+  (defun andre/cider-clojuredocs ()
+    (interactive)
+    (save-excursion
+      (forward-char)
+      (let ((cider-prompt-for-symbol nil))
+        (cider-clojuredocs))))
+  ;; prevents `/` (`lispy-splice`) from being overriden
+  (raise-minor-mode 'lispy-mode)
+  (map! :map lispy-mode-map
+        :i "C-d" 'lispy-delete)
+  (map! :map lispy-mode-map
+        :i "C-k" 'lispy-kill)
+  (map! :map lispy-mode-map
+        :i "C-y" 'lispy-yank)
+  (lispy-define-key lispy-mode-map "X" 'andre/lispy-cider-pprint)
+  (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
+  (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
+  (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
+  (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
+  (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp)
+  (lispy-define-key lispy-mode-map "g" 'counsel-imenu))
 
 (after! clojure
   (map! :map clojure-mode-map
@@ -178,7 +167,7 @@
            ;; TODO: implement for inf clojure
            ;; "B" #'+clojure/cider-switch-to-repl-buffer-and-switch-ns
            "c" #'inf-clojure-clear-repl-buffer))
-        ;; TODO: repl bindings
+         ;; TODO: repl bindings
          )))
 
 (after! eglot
