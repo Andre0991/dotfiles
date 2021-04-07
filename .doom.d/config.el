@@ -185,11 +185,12 @@
            "D" #'inf-clojure-eval-defun-and-go
            "e" #'inf-clojure-eval-last-sexp
            "r" #'inf-clojure-eval-region
-           "R" #'inf-clojure-eval-region-and-go
-           "t" #'apt-inf-clojure-run-tests
-           "T" #'apt-inf-clojure-run-all-tests)
+           "R" #'inf-clojure-eval-region-and-go)
           (:prefix ("h" . "help")
            "a" #'inf-clojure-apropos)
+          (:prefix ("t" . "test")
+           "t" #'apt-inf-clojure-run-tests
+           "a" #'apt-inf-clojure-run-all-tests)
           (:prefix ("r" . "repl")
            "n" #'inf-clojure-set-ns
            "q" #'inf-clojure-quit
