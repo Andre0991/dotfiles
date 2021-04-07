@@ -79,7 +79,8 @@
        vterm                            ; the best terminal emulation in Emacs
 
        :checkers
-       syntax              ; tasing you for every semicolon you forget
+       ;; apt: Disabling flycheck becaue eglot has some issues with running both flycheck and flymake.
+      ;syntax              ; tasing you for every semicolon you forget
        ;;spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 

@@ -122,8 +122,6 @@
 
 (after! lispy
   (setq lispy-eval-display-style 'overlay)
-  ;; M-i for `lispy-iedit' (local) and C-; for iedit (buffer)
-  (advice-add 'lispy-iedit :after #'iedit-restrict-function)
   (defun andre/lispy-cider-pprint ()
     (interactive)
     (lispy-different)
@@ -144,7 +142,8 @@
   (map! :map lispy-mode-map
         :i "C-y" 'lispy-yank)
   (lispy-define-key lispy-mode-map "X" 'andre/lispy-cider-pprint)
-  (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
+  ;; (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
+  (lispy-define-key lispy-mode-map "G" 'apt-inf-clojure-doc)
   (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
   (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
   (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
@@ -158,24 +157,37 @@
         "f l" #'clojure-align))
 
 (after! cider
+  (setq cider-auto-mode nil)
   (map! :map cider-repl-mode-map
         :localleader
         "s" #'cider-switch-to-last-clojure-buffer))
 
 (after! inf-clojure
+  (defun apt-inf-clojure-run-tests ()
+    (interactive)
+    (inf-clojure-eval-string "(clojure.test/run-tests)"))
+  (defun apt-inf-clojure-run-all-tests ()
+    (interactive)
+    (inf-clojure-eval-string "(clojure.test/run-all-tests)"))
+  (defun apt-inf-clojure-doc ()
+    (interactive)
+    (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
+                                     (lispy--current-function))))
   (map! (:localleader
          (:map (clojure-mode-map clojurescript-mode-map)
-          "'"  #'inf-clojure
-          "c"  #'inf-clojure-connect
-          "m"  #'inf-clojure-macroexpand
-          "M"  #'cider-macroexpand-all
+          "'" #'inf-clojure
+          "c" #'inf-clojure-connect
+          "m" #'inf-clojure-macroexpand
+          "M" #'cider-macroexpand-all
           (:prefix ("e" . "eval")
            "b" #'inf-clojure-eval-buffer
            "d" #'inf-clojure-eval-defun
            "D" #'inf-clojure-eval-defun-and-go
            "e" #'inf-clojure-eval-last-sexp
            "r" #'inf-clojure-eval-region
-           "R" #'inf-clojure-eval-region-and-go)
+           "R" #'inf-clojure-eval-region-and-go
+           "t" #'apt-inf-clojure-run-tests
+           "T" #'apt-inf-clojure-run-all-tests)
           (:prefix ("h" . "help")
            "a" #'inf-clojure-apropos)
           (:prefix ("r" . "repl")
@@ -191,6 +203,7 @@
 
 (after! eglot
   (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp")))
+  (setq eglot-confirm-server-initiated-edits nil)
   (setq eglot-connect-timeout 300))
 
 (after! flycheck
@@ -198,6 +211,12 @@
         :desc "Next error" "c ]" #'flycheck-next-error)
   (map! :leader
         :desc "Previous error" "c [" #'flycheck-previous-error))
+
+(after! flymake
+  (map! :leader
+        :desc "Next error" "c ]" #'flymake-goto-next-error)
+  (map! :leader
+        :desc "Previous error" "c [" #'flymake-goto-prev-error))
 
 (after! magit
   (setq git-commit-style-convention-checks
@@ -261,4 +280,3 @@
       (load-theme next-theme))))
 
 (run-with-timer 0 200 'synchronize-theme)
-
