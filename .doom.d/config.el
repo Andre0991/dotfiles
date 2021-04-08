@@ -95,6 +95,11 @@
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
 
+(defun apt-inf-clojure-doc ()
+  (interactive)
+  (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
+                                   (lispy--current-function))))
+
 ;; auth sources
 (add-to-list 'auth-sources "~/.authinfo")
 
@@ -169,10 +174,10 @@
   (defun apt-inf-clojure-run-all-tests ()
     (interactive)
     (inf-clojure-eval-string "(clojure.test/run-all-tests)"))
-  (defun apt-inf-clojure-doc ()
-    (interactive)
-    (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
-                                     (lispy--current-function))))
+
+  ;; TODO: Make inf-clojure repl sticky
+  ;; (set-popup-rules!
+  ;;   '(("^\\*inf-clojure" :quit nil :ttl nil)))
   (map! (:localleader
          (:map (clojure-mode-map clojurescript-mode-map)
           "'" #'inf-clojure
