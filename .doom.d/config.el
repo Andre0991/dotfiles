@@ -95,9 +95,22 @@
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
 
+(defun apt-inf-clojure-enable-pprint ()
+  (interactive)
+  (inf-clojure-eval-string "(do (require 'clojure.pprint) (clojure.main/repl :print clojure.pprint/pprint))"))
+
 (defun apt-inf-clojure-doc ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
+                                   (lispy--current-function))))
+
+(defun apt-inf-clojure-connect ()
+  (interactive)
+  (inf-clojure-connect "localhost" "5555"))
+
+(defun apt-inf-clojure-source ()
+  (interactive)
+  (inf-clojure-eval-string (format "(clojure.repl/source %s)"
                                    (lispy--current-function))))
 
 (defun apt-lispy-describe ()
@@ -120,6 +133,20 @@
                            version)))
     (message clj-expr)
     (inf-clojure-eval-string clj-expr)))
+
+(defun apt-lispy-g ()
+  (interactive)
+  (cl-case (read-char-from-minibuffer "Actions:\n
+n: Go to next error
+p: Go to previous error
+s: Show source code
+w: Save buffer
+\n")
+    (?n (call-interactively 'flymake-goto-next-error))
+    (?p (call-interactively 'flymake-goto-prev-error))
+    (?s (call-interactively 'apt-inf-clojure-source))
+    (?w (save-buffer))))
+
 
 ;; auth sources
 (add-to-list 'auth-sources "~/.authinfo")
@@ -172,9 +199,10 @@
   (lispy-define-key lispy-mode-map "G" 'apt-inf-clojure-doc)
   (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
   (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
-  (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
-  (lispy-define-key lispy-mode-map "H" 'apt-lispy-describe)
-  (lispy-define-key lispy-mode-map "g" 'counsel-imenu))
+  ;; (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
+  (lispy-define-key lispy-mode-map "K" 'apt-lispy-describe)
+  (lispy-define-key lispy-mode-map "O" 'counsel-imenu)
+  (lispy-define-key lispy-mode-map "g" 'apt-lispy-g))
 
 (after! clojure
   (map! :map clojure-mode-map
@@ -189,6 +217,7 @@
         "s" #'cider-switch-to-last-clojure-buffer))
 
 (after! inf-clojure
+  (setq inf-clojure-custom-repl-type 'clojure)
   (defun apt-inf-clojure-run-tests ()
     (interactive)
     (inf-clojure-eval-string "(clojure.test/run-tests)"))
@@ -202,7 +231,7 @@
   (map! (:localleader
          (:map (clojure-mode-map clojurescript-mode-map)
           "'" #'inf-clojure
-          "c" #'inf-clojure-connect
+          "c" #'apt-inf-clojure-connect
           "m" #'inf-clojure-macroexpand
           "M" #'cider-macroexpand-all
           (:prefix ("e" . "eval")
@@ -307,3 +336,4 @@
       (load-theme next-theme))))
 
 (run-with-timer 0 200 'synchronize-theme)
+
