@@ -100,6 +100,27 @@
   (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
                                    (lispy--current-function))))
 
+(defun apt-lispy-describe ()
+  (interactive)
+  (if (bound-and-true-p inf-clojure-minor-mode)
+      (call-interactively 'apt-inf-clojure-doc)
+    (call-interactively 'lispy-describe)))
+
+(defun apt-inf-clojure-add-dependency ()
+  (interactive)
+  (let* ((dependency (read-string "Dependency: "))
+         (version (read-string "Version (default LATEST): " nil nil "LATEST"))
+         (clj-expr (format "(require 'cemerick.pomegranate)
+ (require 'cemerick.pomegranate.aether)
+ (cemerick.pomegranate/add-dependencies :coordinates '[[%s \"%s\"]]
+                                        :repositories (merge cemerick.pomegranate.aether/maven-central
+                                                             {\"clojars\" \"https://clojars.org/repo\"}
+                                                             {\"nu-maven\" \"s3p://nu-maven/releases/\"}))"
+                           dependency
+                           version)))
+    (message clj-expr)
+    (inf-clojure-eval-string clj-expr)))
+
 ;; auth sources
 (add-to-list 'auth-sources "~/.authinfo")
 
@@ -152,7 +173,7 @@
   (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
   (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
   (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
-  (lispy-define-key lispy-mode-map "K" 'lispy-up-slurp)
+  (lispy-define-key lispy-mode-map "H" 'apt-lispy-describe)
   (lispy-define-key lispy-mode-map "g" 'counsel-imenu))
 
 (after! clojure
