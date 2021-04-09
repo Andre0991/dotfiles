@@ -95,9 +95,17 @@
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
 
-(defun apt-inf-clojure-enable-pprint ()
-  (interactive)
-  (inf-clojure-eval-string "(do (require 'clojure.pprint) (clojure.main/repl :print clojure.pprint/pprint))"))
+(defun apt-inf-clojure-init-repl ()
+  "Sane options for using a repl.
+
+Includes a workaround for rebinding clojure.test/*test-out*.
+For details, see https://github.com/nrepl/nrepl/blob/a057874cd3bfc83e465cc163fbc1d4c00223e1b1/src/clojure/nrepl/middleware/interruptible_eval.clj#L93-L99"
+  (inf-clojure-eval-string "(clojure.main/repl :print clojure.pprint/pprint
+                                              :init #(do (require 'clojure.test)
+                                                         (let [bindings (into (get-thread-bindings)
+                                                                              { #'clojure.test/*test-out* *out*})]
+                                                           (pop-thread-bindings)
+                                                           (push-thread-bindings bindings))))"))
 
 (defun apt-inf-clojure-doc ()
   (interactive)
@@ -106,7 +114,8 @@
 
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (inf-clojure-connect "localhost" "5555"))
+  (inf-clojure-connect "localhost" "5555")
+  (apt-inf-clojure-init-repl))
 
 (defun apt-inf-clojure-source ()
   (interactive)
