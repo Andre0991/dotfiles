@@ -96,21 +96,34 @@
     (message "Found! %s" name)))
 
 (defun apt-inf-clojure-init-repl ()
-  "Sane options for using a repl.
-
-Includes a workaround for rebinding clojure.test/*test-out*.
-For details, see https://github.com/nrepl/nrepl/blob/a057874cd3bfc83e465cc163fbc1d4c00223e1b1/src/clojure/nrepl/middleware/interruptible_eval.clj#L93-L99"
-  (inf-clojure-eval-string "(clojure.main/repl :print clojure.pprint/pprint
-                                              :init #(do (require 'clojure.test)
-                                                         (let [bindings (into (get-thread-bindings)
-                                                                              { #'clojure.test/*test-out* *out*})]
-                                                           (pop-thread-bindings)
-                                                           (push-thread-bindings bindings))))"))
+  "Sane options for using a repl."
+  (inf-clojure-eval-string "(do (require '[clojure.main :as m])
+                                (require '[clojure.pprint :as pp])
+                                (clojure.main/repl :print pp/pprint
+                                                   :init #(do
+                                                           ;; The :init hook replicates what clojure.main uses as an initial binding set, so it’s good to repeat that.
+                                                           ;; From https://insideclojure.org/2020/02/11/custom-repl/
+                                                           (apply require m/repl-requires)
+                                                           ;; Workaround for rebinding clojure.test/*test-out*.
+                                                           ;; For details, see https://github.com/nrepl/nrepl/blob/a057874cd3bfc83e465cc163fbc1d4c00223e1b1/src/clojure/nrepl/middleware/interruptible_eval.clj#L93-L99\"
+                                                           (require 'clojure.test)
+                                                           (let [bindings (into (get-thread-bindings)
+                                                                                {#'clojure.test/*test-out* *out*})]
+                                                             (pop-thread-bindings)
+                                                             (push-thread-bindings bindings)))))"))
 
 (defun apt-inf-clojure-doc ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
                                    (lispy--current-function))))
+
+(defun apt-inf-clojure-run-test-at-point ()
+  (interactive)
+  (save-excursion
+    (beginning-of-defun)
+    (end-of-line)
+    (inf-clojure-eval-string (format "(%s)"
+                                     (symbol-at-point)))))
 
 (defun apt-inf-clojure-connect ()
   (interactive)
