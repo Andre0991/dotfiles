@@ -136,6 +136,16 @@
   (inf-clojure-eval-string (format "(clojure.repl/source %s)"
                                    (lispy--current-function))))
 
+(defun apt-inf-clojure-refresh-all ()
+  (interactive)
+  (inf-clojure-eval-string "(do (require 'clojure.tools.namespace.repl)
+                                (clojure.tools.namespace.repl/refresh-all))"))
+
+(defun apt-inf-clojure-refresh ()
+  (interactive)
+  (inf-clojure-eval-string "(do (require 'clojure.tools.namespace.repl)
+                                (clojure.tools.namespace.repl/refresh))"))
+
 (defun apt-lispy-describe ()
   (interactive)
   (if (bound-and-true-p inf-clojure-minor-mode)
