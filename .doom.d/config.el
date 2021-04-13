@@ -62,6 +62,7 @@
 
 (setq confirm-kill-processes nil)
 (setq doom-scratch-initial-major-mode 'markdown-mode)
+(setq compilation-scroll-output 't)
 
 ;; util
 
