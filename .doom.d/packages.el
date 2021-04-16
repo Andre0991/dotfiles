@@ -49,14 +49,16 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;; extra packages
-(package! embark)
-(package! iedit)
-(package! inf-clojure)
-
 ;; nucli.el deps (see https://github.com/nubank/nucli.el/blob/main/src/nucli.el#L5)
 (package! docopt)
 (package! parsec)
 
 ;; See https://github.com/justbur/emacs-which-key/issues/252
 (package! which-key :disable t)
+
+;; extra packages
+(package! embark)
+(package! iedit)
+(package! inf-clojure)
+
+(package! gif-screencast)

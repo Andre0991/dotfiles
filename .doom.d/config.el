@@ -56,6 +56,7 @@
 ;; general keybindings
 
 (map! "C-h" #'delete-backward-char)
+(map! "C-;" #'iedit-mode)
 (setq doom-localleader-key ",")
 
 ;; general settings
