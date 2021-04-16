@@ -117,7 +117,7 @@
 (defun apt-inf-clojure-doc ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
-                                   (lispy--current-function))))
+                                   (vilpy--current-function))))
 
 (defun apt-inf-clojure-run-test-at-point ()
   (interactive)
@@ -135,7 +135,7 @@
 (defun apt-inf-clojure-source ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/source %s)"
-                                   (lispy--current-function))))
+                                   (vilpy--current-function))))
 
 (defun apt-inf-clojure-refresh-all ()
   (interactive)
@@ -147,11 +147,20 @@
   (inf-clojure-eval-string "(do (require 'clojure.tools.namespace.repl)
                                 (clojure.tools.namespace.repl/refresh))"))
 
-(defun apt-lispy-describe ()
+(defun apt-inf-clojure-eval-and-replace-last-sexp ()
+  (interactive)
+  (let* ((start (save-excursion (backward-sexp) (point)))
+         (end (point))
+         (str (buffer-substring-no-properties start end))
+         (str* (replace-regexp-in-string "\n$" "" str)))
+    (save-excursion
+      (insert (inf-clojure--process-response str (inf-clojure-proc 'no-error))))))
+
+(defun apt-vilpy-describe ()
   (interactive)
   (if (bound-and-true-p inf-clojure-minor-mode)
       (call-interactively 'apt-inf-clojure-doc)
-    (call-interactively 'lispy-describe)))
+    (call-interactively 'vilpy-describe)))
 
 (defun apt-inf-clojure-add-dependency ()
   (interactive)
@@ -168,7 +177,7 @@
     (message clj-expr)
     (inf-clojure-eval-string clj-expr)))
 
-(defun apt-lispy-g ()
+(defun apt-vilpy-g ()
   (interactive)
   (cl-case (read-char-from-minibuffer "Actions:\n
 n: Go to next error
@@ -200,43 +209,51 @@ w: Save buffer
   :load-path ("~/dev/nu/nucli.el/src"))
 
 ;; packages
-(use-package lispy
-   :hook ((lisp-mode . lispy-mode)
-          (emacs-lisp-mode . lispy-mode)
-          (clojure-mode . lispy-mode))
-   :load-path "~/dev/peric/lispy-lite"
-   :config (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode))
+(use-package vilpy
+   :hook ((lisp-mode . vilpy-mode)
+          (emacs-lisp-mode . vilpy-mode)
+          (clojure-mode . vilpy-mode))
+   :load-path "~/dev/peric/vilpy"
+   :config (add-hook 'vilpy-mode-hook #'turn-off-smartparens-mode))
 
-(after! lispy
-  (setq lispy-eval-display-style 'overlay)
-  (defun andre/lispy-cider-pprint ()
+(after! vilpy
+  (setq vilpy-eval-display-style 'overlay)
+  (defun andre/vilpy-cider-pprint ()
     (interactive)
-    (lispy-different)
+    (vilpy-different)
     (cider-pprint-eval-last-sexp)
-    (lispy-different))
+    (vilpy-different))
   (defun andre/cider-clojuredocs ()
     (interactive)
     (save-excursion
       (forward-char)
       (let ((cider-prompt-for-symbol nil))
         (cider-clojuredocs))))
-  ;; prevents `/` (`lispy-splice`) from being overriden
-  (raise-minor-mode 'lispy-mode)
-  (map! :map lispy-mode-map
-        :i "C-d" 'lispy-delete)
-  (map! :map lispy-mode-map
-        :i "C-k" 'lispy-kill)
-  (map! :map lispy-mode-map
-        :i "C-y" 'lispy-yank)
-  (lispy-define-key lispy-mode-map "X" 'andre/lispy-cider-pprint)
-  ;; (lispy-define-key lispy-mode-map "G" 'andre/cider-clojuredocs)
-  (lispy-define-key lispy-mode-map "G" 'apt-inf-clojure-doc)
-  (lispy-define-key lispy-mode-map "S" 'lispy-move-right)
-  (lispy-define-key lispy-mode-map "W" 'lispy-move-left)
-  ;; (lispy-define-key lispy-mode-map "J" 'lispy-down-slurp)
-  (lispy-define-key lispy-mode-map "K" 'apt-lispy-describe)
-  (lispy-define-key lispy-mode-map "O" 'counsel-imenu)
-  (lispy-define-key lispy-mode-map "g" 'apt-lispy-g))
+  ;; prevents `/` (`vilpy-splice`) from being overriden
+  (raise-minor-mode 'vilpy-mode)
+  (map! :map vilpy-mode-map
+        :i "C-d" 'vilpy-delete)
+  (map! :map vilpy-mode-map
+        :i "C-k" 'vilpy-kill)
+  (map! :map vilpy-mode-map
+        :i "C-y" 'vilpy-yank)
+  ;; (vilpy-define-key vilpy-mode-map "X" 'andre/vilpy-cider-pprint)
+  ;; (vilpy-define-key vilpy-mode-map "G" 'andre/cider-clojuredocs)
+  ;; (vilpy-define-key vilpy-mode-map "G" 'apt-inf-clojure-doc)
+  ;; (vilpy-define-key vilpy-mode-map "S" 'vilpy-move-right)
+  ;; (vilpy-define-key vilpy-mode-map "W" 'vilpy-move-left)
+  ;; (vilpy-define-key vilpy-mode-map "J" 'vilpy-down-slurp)
+  (vilpy-define-key vilpy-mode-map "K" 'apt-vilpy-describe)
+  ;; (vilpy-define-key vilpy-mode-map "O" 'counsel-imenu)
+  ;; (vilpy-define-key vilpy-mode-map "g" 'apt-vilpy-g)
+  (vilpy-define-key vilpy-mode-map "m" 'evil-set-marker)
+  (vilpy-define-key vilpy-mode-map "`" 'evil-goto-mark)
+  (vilpy-define-key vilpy-mode-map "c" 'vilpy-execute-in-normal-state))
+
+(defun apt-vilpy-go-to-definition ()
+  (interactive)
+  (forward-char)
+  (+lookup/definition (vilpy--current-function)))
 
 (after! clojure
   (map! :map clojure-mode-map
@@ -352,7 +369,7 @@ w: Save buffer
 ;; (after! markdown-mode
 ;;   (setq markdown-header-scaling t))
 
-;; conflicts with lispy
+;; conflicts with vilpy
 ;; (after! evil
 ;;   (map! :n "C-k" 'kill-line))
 
