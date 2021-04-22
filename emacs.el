@@ -6,17 +6,22 @@
 (setq package-selected-packages '(modus-themes
 				  vertico
 				  magit
-				  exec-path-from-shell))
+				  exec-path-from-shell
+				  consult
+				  orderless))
 
-
-;;; Themes
-
-(modus-themes-load-themes)
-(modus-themes-load-vivendi)
 
 
 ;;; Emacs
 (global-display-line-numbers-mode)
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(setq vc-follow-symlinks t)
+(tool-bar-mode -1)
+
+
+;;; Themes
+(modus-themes-load-themes)
+(modus-themes-load-vivendi)
 
 
 ;;; Face
@@ -25,6 +30,11 @@
 
 ;;; Vertico
 (vertico-mode)
+
+
+;;; Orderless
+(require 'orderless)
+(setq completion-styles '(orderless))
 
 
 ;;; Viper
