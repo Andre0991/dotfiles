@@ -5,7 +5,8 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-selected-packages '(modus-themes
 				  vertico
-				  magit))
+				  magit
+				  exec-path-from-shell))
 
 
 ;;; Themes
@@ -29,3 +30,10 @@
 ;;; Viper
 (setq viper-inhibit-startup-message 't)
 (setq viper-expert-level '5)
+
+
+;;; Env variables
+;; TODO: Make this faster
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
