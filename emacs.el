@@ -8,7 +8,8 @@
 				  magit
 				  exec-path-from-shell
 				  consult
-				  orderless))
+				  orderless
+				  clojure-mode))
 
 
 
@@ -17,6 +18,8 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (setq vc-follow-symlinks t)
 (tool-bar-mode -1)
+(setq recentf-mode t)
+(setq enable-recursive-minibuffers t)
 
 
 ;;; Themes
@@ -30,6 +33,13 @@
 
 ;;; Vertico
 (vertico-mode)
+
+
+;;; Consult
+(setq consult-project-root-function
+       (lambda ()
+         (when-let (project (project-current))
+           (project-root project))))
 
 
 ;;; Orderless
@@ -47,3 +57,11 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+;;; TODO
+;; god-like mode
+;; do not display splash screen
+;; select candiates in other buffer (embark?)
+;; inf-clojure
+;; evil
+;; cider
+;; vilpy
