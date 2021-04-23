@@ -15,12 +15,14 @@
 				  avy
 				  inf-clojure
 				  embark
-				  embark-consult))
+				  embark-consult
+				  eglot
+				  browse-at-remote))
 
 
 
 ;;; Emacs
-(global-display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -47,6 +49,19 @@
 (set-face-attribute 'default nil :height 150)
 
 
+;;; Evil
+(require 'evil)
+(evil-mode 1)
+(evil-set-leader 'normal (kbd "SPC"))
+(evil-set-leader 'normal (kbd ",") t) 	; localleader
+
+
+;;; Winner mode
+(add-hook 'after-init-hook #'winner-mode)
+(evil-define-key 'normal 'global (kbd "<leader>wr") 'winner-redo)
+(evil-define-key 'normal 'global (kbd "<leader>wu") 'winner-undo)
+
+
 ;;; Vertico
 (vertico-mode)
 
@@ -69,46 +84,13 @@
     (require 'embark-consult)))
 
 (with-eval-after-load 'embark
-  (define-key embark-meta-map (kbd "C-o") #'embark-keymap-help))
+  (define-key global-map (kbd "C-o") #'embark-act))
 
 
 ;;; Orderless
 (require 'orderless)
 (setq completion-styles '(orderless))
 
-
-;;; Viper
-(setq viper-inhibit-startup-message 't)
-(setq viper-expert-level '5)
-
-
-;;; Evil
-(require 'evil)
-(evil-mode 1)
-(evil-set-leader 'normal (kbd "SPC"))
-(evil-define-key 'normal 'global (kbd "<leader><SPC>") 'execute-extended-command)
-;; buffer
-(evil-define-key 'normal 'global (kbd "<leader>bb") 'consult-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bs") 'switch-to-buffer)
-;; file
-(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>ff") 'find-file)
-;; project
-;; TODO: Continue this. See the `project-prefix-map` keymap
-(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
-(evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
-(evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
-(evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
-;; magit
-(evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
-;; consult
-(evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
-;; window
-(evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
-(evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
-(evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
-(evil-define-key 'normal 'global (kbd "<leader>wm") 'maximize-window)
 
 
 ;;; Vilpy
@@ -123,13 +105,70 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+
+;;; eglot
+(setq eglot-confirm-server-initiated-edits nil)
+(setq eglot-connect-timeout 300)
+(with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp"))))
+
+
+;;; inf-clojure
+(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>eb") 'inf-clojure-eval-buffer)
+(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rn") 'inf-clojure-set-ns)
+(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rr") 'inf-clojure-switch-to-repl)
+
+
+;;; eww
+(setq eww-search-prefix "https://www.google.com/search?q=")
+
+
+;;; browse-at-remote
+(evil-define-key 'normal 'global (kbd "<leader>go") 'browse-at-remote)
+
+
+;;; Leader keybindings
+(evil-define-key 'normal 'global (kbd "<leader><SPC>") 'execute-extended-command)
+;; buffer
+(evil-define-key 'normal 'global (kbd "<leader>bb") 'consult-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bs") 'switch-to-buffer)
+;; file
+(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>ff") 'find-file)
+;; project
+;; TODO: Continue this. See the `project-prefix-map` keymap
+(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
+(evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
+(evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
+(evil-define-key 'normal 'global (kbd "<leader>pr") 'consult-ripgrep)
+(evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
+;; magit
+(evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
+;; consult
+(evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
+(evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
+;; window
+(evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
+(evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
+(evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
+(evil-define-key 'normal 'global (kbd "<leader>wm") 'maximize-window)
+(evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
+(evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
+(evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
+;; emacs
+(evil-define-key 'normal 'global (kbd "<leader>hv") 'describe-variable)
+(evil-define-key 'normal 'global (kbd "<leader>hf") 'describe-function)
+
+
 ;;; TODO
 ;; god-like mode (see https://www.reddit.com/r/emacs/comments/apvpeu/status_of_godmode/)
 ;; select candiates in other buffer (embark?)
-;; inf-clojure
-;; cider
 ;; window undo
 ;; line numbers not in eww, help buffers and other modes
 ;; fix exec-path-from-shell-initialize performance
 ;; set localleader and use it for some modes (evil-set-leader STATE KEY [LOCALLEADER]) (see https://evil.readthedocs.io/en/latest/keymaps.html#leader-keys)
+;; add inf-clojure file to init (provide?)
+;; leader key does not work on visual selection
+;; selection + * won't work
 
