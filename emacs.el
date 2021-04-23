@@ -17,7 +17,9 @@
 				  embark
 				  embark-consult
 				  eglot
-				  browse-at-remote))
+				  browse-at-remote
+				  corfu
+				  marginalia))
 
 
 
@@ -37,7 +39,8 @@
       enable-recursive-minibuffers t
       inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
-      initial-major-mode 'fundamental-mode)
+      initial-major-mode 'fundamental-mode
+      backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/"))))
 
 
 ;;; Themes
@@ -58,12 +61,16 @@
 
 ;;; Winner mode
 (add-hook 'after-init-hook #'winner-mode)
-(evil-define-key 'normal 'global (kbd "<leader>wr") 'winner-redo)
 (evil-define-key 'normal 'global (kbd "<leader>wu") 'winner-undo)
+(evil-define-key 'normal 'global (kbd "<leader>wr") 'winner-redo)
 
 
 ;;; Vertico
 (vertico-mode)
+
+
+;;; Corfu
+(add-hook 'prog-mode-hook 'corfu-mode)
 
 
 ;;; Consult
@@ -94,11 +101,11 @@
 
 
 ;;; Vilpy
-(let ((vilpy-path "~/dev/peric/vilpy/"))
-  (add-to-list 'load-path vilpy-path)
-  (require 'vilpy))
-(add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
-(add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
+;; (let ((vilpy-path "~/dev/peric/vilpy/"))
+;;   (add-to-list 'load-path vilpy-path)
+;;   (require 'vilpy))
+;; (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
+;; (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
 
 
 ;;; Env variables
@@ -111,12 +118,21 @@
 (setq eglot-connect-timeout 300)
 (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp"))))
+(evil-define-key 'normal 'global (kbd "<leader>la") 'eglot-code-actions)
+(evil-define-key 'normal 'global (kbd "<leader>ll") 'eglot)
+(evil-define-key 'normal 'global (kbd "<leader>lq") 'eglot-shutdown)
+(evil-define-key 'normal 'global (kbd "<leader>lr") 'eglot-rename)
+(evil-define-key 'normal 'global (kbd "<leader>ld") 'xref-find-definitions)
 
 
 ;;; inf-clojure
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>eb") 'inf-clojure-eval-buffer)
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rn") 'inf-clojure-set-ns)
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rr") 'inf-clojure-switch-to-repl)
+(let ((elisp-path "~/dotfiles/elisp/"))
+  (when (file-directory-p elisp-path)
+    (add-to-list 'load-path elisp-path)
+    (require 'apt-inf-clojure)))
 
 
 ;;; eww
@@ -143,6 +159,8 @@
 (evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
 (evil-define-key 'normal 'global (kbd "<leader>pr") 'consult-ripgrep)
 (evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
+;; flymake
+(evil-define-key 'normal 'global (kbd "<leader>cf") 'consult-flymake)
 ;; magit
 (evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
 ;; consult
@@ -164,11 +182,19 @@
 ;;; TODO
 ;; god-like mode (see https://www.reddit.com/r/emacs/comments/apvpeu/status_of_godmode/)
 ;; select candiates in other buffer (embark?)
-;; window undo
-;; line numbers not in eww, help buffers and other modes
 ;; fix exec-path-from-shell-initialize performance
 ;; set localleader and use it for some modes (evil-set-leader STATE KEY [LOCALLEADER]) (see https://evil.readthedocs.io/en/latest/keymaps.html#leader-keys)
-;; add inf-clojure file to init (provide?)
 ;; leader key does not work on visual selection
 ;; selection + * won't work
+;; iedit or alternative
+;; switch between test and implementation
 
+
+;; TODO: Finish test
+(defun apt-switch-between-test-and-implementation ()
+  (interactive)
+  (cond ((derived-mode-p 'clojure-mode)
+	 (find-file (format "%s_test.%s"
+			  (string-replace "/src/" "/test/"
+					  (file-name-sans-extension buffer-file-name))
+			  (file-name-extension buffer-file-name))))))
