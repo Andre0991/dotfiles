@@ -19,13 +19,13 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "Source Code Pro" :size 15)
-      doom-variable-pitch-font (font-spec :family "Helvetica" :size 13))
+(setq doom-font (font-spec :family "Source Code Pro" :size 18)
+      doom-variable-pitch-font (font-spec :family "Helvetica" :size 18))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-one-light)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -96,6 +96,16 @@
     (while (and (not (eobp))
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
+
+(defun apt-doom-localleader-dispatch ()
+  (interactive)
+  (set-transient-map
+   (lookup-key (current-active-maps) (kbd doom-localleader-alt-key))))
+
+(defun apt-doom-leader-dispatch ()
+  (interactive)
+  (set-transient-map
+   (lookup-key (current-active-maps) (kbd doom-leader-alt-key))))
 
 (defun apt-inf-clojure-init-repl ()
   "Sane options for using a repl."
@@ -229,7 +239,6 @@ w: Save buffer
       (forward-char)
       (let ((cider-prompt-for-symbol nil))
         (cider-clojuredocs))))
-  ;; prevents `/` (`vilpy-splice`) from being overriden
   (raise-minor-mode 'vilpy-mode)
   (map! :map vilpy-mode-map
         :i "C-d" 'vilpy-delete)
@@ -248,24 +257,24 @@ w: Save buffer
   ;; (vilpy-define-key vilpy-mode-map "g" 'apt-vilpy-g)
   (vilpy-define-key vilpy-mode-map "m" 'evil-set-marker)
   (vilpy-define-key vilpy-mode-map "`" 'evil-goto-mark)
-  (vilpy-define-key vilpy-mode-map "c" 'vilpy-execute-in-normal-state))
+  (vilpy-define-key vilpy-mode-map "c" 'vilpy-execute-in-normal-state)
+  (setq which-key-show-transient-maps t)
+  (vilpy-define-key vilpy-mode-map "SPC" #'apt-doom-leader-dispatch)
+  (vilpy-define-key vilpy-mode-map "," #'apt-doom-localleader-dispatch))
 
 (defun apt-vilpy-go-to-definition ()
   (interactive)
   (forward-char)
   (+lookup/definition (vilpy--current-function)))
 
-(after! clojure
-  (map! :map clojure-mode-map
-        :localleader
-        :desc "Align sexp"
-        "f l" #'clojure-align))
-
 (after! cider
   (setq cider-auto-mode nil)
   (map! :map cider-repl-mode-map
         :localleader
         "s" #'cider-switch-to-last-clojure-buffer))
+
+(after! clojure-mode
+  (setq clojure-align-forms-automatically t))
 
 (after! inf-clojure
   (setq inf-clojure-custom-repl-type 'clojure)
@@ -361,6 +370,9 @@ w: Save buffer
   ;; Permanent SHA link.
   (setq browse-at-remote-prefer-symbolic nil))
 
+(after! eww
+  (setq eww-search-prefix "https://www.google.com/search?q=%s"))
+
 (after! lsp-mode
   (setq lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories
                                                    nu-lsp-ignore-dirs))
@@ -369,9 +381,8 @@ w: Save buffer
 ;; (after! markdown-mode
 ;;   (setq markdown-header-scaling t))
 
-;; conflicts with vilpy
-;; (after! evil
-;;   (map! :n "C-k" 'kill-line))
+(after! evil
+  (setq evil-respect-visual-line-mode nil))
 
 ;; adapted from https://stackoverflow.com/questions/14760567/emacs-auto-load-color-theme-by-time
 (defun synchronize-theme ()
@@ -389,3 +400,4 @@ w: Save buffer
 ;; (setq change-theme-timer (run-with-timer 0 200 'synchronize-theme))
 (comment
  (cancel-timer change-theme-timer))
+
