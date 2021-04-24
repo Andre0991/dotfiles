@@ -40,7 +40,12 @@
       inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       initial-major-mode 'fundamental-mode
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/"))))
+      backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
+      ;; TAB cycle if there are only few candidates
+      completion-cycle-threshold 3
+      ;; Enable indentation+completion using the TAB key.
+      ;; Completion is often bound to M-TAB.
+      tab-always-indent 'complete)
 
 
 ;;; Themes
@@ -98,14 +103,13 @@
 (require 'orderless)
 (setq completion-styles '(orderless))
 
-
 
 ;;; Vilpy
-;; (let ((vilpy-path "~/dev/peric/vilpy/"))
-;;   (add-to-list 'load-path vilpy-path)
-;;   (require 'vilpy))
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
-;; (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
+(let ((vilpy-path "~/dev/peric/vilpy/"))
+  (add-to-list 'load-path vilpy-path)
+  (require 'vilpy))
+(add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
+(add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
 
 
 ;;; Env variables
