@@ -94,9 +94,7 @@
 (with-eval-after-load 'consult
   (with-eval-after-load 'embark
     (require 'embark-consult)))
-
-(with-eval-after-load 'embark
-  (define-key global-map (kbd "C-o") #'embark-act))
+(define-key global-map (kbd "C-o") #'embark-act)
 
 
 ;;; Orderless
