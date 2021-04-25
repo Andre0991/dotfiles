@@ -85,9 +85,12 @@
           (project-root project)))
       xref-show-xrefs-function #'consult-xref
       xref-show-definitions-function #'consult-xref)
-
 (let ((map global-map))
   (define-key map (kbd "C-x b") #'consult-buffer))
+(evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
+(evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
+(evil-define-key 'normal 'global (kbd "<leader>cy") 'consult-yank)
+
 
 
 ;;; Embark
@@ -115,7 +118,7 @@
   (exec-path-from-shell-initialize))
 
 
-;;; eglot
+;;; Eglot
 (setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout 300)
 (with-eval-after-load 'eglot
@@ -145,7 +148,61 @@
 (evil-define-key 'normal 'global (kbd "<leader>go") 'browse-at-remote)
 
 
-;;; Leader keybindings
+;;; project
+;; TODO: If file does not exist, ask if want to create it.
+(defun apt-project-switch-between-test-and-implementation ()
+    (interactive)
+    (cond ((derived-mode-p 'clojure-mode)
+	   (let* ((src-dir "/src/")
+		  (test-dir "/test/")
+		  (test-suffix "_test")
+		  (is-test-p (cl-search test-dir buffer-file-name)))
+	     (if is-test-p
+	       (find-file (format "%s.%s"
+                                  (thread-last buffer-file-name
+                                               file-name-sans-extension
+                                               (string-replace test-dir src-dir)
+                                               (replace-regexp-in-string "_test$" ""))
+				  (file-name-extension buffer-file-name)))
+               (find-file (format "%s%s.%s"
+				  (string-replace src-dir test-dir (file-name-sans-extension buffer-file-name))
+				  test-suffix
+				  (file-name-extension buffer-file-name))))))
+	  ((derived-mode-p 'emacs-lisp-mode)
+	   (let* ((test-suffix "-test")
+		  (is-test-p (cl-search test-suffix buffer-file-name)))
+	     (if is-test-p
+	       (find-file (format "%s.%s"
+                                  (thread-last buffer-file-name
+                                               file-name-sans-extension
+                                               (replace-regexp-in-string "-test$" ""))
+				  (file-name-extension buffer-file-name)))
+               (find-file (format "%s%s.%s"
+				  (file-name-sans-extension buffer-file-name)
+				  test-suffix
+				  (file-name-extension buffer-file-name))))))))
+
+(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
+(evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
+(evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
+(evil-define-key 'normal 'global (kbd "<leader>pr") 'consult-ripgrep)
+(evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
+(evil-define-key 'normal 'global (kbd "<leader>pF") 'project-or-external-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>pG") 'project-or-external-find-regexp)
+(evil-define-key 'normal 'global (kbd "<leader>pb") 'project-switch-to-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>pd") 'project-dired)
+(evil-define-key 'normal 'global (kbd "<leader>pe") 'project-eshell)
+(evil-define-key 'normal 'global (kbd "<leader>pg") 'project-find-regexp)
+(evil-define-key 'normal 'global (kbd "<leader>pk") 'project-kill-buffers)
+(evil-define-key 'normal 'global (kbd "<leader>pr") 'project-query-replace-regexp)
+(evil-define-key 'normal 'global (kbd "<leader>pv") 'project-vc-dir)
+(evil-define-key 'normal 'global (kbd "<leader>px") 'project-execute-extended-command)
+;; my extras
+(evil-define-key 'normal 'global (kbd "<leader>pt") 'apt-project-switch-between-test-and-implementation)
+
+
+;;; Misc leader keybindings
 (evil-define-key 'normal 'global (kbd "<leader><SPC>") 'execute-extended-command)
 ;; buffer
 (evil-define-key 'normal 'global (kbd "<leader>bb") 'consult-buffer)
@@ -153,21 +210,15 @@
 ;; file
 (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
 (evil-define-key 'normal 'global (kbd "<leader>ff") 'find-file)
-;; project
-;; TODO: Continue this. See the `project-prefix-map` keymap
-(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
-(evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
-(evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
-(evil-define-key 'normal 'global (kbd "<leader>pr") 'consult-ripgrep)
-(evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
-;; flymake
+
+
+;;; Flymake
 (evil-define-key 'normal 'global (kbd "<leader>cf") 'consult-flymake)
-;; magit
+
+
+;;; Magit
 (evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
-;; consult
-(evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
-(evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
+
 ;; window
 (evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
 (evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
@@ -180,23 +231,10 @@
 (evil-define-key 'normal 'global (kbd "<leader>hv") 'describe-variable)
 (evil-define-key 'normal 'global (kbd "<leader>hf") 'describe-function)
 
-
 ;;; TODO
-;; god-like mode (see https://www.reddit.com/r/emacs/comments/apvpeu/status_of_godmode/)
 ;; select candiates in other buffer (embark?)
 ;; fix exec-path-from-shell-initialize performance
 ;; set localleader and use it for some modes (evil-set-leader STATE KEY [LOCALLEADER]) (see https://evil.readthedocs.io/en/latest/keymaps.html#leader-keys)
-;; leader key does not work on visual selection
+;; leader key does not work on visual selectio n
 ;; selection + * won't work
 ;; iedit or alternative
-;; switch between test and implementation
-
-
-;; TODO: Finish test
-(defun apt-switch-between-test-and-implementation ()
-  (interactive)
-  (cond ((derived-mode-p 'clojure-mode)
-	 (find-file (format "%s_test.%s"
-			  (string-replace "/src/" "/test/"
-					  (file-name-sans-extension buffer-file-name))
-			  (file-name-extension buffer-file-name))))))
