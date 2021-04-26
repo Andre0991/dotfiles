@@ -97,7 +97,7 @@
 (with-eval-after-load 'consult
   (with-eval-after-load 'embark
     (require 'embark-consult)))
-(define-key global-map (kbd "C-o") #'embark-act)
+(define-key global-map (kbd "C-;") #'embark-act)
 
 
 ;;; Orderless
@@ -220,14 +220,16 @@
 ;;; Magit
 (evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
 
-;; window
+
+;; Window
 (evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
 (evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
 (evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
 (evil-define-key 'normal 'global (kbd "<leader>wm") 'maximize-window)
 (evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
 (evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
-(evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
+(evil-define-key 'normal 'global (kbd "<leader>wk") 'delete-other-windows)
+
 ;; emacs
 (evil-define-key 'normal 'global (kbd "<leader>hv") 'describe-variable)
 (evil-define-key 'normal 'global (kbd "<leader>hf") 'describe-function)
