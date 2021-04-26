@@ -127,7 +127,7 @@
 (evil-define-key 'normal 'global (kbd "<leader>ll") 'eglot)
 (evil-define-key 'normal 'global (kbd "<leader>lq") 'eglot-shutdown)
 (evil-define-key 'normal 'global (kbd "<leader>lr") 'eglot-rename)
-(evil-define-key 'normal 'global (kbd "<leader>ld") 'xref-find-definitions)
+(evil-define-key 'normal 'global (kbd "<leader>lu") 'xref-find-references)
 
 
 ;;; inf-clojure
@@ -206,6 +206,7 @@
 (evil-define-key 'normal 'global (kbd "<leader><SPC>") 'execute-extended-command)
 ;; buffer
 (evil-define-key 'normal 'global (kbd "<leader>bb") 'consult-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bo") 'consult-buffer-other-window)
 (evil-define-key 'normal 'global (kbd "<leader>bs") 'switch-to-buffer)
 ;; file
 (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
