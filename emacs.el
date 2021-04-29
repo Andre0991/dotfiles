@@ -10,6 +10,7 @@
 				  consult
 				  orderless
 				  clojure-mode
+				  yaml-mode
 				  markdown-mode
 				  evil
 				  avy
@@ -18,14 +19,12 @@
 				  embark-consult
 				  eglot
 				  browse-at-remote
-				  corfu
-				  marginalia))
-
+				  corfu))
 
 
 ;;; Emacs
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -45,7 +44,8 @@
       completion-cycle-threshold 3
       ;; Enable indentation+completion using the TAB key.
       ;; Completion is often bound to M-TAB.
-      tab-always-indent 'complete)
+      tab-always-indent 'complete
+      compilation-scroll-output 't)
 
 
 ;;; Themes
@@ -90,6 +90,7 @@
 (evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
 (evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
 (evil-define-key 'normal 'global (kbd "<leader>cy") 'consult-yank)
+(evil-define-key 'normal 'global (kbd "<leader>cg") 'consult-global-mark)
 
 
 
@@ -111,11 +112,18 @@
   (require 'vilpy))
 (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
 (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
+(evil-define-key 'insert 'vilpy-mode-map (kbd "C-k") 'vilpy-kill)
+(evil-define-key 'insert 'vilpy-mode-map (kbd "C-d") 'vilpy-delete)
+(evil-define-key 'insert 'vilpy-mode-map (kbd "C-y") 'vilpy-yank)
 
 
 ;;; Env variables
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+
+
+;;; Clojure
+(setq clojure-align-forms-automatically t)
 
 
 ;;; Eglot
@@ -195,7 +203,7 @@
 (evil-define-key 'normal 'global (kbd "<leader>pe") 'project-eshell)
 (evil-define-key 'normal 'global (kbd "<leader>pg") 'project-find-regexp)
 (evil-define-key 'normal 'global (kbd "<leader>pk") 'project-kill-buffers)
-(evil-define-key 'normal 'global (kbd "<leader>pr") 'project-query-replace-regexp)
+(evil-define-key 'normal 'global (kbd "<leader>p%") 'project-query-replace-regexp)
 (evil-define-key 'normal 'global (kbd "<leader>pv") 'project-vc-dir)
 (evil-define-key 'normal 'global (kbd "<leader>px") 'project-execute-extended-command)
 ;; my extras
@@ -224,11 +232,23 @@
 ;; Window
 (evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
 (evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
+(evil-define-key 'normal 'global (kbd "<leader>w-") 'split-window-vertically)
 (evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
 (evil-define-key 'normal 'global (kbd "<leader>wm") 'maximize-window)
+(evil-define-key 'normal 'global (kbd "<leader>wk") 'windmove-up)
+(evil-define-key 'normal 'global (kbd "<leader>wj") 'windmove-down)
 (evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
 (evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
-(evil-define-key 'normal 'global (kbd "<leader>wk") 'delete-other-windows)
+(evil-define-key 'normal 'global (kbd "<leader>wD") 'delete-other-windows)
+
+
+;; Outline
+(evil-define-key 'normal 'global (kbd "<leader>os") 'outline-show-subtree)
+(evil-define-key 'normal 'global (kbd "<leader>oh") 'outline-hide-subtree)
+(evil-define-key 'normal 'global (kbd "<leader>oc") 'outline-cycle)
+(evil-define-key 'normal 'global (kbd "<leader>oc") 'outline-hide)
+(evil-define-key 'normal 'global (kbd "<leader>on") 'outline-next-heading)
+(evil-define-key 'normal 'global (kbd "<leader>op") 'outline-previous-heading)
 
 ;; emacs
 (evil-define-key 'normal 'global (kbd "<leader>hv") 'describe-variable)
@@ -263,3 +283,6 @@
 ;; leader key does not work on visual selectio n
 ;; selection + * won't work
 ;; iedit or alternative
+;; add yaml mode
+;; add outlijne binding 
+
