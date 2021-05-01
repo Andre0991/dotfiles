@@ -22,6 +22,14 @@
 				  corfu))
 
 
+;;; Global keybindings
+(let ((map global-map))
+  (define-key map (kbd "M-o") #'other-window))
+(when (string= (system-name) "Andres-MBP-2.lan") ; work macbook
+  ;; translate super to control
+  (setq ns-command-modifier 'control))
+
+
 ;;; Emacs
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
