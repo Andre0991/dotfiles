@@ -94,7 +94,15 @@
       xref-show-xrefs-function #'consult-xref
       xref-show-definitions-function #'consult-xref)
 (let ((map global-map))
-  (define-key map (kbd "C-x b") #'consult-buffer))
+  (define-key map (kbd "C-c k") #'consult-kmacro)
+  (define-key map (kbd "C-x b") #'consult-buffer)
+  (define-key map (kbd "C-x 4 b") #'consult-buffer-other-window)
+  (define-key map (kbd "M-y") #'consult-yank-pop)
+  (define-key map (kbd "M-s l") #'consult-line)
+  (define-key map (kbd "M-s r") #'consult-ripgrep)
+  ;; goto-map
+  (define-key map (kbd "M-g f") #'consult-flymake)
+  (define-key map (kbd "M-g i") #'consult-imenu))
 (evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
 (evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
 (evil-define-key 'normal 'global (kbd "<leader>cy") 'consult-yank)
