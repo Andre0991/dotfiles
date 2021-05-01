@@ -59,7 +59,7 @@
 
 ;;; Evil
 (require 'evil)
-(evil-mode 1)
+;; (evil-mode 1)
 (evil-set-leader 'normal (kbd "SPC"))
 (evil-set-leader 'normal (kbd ",") t) 	; localleader
 
