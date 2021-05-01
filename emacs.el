@@ -131,6 +131,11 @@
 (setq eglot-connect-timeout 300)
 (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp"))))
+(define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
+(define-key eglot-mode-map (kbd "C-c l l") #'eglot)
+(define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
+(define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
+(define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references)
 (evil-define-key 'normal 'global (kbd "<leader>la") 'eglot-code-actions)
 (evil-define-key 'normal 'global (kbd "<leader>ll") 'eglot)
 (evil-define-key 'normal 'global (kbd "<leader>lq") 'eglot-shutdown)
@@ -285,4 +290,3 @@
 ;; iedit or alternative
 ;; add yaml mode
 ;; add outlijne binding 
-
