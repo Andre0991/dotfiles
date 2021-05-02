@@ -2,32 +2,41 @@
 ;;; Packages
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-;; Install missing packages with (package-install-selected-packages)
+;; Install missing packages:
+;; (package-install-selected-packages)
+;; Remove unused packages:
+;; (package-autoremove)
 (setq package-selected-packages '(modus-themes
 				  vertico
 				  magit
-				  exec-path-from-shell
 				  consult
 				  orderless
 				  clojure-mode
 				  yaml-mode
 				  markdown-mode
-				  evil
 				  avy
 				  inf-clojure
 				  embark
 				  embark-consult
 				  eglot
 				  browse-at-remote
-				  corfu))
+				  corfu
+				  lispy))
 
 
 ;;; Global keybindings
 (let ((map global-map))
-  (define-key map (kbd "M-o") #'other-window))
-(when (string= (system-name) "Andres-MBP-2.lan") ; work macbook
+  (define-key map (kbd "M-o") #'other-window)
+  (define-key map (kbd "M-,") 'pop-tag-mark))
+(when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
+
+
+;;; Load paths
+(let ((elisp-path "~/dotfiles/elisp/"))
+  (when (file-directory-p elisp-path)
+    (add-to-list 'load-path elisp-path)))
 
 
 ;;; Emacs
@@ -57,8 +66,9 @@
 
 
 ;;; Themes
-(modus-themes-load-themes)
-(modus-themes-load-vivendi)
+(setq auto-dark-emacs/light-theme 'modus-operandi)
+(setq auto-dark-emacs/dark-theme 'modus-vivendi)
+(require 'auto-dark-emacs)
 
 
 ;;; Face
@@ -122,7 +132,7 @@
 (setq completion-styles '(orderless))
 
 
-;;; Vilpy
+;; Vilpy
 (let ((vilpy-path "~/dev/peric/vilpy/"))
   (add-to-list 'load-path vilpy-path)
   (require 'vilpy))
@@ -133,9 +143,11 @@
 (evil-define-key 'insert 'vilpy-mode-map (kbd "C-y") 'vilpy-yank)
 
 
-;;; Env variables
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+;;; Lispy
+;; (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-k") 'lispy-kill)
+;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-d") 'lispy-delete)
+;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-y") 'lispy-yank)
 
 
 ;;; Clojure
@@ -146,12 +158,12 @@
 (setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout 300)
 (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp"))))
-(define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
-(define-key eglot-mode-map (kbd "C-c l l") #'eglot)
-(define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
-(define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
-(define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references)
+  (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp")))
+  (define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
+  (define-key eglot-mode-map (kbd "C-c l l") #'eglot)
+  (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
+  (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
 (evil-define-key 'normal 'global (kbd "<leader>la") 'eglot-code-actions)
 (evil-define-key 'normal 'global (kbd "<leader>ll") 'eglot)
 (evil-define-key 'normal 'global (kbd "<leader>lq") 'eglot-shutdown)
@@ -163,10 +175,8 @@
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>eb") 'inf-clojure-eval-buffer)
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rn") 'inf-clojure-set-ns)
 (evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rr") 'inf-clojure-switch-to-repl)
-(let ((elisp-path "~/dotfiles/elisp/"))
-  (when (file-directory-p elisp-path)
-    (add-to-list 'load-path elisp-path)
-    (require 'apt-inf-clojure)))
+;; from `elisp-path` 
+(require 'apt-inf-clojure)
 
 
 ;;; eww
@@ -210,7 +220,7 @@
 				  (file-name-sans-extension buffer-file-name)
 				  test-suffix
 				  (file-name-extension buffer-file-name))))))))
-
+(define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 (evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
 (evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
 (evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
@@ -306,3 +316,16 @@
 ;; iedit or alternative
 ;; add yaml mode
 ;; add outlijne binding 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(modus-themes vertico magit exec-path-from-shell consult orderless clojure-mode yaml-mode markdown-mode evil avy inf-clojure embark embark-consult eglot browse-at-remote corfu)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
