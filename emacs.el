@@ -74,18 +74,9 @@
 ;;; Face
 (set-face-attribute 'default nil :height 150)
 
-
-;;; Evil
-(require 'evil)
-;; (evil-mode 1)
-(evil-set-leader 'normal (kbd "SPC"))
-(evil-set-leader 'normal (kbd ",") t) 	; localleader
 
-
 ;;; Winner mode
 (add-hook 'after-init-hook #'winner-mode)
-(evil-define-key 'normal 'global (kbd "<leader>wu") 'winner-undo)
-(evil-define-key 'normal 'global (kbd "<leader>wr") 'winner-redo)
 
 
 ;;; Vertico
@@ -113,11 +104,6 @@
   ;; goto-map
   (define-key map (kbd "M-g f") #'consult-flymake)
   (define-key map (kbd "M-g i") #'consult-imenu))
-(evil-define-key 'normal 'global (kbd "<leader>cl") 'consult-line)
-(evil-define-key 'normal 'global (kbd "<leader>ci") 'consult-imenu)
-(evil-define-key 'normal 'global (kbd "<leader>cy") 'consult-yank)
-(evil-define-key 'normal 'global (kbd "<leader>cg") 'consult-global-mark)
-
 
 
 ;;; Embark
@@ -138,16 +124,10 @@
   (require 'vilpy))
 (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
 (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
-(evil-define-key 'insert 'vilpy-mode-map (kbd "C-k") 'vilpy-kill)
-(evil-define-key 'insert 'vilpy-mode-map (kbd "C-d") 'vilpy-delete)
-(evil-define-key 'insert 'vilpy-mode-map (kbd "C-y") 'vilpy-yank)
 
 
 ;;; Lispy
 ;; (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
-;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-k") 'lispy-kill)
-;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-d") 'lispy-delete)
-;; (evil-define-key 'insert 'lispy-mode-map (kbd "C-y") 'lispy-yank)
 
 
 ;;; Clojure
@@ -164,17 +144,9 @@
   (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
   (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
   (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
-(evil-define-key 'normal 'global (kbd "<leader>la") 'eglot-code-actions)
-(evil-define-key 'normal 'global (kbd "<leader>ll") 'eglot)
-(evil-define-key 'normal 'global (kbd "<leader>lq") 'eglot-shutdown)
-(evil-define-key 'normal 'global (kbd "<leader>lr") 'eglot-rename)
-(evil-define-key 'normal 'global (kbd "<leader>lu") 'xref-find-references)
 
 
 ;;; inf-clojure
-(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>eb") 'inf-clojure-eval-buffer)
-(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rn") 'inf-clojure-set-ns)
-(evil-define-key 'normal 'inf-clojure-minor-mode-map (kbd "<localleader>rr") 'inf-clojure-switch-to-repl)
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
 
@@ -184,7 +156,7 @@
 
 
 ;;; browse-at-remote
-(evil-define-key 'normal 'global (kbd "<leader>go") 'browse-at-remote)
+(global-set-key (kbd "C-c g o") 'browse-at-remote)
 
 
 ;;; project
@@ -221,69 +193,6 @@
 				  test-suffix
 				  (file-name-extension buffer-file-name))))))))
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
-(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
-(evil-define-key 'normal 'global (kbd "<leader>pc") 'project-compile)
-(evil-define-key 'normal 'global (kbd "<leader>p!") 'project-shell-command)
-(evil-define-key 'normal 'global (kbd "<leader>pr") 'consult-ripgrep)
-(evil-define-key 'normal 'global (kbd "<leader>p&") 'project-async-shell-command)
-(evil-define-key 'normal 'global (kbd "<leader>pF") 'project-or-external-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>pG") 'project-or-external-find-regexp)
-(evil-define-key 'normal 'global (kbd "<leader>pb") 'project-switch-to-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>pd") 'project-dired)
-(evil-define-key 'normal 'global (kbd "<leader>pe") 'project-eshell)
-(evil-define-key 'normal 'global (kbd "<leader>pg") 'project-find-regexp)
-(evil-define-key 'normal 'global (kbd "<leader>pk") 'project-kill-buffers)
-(evil-define-key 'normal 'global (kbd "<leader>p%") 'project-query-replace-regexp)
-(evil-define-key 'normal 'global (kbd "<leader>pv") 'project-vc-dir)
-(evil-define-key 'normal 'global (kbd "<leader>px") 'project-execute-extended-command)
-;; my extras
-(evil-define-key 'normal 'global (kbd "<leader>pt") 'apt-project-switch-between-test-and-implementation)
-
-
-;;; Misc leader keybindings
-(evil-define-key 'normal 'global (kbd "<leader><SPC>") 'execute-extended-command)
-;; buffer
-(evil-define-key 'normal 'global (kbd "<leader>bb") 'consult-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bo") 'consult-buffer-other-window)
-(evil-define-key 'normal 'global (kbd "<leader>bs") 'switch-to-buffer)
-;; file
-(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>ff") 'find-file)
-
-
-;;; Flymake
-(evil-define-key 'normal 'global (kbd "<leader>cf") 'consult-flymake)
-
-
-;;; Magit
-(evil-define-key 'normal 'global (kbd "<leader>gg") 'magit)
-
-
-;; Window
-(evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
-(evil-define-key 'normal 'global (kbd "<leader>w/") 'split-window-right)
-(evil-define-key 'normal 'global (kbd "<leader>w-") 'split-window-vertically)
-(evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
-(evil-define-key 'normal 'global (kbd "<leader>wm") 'maximize-window)
-(evil-define-key 'normal 'global (kbd "<leader>wk") 'windmove-up)
-(evil-define-key 'normal 'global (kbd "<leader>wj") 'windmove-down)
-(evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
-(evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
-(evil-define-key 'normal 'global (kbd "<leader>wD") 'delete-other-windows)
-
-
-;; Outline
-(evil-define-key 'normal 'global (kbd "<leader>os") 'outline-show-subtree)
-(evil-define-key 'normal 'global (kbd "<leader>oh") 'outline-hide-subtree)
-(evil-define-key 'normal 'global (kbd "<leader>oc") 'outline-cycle)
-(evil-define-key 'normal 'global (kbd "<leader>oc") 'outline-hide)
-(evil-define-key 'normal 'global (kbd "<leader>on") 'outline-next-heading)
-(evil-define-key 'normal 'global (kbd "<leader>op") 'outline-previous-heading)
-
-;; emacs
-(evil-define-key 'normal 'global (kbd "<leader>hv") 'describe-variable)
-(evil-define-key 'normal 'global (kbd "<leader>hf") 'describe-function)
 
 
 ;;; Helpers
@@ -305,7 +214,6 @@
     (while (and (not (eobp))
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
-
 
 ;;; TODO
 ;; select candiates in other buffer (embark?)
