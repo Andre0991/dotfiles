@@ -27,7 +27,8 @@
 ;;; Global keybindings
 (let ((map global-map))
   (define-key map (kbd "M-o") #'other-window)
-  (define-key map (kbd "M-,") 'pop-tag-mark))
+  (define-key map (kbd "M-,") 'pop-tag-mark)
+  (define-key map (kbd "C-c f d") 'delete-file))
 (when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
@@ -53,6 +54,7 @@
 (setq vc-follow-symlinks t
       recentf-mode t
       enable-recursive-minibuffers t
+      initial-scratch-message nil
       inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       initial-major-mode 'fundamental-mode
@@ -63,6 +65,12 @@
       ;; Completion is often bound to M-TAB.
       tab-always-indent 'complete
       compilation-scroll-output 't)
+
+;;; electric pair mode
+(electric-pair-mode)
+(defun apt-inhibit-electric-pair-mode (_char)
+  (minibufferp))
+(setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
 
 
 ;;; Themes
@@ -149,6 +157,7 @@
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
+(define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point)
 
 
 ;;; eww
@@ -214,26 +223,3 @@
     (while (and (not (eobp))
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
-
-;;; TODO
-;; select candiates in other buffer (embark?)
-;; fix exec-path-from-shell-initialize performance
-;; set localleader and use it for some modes (evil-set-leader STATE KEY [LOCALLEADER]) (see https://evil.readthedocs.io/en/latest/keymaps.html#leader-keys)
-;; leader key does not work on visual selectio n
-;; selection + * won't work
-;; iedit or alternative
-;; add yaml mode
-;; add outlijne binding 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(modus-themes vertico magit exec-path-from-shell consult orderless clojure-mode yaml-mode markdown-mode evil avy inf-clojure embark embark-consult eglot browse-at-remote corfu)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
