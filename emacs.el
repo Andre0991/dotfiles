@@ -20,8 +20,7 @@
 				  embark-consult
 				  eglot
 				  browse-at-remote
-				  corfu
-				  lispy))
+				  corfu))
 
 
 ;;; Global keybindings
@@ -108,6 +107,7 @@
   (define-key map (kbd "C-x 4 b") #'consult-buffer-other-window)
   (define-key map (kbd "M-y") #'consult-yank-pop)
   (define-key map (kbd "M-s l") #'consult-line)
+  (define-key map (kbd "M-s k") #'consult-keep-lines)
   (define-key map (kbd "M-s r") #'consult-ripgrep)
   ;; goto-map
   (define-key map (kbd "M-g f") #'consult-flymake)
@@ -157,7 +157,8 @@
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
-(define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point)
+(with-eval-after-load 'inf-clojure
+  (define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point))
 
 
 ;;; eww
