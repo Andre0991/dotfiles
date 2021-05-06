@@ -64,7 +64,8 @@
       ;; Enable indentation+completion using the TAB key.
       ;; Completion is often bound to M-TAB.
       tab-always-indent 'complete
-      compilation-scroll-output 't)
+      compilation-scroll-output 't
+      sentence-end-double-space nil)
 
 ;;; electric pair mode
 (electric-pair-mode)
