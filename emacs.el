@@ -170,12 +170,14 @@
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
+(defun apt-inf-clojure-set-ns (&rest r)
+  (call-interactively #'inf-clojure-set-ns))
 (with-eval-after-load 'inf-clojure
   (define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point)
-  (advice-add #'inf-clojure-eval-last-sexp :before #'inf-clojure-set-ns)
-  (advice-add #'inf-clojure-eval-defun :before #'inf-clojure-set-ns)
-  (advice-add #'inf-clojure-eval-region :before #'inf-clojure-set-ns)
-  (advice-add #'apt-inf-clojure-eval-and-replace-last-sexp :before #'inf-clojure-set-ns))
+  (advice-add #'inf-clojure-eval-last-sexp :before #'apt-inf-clojure-set-ns)
+  (advice-add #'inf-clojure-eval-defun :before #'apt-inf-clojure-set-ns)
+  (advice-add #'inf-clojure-eval-region :before #'apt-inf-clojure-set-ns)
+  (advice-add #'apt-inf-clojure-eval-and-replace-last-sexp :before #'apt-inf-clojure-set-ns))
 
 
 ;;; eww
