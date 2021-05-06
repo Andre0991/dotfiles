@@ -38,6 +38,9 @@
 (let ((elisp-path "~/dotfiles/elisp/"))
   (when (file-directory-p elisp-path)
     (add-to-list 'load-path elisp-path)))
+(let ((elisp-path "~/Dropbox/nu/emacs-lisp"))
+  (when (file-directory-p elisp-path)
+    (add-to-list 'load-path elisp-path)))
 
 
 ;;; Emacs
@@ -243,3 +246,7 @@
     (while (and (not (eobp))
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
+
+
+;;; Nu
+(require 'nu-andre)
