@@ -28,7 +28,8 @@
 (let ((map global-map))
   (define-key map (kbd "M-o") #'other-window)
   (define-key map (kbd "M-,") 'pop-tag-mark)
-  (define-key map (kbd "C-c f d") 'delete-file))
+  (define-key map (kbd "C-c f d") 'delete-file)
+  (define-key map (kbd "C-Z") 'zap-up-to-char))
 (when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
