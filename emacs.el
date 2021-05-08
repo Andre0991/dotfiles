@@ -70,6 +70,15 @@
       tab-always-indent 'complete
       compilation-scroll-output 't
       sentence-end-double-space nil)
+(dolist (cmd '(narrow-to-region
+               upcase-region
+               downcase-region
+               narrow-to-page
+               scroll-left
+               scroll-right))
+  (put cmd 'disabled nil))
+
+
 
 ;;; electric pair mode
 (electric-pair-mode)
