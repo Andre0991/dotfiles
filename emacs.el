@@ -21,7 +21,8 @@
 				  eglot
 				  browse-at-remote
 				  corfu
-				  which-key))
+				  which-key
+				  olivetti))
 
 
 ;;; Global keybindings
@@ -78,7 +79,7 @@
 
 
 
-;;; electric pair mode
+;;; Electric pair mode
 (electric-pair-mode)
 (defun apt-inhibit-electric-pair-mode (_char)
   (minibufferp))
@@ -93,6 +94,12 @@
 
 ;;; Face
 (set-face-attribute 'default nil :height 150)
+(set-face-attribute 'variable-pitch nil :family "Helvetica" :height 180)
+
+
+;;; Writing
+(add-hook 'text-mode-hook 'variable-pitch-mode)
+(add-hook 'text-mode-hook 'olivetti-mode)
 
 
 ;;; Winner mode
