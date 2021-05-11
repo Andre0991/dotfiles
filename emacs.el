@@ -36,12 +36,10 @@
 
 
 ;;; Load paths
-(let ((elisp-path "~/dotfiles/elisp/"))
-  (when (file-directory-p elisp-path)
-    (add-to-list 'load-path elisp-path)))
-(let ((elisp-path "~/Dropbox/nu/emacs-lisp"))
-  (when (file-directory-p elisp-path)
-    (add-to-list 'load-path elisp-path)))
+(dolist (path '("~/dotfiles/elisp/"
+		"~/Dropbox/nu/emacs-lisp"))
+  (when (file-directory-p path)
+    (add-to-list 'load-path path)))
 
 
 ;;; Emacs
@@ -202,60 +200,12 @@
 
 
 ;;; project
-;; TODO: If file does not exist, ask if want to create it.
-(defun apt-project-switch-between-test-and-implementation ()
-    (interactive)
-    (cond ((derived-mode-p 'clojure-mode)
-	   (let* ((src-dir "/src/")
-		  (test-dir "/test/")
-		  (test-suffix "_test")
-		  (is-test-p (cl-search test-dir buffer-file-name)))
-	     (if is-test-p
-	       (find-file (format "%s.%s"
-                                  (thread-last buffer-file-name
-                                               file-name-sans-extension
-                                               (string-replace test-dir src-dir)
-                                               (replace-regexp-in-string "_test$" ""))
-				  (file-name-extension buffer-file-name)))
-               (find-file (format "%s%s.%s"
-				  (string-replace src-dir test-dir (file-name-sans-extension buffer-file-name))
-				  test-suffix
-				  (file-name-extension buffer-file-name))))))
-	  ((derived-mode-p 'emacs-lisp-mode)
-	   (let* ((test-suffix "-test")
-		  (is-test-p (cl-search test-suffix buffer-file-name)))
-	     (if is-test-p
-	       (find-file (format "%s.%s"
-                                  (thread-last buffer-file-name
-                                               file-name-sans-extension
-                                               (replace-regexp-in-string "-test$" ""))
-				  (file-name-extension buffer-file-name)))
-               (find-file (format "%s%s.%s"
-				  (file-name-sans-extension buffer-file-name)
-				  test-suffix
-				  (file-name-extension buffer-file-name))))))))
+(require 'apt-project-extras)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 
 
 ;;; Helpers
-(defun check-next-def ()
-  (push-mark nil t)
-  (when (re-search-forward
-         (concat "(def\\(?:un\\|macro\\|subst\\|var\\|const\\) "
-                 "\\(\\(?:\\sw\\|\\s_\\)+\\)")
-         nil 'move)
-    (save-excursion
-      (let ((name (match-string 1)))
-        (goto-char (point-min))
-        (unless (re-search-forward (concat "\\_<" name "\\_>") nil t 2)
-          name)))))
-
-(defun find-unused-def ()
-  (interactive)
-  (let (name)
-    (while (and (not (eobp))
-                (not (setq name (check-next-def)))))
-    (message "Found! %s" name)))
+(require 'apt-helpers)
 
 
 ;;; Nu
