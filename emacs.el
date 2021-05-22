@@ -22,7 +22,10 @@
 				  browse-at-remote
 				  corfu
 				  which-key
-				  olivetti))
+				  olivetti
+				  ox-slack
+				  flymake-shellcheck
+				  forge))
 
 
 ;;; Global keybindings
@@ -30,7 +33,7 @@
   (define-key map (kbd "M-o") #'other-window)
   (define-key map (kbd "M-,") 'pop-tag-mark)
   (define-key map (kbd "C-c f d") 'delete-file)
-  (define-key map (kbd "C-Z") 'zap-up-to-char))
+  (define-key map (kbd "M-Z") 'zap-up-to-char))
 (when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
@@ -68,7 +71,9 @@
       ;; Completion is often bound to M-TAB.
       tab-always-indent 'complete
       compilation-scroll-output 't
-      sentence-end-double-space nil)
+      sentence-end-double-space nil
+      auth-sources '("~/.authinfo")
+      isearch-lazy-count t)
 (dolist (cmd '(narrow-to-region
                upcase-region
                downcase-region
@@ -98,23 +103,26 @@
 
 
 ;;; Writing
-(add-hook 'text-mode-hook 'variable-pitch-mode)
-(add-hook 'text-mode-hook 'olivetti-mode)
+(dolist (hook '(markdown-mode-hook
+		org-mode-hook))
+  ;; experimental: is it too intrusive to be automatic?
+  ;; (add-hook hook 'olivetti-mode)
+  (add-hook hook 'variable-pitch-mode))
 
 
 ;;; Winner mode
 (add-hook 'after-init-hook #'winner-mode)
 
 
-;;; which-key
+;;; Which-key
 ;; Manual Activation 
 ;; Allow C-h to trigger which-key before it is done automatically
 (setq which-key-show-early-on-C-h t)
 ;; make sure which-key doesn't show normally but refreshes quickly after it is
 ;; triggered.
 (setq which-key-idle-delay 10000)
-(setq which-key-idle-secondary-delay 0.05)
 (which-key-mode)
+(setq which-key-idle-secondary-delay 0.05)
 
 
 ;;; Vertico
@@ -217,3 +225,33 @@
 
 ;;; Nu
 (require 'nu-andre)
+
+
+;;; Org
+(setq org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS (p)" "WAITING(w)" "|" "DONE(d)"))
+      org-agenda-files '("/Users/andreperictavares/Dropbox/nu/org/tasks/TODO.org"))
+
+
+;;; Shell
+(add-hook 'sh-mode-hook 'flymake-shellcheck-load)
+
+
+;;; Forge
+(with-eval-after-load 'magit
+  (require 'forge))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((cider-shadow-cljs-default-options . "app")
+     (cider-default-cljs-repl . shadow))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
