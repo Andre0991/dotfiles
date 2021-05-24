@@ -229,7 +229,9 @@
 
 ;;; Org
 (setq org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS (p)" "WAITING(w)" "|" "DONE(d)"))
-      org-agenda-files '("/Users/andreperictavares/Dropbox/nu/org/tasks/TODO.org"))
+      org-agenda-files '("/Users/andreperictavares/Dropbox/nu/org/tasks/TODO.org")
+      org-export-html-postamble nil)
+(global-set-key (kbd "C-c L") 'org-store-link)
 
 
 ;;; Shell
