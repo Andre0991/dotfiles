@@ -11,6 +11,7 @@
 				  magit
 				  consult
 				  orderless
+				  wgrep
 				  clojure-mode
 				  yaml-mode
 				  markdown-mode
