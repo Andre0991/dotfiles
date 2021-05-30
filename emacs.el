@@ -95,6 +95,7 @@
 ;;; Themes
 (setq auto-dark-emacs/light-theme 'modus-operandi)
 (setq auto-dark-emacs/dark-theme 'modus-vivendi)
+(setq modus-themes-scale-headings t)
 (require 'auto-dark-emacs)
 
 
