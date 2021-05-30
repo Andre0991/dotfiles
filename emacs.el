@@ -234,8 +234,15 @@
 ;;; Org
 (setq org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS (p)" "WAITING(w)" "|" "DONE(d)"))
       org-agenda-files '("/Users/andreperictavares/Dropbox/nu/org/tasks/TODO.org")
-      org-export-html-postamble nil)
+      org-html-postamble nil)
 (global-set-key (kbd "C-c L") 'org-store-link)
+(setq org-publish-project-alist
+      '(("mothership-proposal"
+	 :base-directory "~/Dropbox/nu/org/tasks/mothership-proposal/"
+	 :publishing-directory "~/Dropbox/nu/org/tasks/mothership-proposal/html_export/"
+	 :publishing-function org-html-publish-to-html
+	 :auto-sitemap t
+	 :recursive t)))
 
 
 ;;; Shell
