@@ -253,6 +253,9 @@
 (with-eval-after-load 'magit
   (require 'forge))
 
+
+;;; ERC
+(setq erc-server "irc.libera.chat")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
