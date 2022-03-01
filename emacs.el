@@ -87,6 +87,8 @@
 ;;; Electric pair mode
 (electric-pair-mode)
 (defun apt-inhibit-electric-pair-mode (_char)
+  ;; do not use electrict pair mode in minifuffer, as
+  ;; it is common to use a single parens for searching
   (minibufferp))
 (setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
 
