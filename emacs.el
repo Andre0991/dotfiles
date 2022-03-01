@@ -187,8 +187,9 @@
 ;;; Eglot
 (setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout 300)
+(add-hook 'clojure-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '(clojure-mode . ("clojure-lsp")))
+  ;; (add-to-list 'eglot-server-programs '(clojure-mode . ("/Users/andreperictavares/Downloads/clojure-lsp-tent")))
   (define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
   (define-key eglot-mode-map (kbd "C-c l l") #'eglot)
   (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
