@@ -130,6 +130,8 @@
 
 ;;; Vertico
 (vertico-mode)
+(with-eval-after-load 'vertico
+  (setq vertico-cycle nil))
 
 
 ;;; Corfu
