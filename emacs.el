@@ -101,7 +101,7 @@
 
 
 ;;; Face
-(set-face-attribute 'default nil :height 150)
+(set-face-attribute 'default nil :height 150 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 180)
 
 
@@ -221,8 +221,8 @@
 ;;; project
 (require 'apt-project-extras)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
-(with-eval-after-load 'consult
-  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
+;; (with-eval-after-load 'consult
+;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
 
 
 ;;; Helpers
