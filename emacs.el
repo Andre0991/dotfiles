@@ -82,6 +82,9 @@
                scroll-right))
   (put cmd 'disabled nil))
 
+
+;;; Windmove
+(windmove-default-keybindings)
 
 
 ;;; Electric pair mode
