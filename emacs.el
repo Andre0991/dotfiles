@@ -100,7 +100,8 @@
 (setq auto-dark-emacs/light-theme 'modus-operandi)
 (setq auto-dark-emacs/dark-theme 'modus-vivendi)
 (setq modus-themes-scale-headings t)
-(require 'auto-dark-emacs)
+(when (display-graphic-p)
+  (require 'auto-dark-emacs))
 
 
 ;;; Face
@@ -194,7 +195,6 @@
 (setq eglot-connect-timeout 300)
 (add-hook 'clojure-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
-  ;; (add-to-list 'eglot-server-programs '(clojure-mode . ("/Users/andreperictavares/Downloads/clojure-lsp-tent")))
   (define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
   (define-key eglot-mode-map (kbd "C-c l l") #'eglot)
   (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
@@ -272,9 +272,3 @@
  '(safe-local-variable-values
    '((cider-shadow-cljs-default-options . "app")
      (cider-default-cljs-repl . shadow))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
