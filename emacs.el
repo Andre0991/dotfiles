@@ -105,8 +105,8 @@
 
 
 ;;; Face
-(set-face-attribute 'default nil :height 150 :family "DejaVu Sans Mono")
-(set-face-attribute 'variable-pitch nil :family "Helvetica" :height 180)
+(set-face-attribute 'default nil :height 180 :family "DejaVu Sans Mono")
+(set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
 
 
 ;;; Writing
