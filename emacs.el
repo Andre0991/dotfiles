@@ -48,7 +48,7 @@
 
 
 ;;; Emacs
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (tool-bar-mode -1)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -205,8 +205,6 @@
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
-(defun apt-inf-clojure-set-ns (&rest r)
-  (call-interactively #'inf-clojure-set-ns))
 (with-eval-after-load 'inf-clojure
   (define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point)
   (advice-add #'inf-clojure-eval-last-sexp :before #'apt-inf-clojure-set-ns)

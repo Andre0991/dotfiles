@@ -19,6 +19,13 @@
                                                              (pop-thread-bindings)
                                                              (push-thread-bindings bindings)))))"))
 
+(defun apt-inf-clojure-set-ns (&rest r)
+  (let* ((ns-name (inf-clojure--process-response "(str *ns*)" (inf-clojure-proc 'no-error)))
+	 (ns (substring ns-name
+			1 (- (length ns-name) 2))))
+    (when (not (string= ns (clojure-find-ns)))
+      (call-interactively #'inf-clojure-set-ns))))
+
 (defun apt-inf-clojure-doc ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
