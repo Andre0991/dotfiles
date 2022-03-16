@@ -1,1 +1,6 @@
-/.doom.d/custom.el
+# -*- mode: gitignore; -*-
+
+## emacs
+/.doom.d/custom.
+\#*\#
+

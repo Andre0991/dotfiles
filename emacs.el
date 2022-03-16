@@ -50,7 +50,8 @@
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(tool-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1))
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Get rid of "For information about GNU Emacs..." message at startup, unless
 ;; we're in a daemon session where it'll say "Starting Emacs daemon." instead,
@@ -97,7 +98,6 @@
                    recenter-top-bottom
 		   other-window))
   (advice-add command :after #'pulse-line))
-
 
 
 ;;; Electric pair mode
