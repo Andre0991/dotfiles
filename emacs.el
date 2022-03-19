@@ -74,7 +74,8 @@
       compilation-scroll-output 't
       sentence-end-double-space nil
       auth-sources '("~/.authinfo")
-      isearch-lazy-count t)
+      isearch-lazy-count t
+      async-shell-command-buffer 'new-buffer)
 (dolist (cmd '(narrow-to-region
                upcase-region
                downcase-region
@@ -82,6 +83,16 @@
                scroll-left
                scroll-right))
   (put cmd 'disabled nil))
+
+;; TODO: Create only if it does not exist
+;; (make-directory "~/.emacs.d/aux")
+(setq lock-file-name-transforms
+      '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t)))
+(setq auto-save-file-name-transforms
+      '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t)))
+(setq backup-directory-alist
+      '((".*" . "~/.emacs.d/aux/")))
+
 
 
 ;;; Windmove
@@ -153,6 +164,7 @@
 
 ;;; Corfu
 (add-hook 'prog-mode-hook 'corfu-mode)
+(add-hook 'shell-mode-hook 'corfu-mode)
 
 
 ;;; Consult
@@ -219,11 +231,7 @@
 ;; from `elisp-path` 
 (require 'apt-inf-clojure)
 (with-eval-after-load 'inf-clojure
-  (define-key inf-clojure-mode-map (kbd "C-c m t") #'apt-inf-clojure-run-test-at-point)
-  (advice-add #'inf-clojure-eval-last-sexp :before #'apt-inf-clojure-set-ns)
-  (advice-add #'inf-clojure-eval-defun :before #'apt-inf-clojure-set-ns)
-  (advice-add #'inf-clojure-eval-region :before #'apt-inf-clojure-set-ns)
-  (advice-add #'apt-inf-clojure-eval-and-replace-last-sexp :before #'apt-inf-clojure-set-ns))
+  (vilpy-define-key vilpy-mode-map "d" 'inf-clojure-set-ns))
 
 
 ;;; eww
