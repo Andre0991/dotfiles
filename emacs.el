@@ -7,7 +7,8 @@
 
 ;; Remove unused packages:
 ;; (package-autoremove)
-(setq package-selected-packages '(modus-themes
+(setq package-selected-packages '(auto-dark
+				  modus-themes
 				  vertico
 				  magit
 				  consult
@@ -127,11 +128,11 @@
 
 
 ;;; Themes
-(setq auto-dark-emacs/light-theme 'modus-operandi)
-(setq auto-dark-emacs/dark-theme 'modus-vivendi)
 (setq modus-themes-scale-headings t)
 (when (display-graphic-p)
-  (require 'auto-dark-emacs))
+  (require 'auto-dark)
+  (setq auto-dark--light-theme 'modus-operandi)
+  (setq auto-dark--dark-theme 'modus-vivendi))
 
 
 ;;; Face
