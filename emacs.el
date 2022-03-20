@@ -255,8 +255,8 @@
 ;;; project
 (require 'apt-project-extras)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
-;; (with-eval-after-load 'consult
-;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
+(with-eval-after-load 'consult
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
 
 
 ;;; Helpers
