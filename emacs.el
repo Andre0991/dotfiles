@@ -4,6 +4,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; Install missing packages:
 ;; (package-install-selected-packages)
+
 ;; Remove unused packages:
 ;; (package-autoremove)
 (setq package-selected-packages '(modus-themes
@@ -26,7 +27,8 @@
 				  olivetti
 				  ox-slack
 				  flymake-shellcheck
-				  forge))
+				  forge
+				  marginalia))
 
 
 ;;; Global keybindings
@@ -157,6 +159,10 @@
 (setq which-key-idle-delay 10000)
 (which-key-mode)
 (setq which-key-idle-secondary-delay 0.05)
+
+
+;;; Marginalia
+(marginalia-mode)
 
 
 ;;; Vertico
