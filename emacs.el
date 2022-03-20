@@ -266,6 +266,10 @@
 ;;; Nu
 (require 'nu-andre)
 
+
+;;; cljdocs
+(require 'cljdocs)
+
 ;;; Magit
 (with-eval-after-load 'project
   (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))

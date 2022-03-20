@@ -1,6 +1,12 @@
+;; cljdocs.el --- Get documentation using clojuredocs.org data -*- lexical-binding: t; -*-
+
+;;; Code:
+
 (require 'seq)
 (eval-when-compile
   (require 'subr-x))
+
+(setq cljdocs--export nil)
 
 ;; taken from cider - will use it?
 (defun cider-symbol-at-point (&optional look-back)
@@ -32,15 +38,13 @@ keywords."
               (forward-sexp -1)))
           (cider-symbol-at-point)))))
 
-(setq cljdocs--export nil)
-
 (defun cljdocs--file-as-string (path)
   (with-temp-buffer
     (insert-file-contents path)
     (buffer-string)))
 
 (defun cljdocs--clj-symbol-name (clj-sym)
-  (let ((split-clj-symbol (split-string clj-symbol "/")))
+  (let ((split-clj-symbol (split-string clj-sym "/")))
     (if (= 1 (length split-clj-symbol))
 	(car split-clj-symbol)
       (car (cdr split-clj-symbol)))))
@@ -64,7 +68,7 @@ keywords."
 	  (gethash "ns" var)
 	  (gethash "name" var)))
 
-(defun cljsdocs--find-var
+(defun cljdocs--find-var
     (ns name)
   (car (seq-filter (lambda (el)
 		     (and (string= ns (gethash "ns" el))
@@ -75,8 +79,6 @@ keywords."
     (var)
   (let ((examples (seq-map (lambda (el)
 			     (gethash "body" el)) (gethash "examples" var))))
-    ;; TODO: Use string-join from subr-x.el instead
-    ;; see https://stackoverflow.com/questions/12999530/is-there-a-function-that-joins-a-string-into-a-delimited-string
     (string-join examples "\n\n;;;; Example \n\n")))
 
 (defun cljdocs--buffer-name
@@ -90,12 +92,13 @@ keywords."
 	 (name (car (cdr var-str-split))))
     ;; TODO: check if buffer already exists? is it necessary?
     (with-output-to-temp-buffer (cljdocs--buffer-name ns name)
-      (princ (cljdocs--fmt-buffer-content (cljsdocs--find-var ns name)))
+      (princ (cljdocs--fmt-buffer-content (cljdocs--find-var ns name)))
       (pop-to-buffer (cljdocs--buffer-name ns name))
-      (clojure-mode))))
+      (clojure-mode)
+      (read-only-mode 1))))
 
-
-(defun clojuredocs ()
+;; TODO: Use autoload
+(defun cljdocs ()
   (interactive)
   ;; TODO: Handle #'foo, 'foo etc? (see cider example) 
   (if-let ((clj-symbol (thing-at-point 'symbol)))
@@ -107,11 +110,15 @@ keywords."
 				       (seq-map #'cljdocs-summary-candidate))))
 	  (if (= 1 (length candidates))
 	      (cljdocs--display (car candidates))
-	    (let ((var (completing-read "var: " (thread-last clj-symbol
-							     cljdocs--clj-symbol-name
-							     cljdocs-filter-candidates
-							     (seq-map #'cljdocs-summary-candidate)))))
+	    (let ((var (completing-read "var: " candidates)))
 	      (cljdocs--display var)))))
     (message "clojuredocs: could not find symbol at point")))
 
-;; (cljdocs--display "clojure.core/filter")
+;; Next:
+;; - [ ] Add autoload
+;; - [ ] Add keybinding to my config
+;; - [ ] Fix filter (second candidate returns error)
+;; - [ ] cache export
+
+(provide 'cljdocs)
+;;; cljdocs.el ends here
