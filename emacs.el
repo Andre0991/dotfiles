@@ -88,9 +88,10 @@
 ;; triggered automatically on long *files*
 ;; (not on text inserted in a buffer)
 (global-so-long-mode)
-
-;; TODO: Create only if it does not exist
-;; (make-directory "~/.emacs.d/aux")
+;; lock file, backup file
+(let ((aux-dir "~/.emacs.d/aux"))
+  (unless (file-exists-p aux-dir)
+    (make-directory aux-dir)))
 (setq lock-file-name-transforms
       '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t)))
 (setq auto-save-file-name-transforms
