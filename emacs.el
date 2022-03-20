@@ -220,10 +220,6 @@
 (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
 
 
-;;; Lispy
-;; (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
-
-
 ;;; Clojure
 (setq clojure-align-forms-automatically t)
 
