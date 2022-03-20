@@ -266,6 +266,10 @@
 ;;; Nu
 (require 'nu-andre)
 
+;;; Magit
+(with-eval-after-load 'project
+  (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))
+
 
 ;;; Forge
 (with-eval-after-load 'magit
