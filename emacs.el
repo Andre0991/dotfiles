@@ -168,6 +168,9 @@
 ;;; Corfu
 (add-hook 'prog-mode-hook 'corfu-mode)
 (add-hook 'shell-mode-hook 'corfu-mode)
+(with-eval-after-load 'corfu
+  (setq corfu-auto nil)
+  (define-key corfu-map (kbd "SPC") #'corfu-insert-separator))
 
 
 ;;; Consult
