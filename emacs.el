@@ -83,6 +83,9 @@
                scroll-left
                scroll-right))
   (put cmd 'disabled nil))
+;; triggered automatically on long *files*
+;; (not on text inserted in a buffer)
+(global-so-long-mode)
 
 ;; TODO: Create only if it does not exist
 ;; (make-directory "~/.emacs.d/aux")
