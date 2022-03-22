@@ -110,6 +110,17 @@
 ;; This displays full docs for clojure functions.
 ;; See https://github.com/joaotavora/eglot/discussions/894
 (setq eldoc-documentation-strategy 'eldoc-documentation-compose)
+
+
+;; Webjump
+(setq webjump-sites
+      '(("Tekton Dashboard" . "https://dashboard.cicd.nubank.world/")
+        ("The Drunkard's Walk"   . "https://meet.google.com/jgf-bogh-oop")
+	("Eagles eyes"   . "https://meet.google.com/xgc-wmqr-kvn")
+	("Zoom"   . "https://nubank.zoom.us/j/6441464215")
+	("Jira"   . "https://nubank.atlassian.net/jira/software/c/projects/CPL/boards/277")))
+
+
 
 ;;; Pulse
 (defun pulse-line (&rest _)
@@ -260,8 +271,8 @@
 ;;; project
 (require 'apt-project-extras)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
-(with-eval-after-load 'consult
-  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
+;; (with-eval-after-load 'consult
+;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
 
 
 ;;; Helpers
@@ -273,11 +284,11 @@
 
 
 ;;; cljdocs
-(require 'cljdocs)
+;; (require 'cljdocs)
 
 ;;; Magit
-(with-eval-after-load 'project
-  (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))
+;; (with-eval-after-load 'project
+;;   (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))
 
 
 ;;; Forge
@@ -287,12 +298,3 @@
 
 ;;; ERC
 (setq erc-server "irc.libera.chat")
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values
-   '((cider-shadow-cljs-default-options . "app")
-     (cider-default-cljs-repl . shadow))))
