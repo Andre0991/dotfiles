@@ -106,6 +106,11 @@
 (windmove-default-keybindings)
 
 
+;;; Eldoc
+;; This displays full docs for clojure functions.
+;; See https://github.com/joaotavora/eglot/discussions/894
+(setq eldoc-documentation-strategy 'eldoc-documentation-compose)
+
 ;;; Pulse
 (defun pulse-line (&rest _)
   "Pulse the current line."
