@@ -33,11 +33,10 @@
 
 
 ;;; Global keybindings
-(let ((map global-map))
-  (define-key map (kbd "M-o") #'other-window)
-  (define-key map (kbd "M-,") 'pop-tag-mark)
-  (define-key map (kbd "C-c f d") 'delete-file)
-  (define-key map (kbd "M-Z") 'zap-up-to-char))
+(define-key global-map (kbd "M-o") #'other-window)
+(define-key global-map (kbd "M-,") 'pop-tag-mark)
+(define-key global-map (kbd "C-c f d") 'delete-file)
+(define-key global-map (kbd "M-Z") 'zap-up-to-char)
 (when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
@@ -52,7 +51,7 @@
 
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (when (display-graphic-p)
   (tool-bar-mode -1))
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -124,7 +123,6 @@
 (defun pulse-line (&rest _)
   "Pulse the current line."
   (pulse-momentary-highlight-one-line (point)))
-
 (dolist (command '(scroll-up-command
 		   scroll-down-command
                    recenter-top-bottom
@@ -169,12 +167,12 @@
 ;;; Which-key
 ;; Manual Activation 
 ;; Allow C-h to trigger which-key before it is done automatically
-(setq which-key-show-early-on-C-h t)
-;; make sure which-key doesn't show normally but refreshes quickly after it is
-;; triggered.
-(setq which-key-idle-delay 10000)
+(setq which-key-show-early-on-C-h t
+      ;; make sure which-key doesn't show normally but refreshes quickly after it is
+      ;; triggered.
+      which-key-idle-delay 10000
+      which-key-idle-secondary-delay 0.05)
 (which-key-mode)
-(setq which-key-idle-secondary-delay 0.05)
 
 
 ;;; Marginalia
