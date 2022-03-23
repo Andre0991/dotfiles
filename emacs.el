@@ -8,28 +8,28 @@
 ;; Remove unused packages:
 ;; (package-autoremove)
 (setq package-selected-packages '(auto-dark
-				  modus-themes
-				  vertico
-				  magit
-				  consult
-				  orderless
-				  wgrep
-				  clojure-mode
-				  yaml-mode
-				  markdown-mode
 				  avy
-				  inf-clojure
+				  browse-at-remote
+				  clojure-mode
+				  consult
+				  corfu
+				  eglot
 				  embark
 				  embark-consult
-				  eglot
-				  browse-at-remote
-				  corfu
-				  which-key
-				  olivetti
-				  ox-slack
 				  flymake-shellcheck
 				  forge
-				  marginalia))
+				  inf-clojure
+				  magit
+				  marginalia
+				  markdown-mode
+				  modus-themes
+				  olivetti
+				  orderless
+				  ox-slack
+				  vertico
+				  wgrep
+				  which-key
+				  yaml-mode))
 
 
 ;;; Global keybindings
