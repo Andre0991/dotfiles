@@ -93,12 +93,9 @@
 (let ((aux-dir "~/.emacs.d/aux"))
   (unless (file-exists-p aux-dir)
     (make-directory aux-dir)))
-(setq lock-file-name-transforms
-      '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t)))
-(setq auto-save-file-name-transforms
-      '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t)))
-(setq backup-directory-alist
-      '((".*" . "~/.emacs.d/aux/")))
+(setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
+      auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
+      backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
 
 
 
