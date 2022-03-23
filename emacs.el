@@ -109,7 +109,8 @@
 ;;; Eldoc
 ;; This displays full docs for clojure functions.
 ;; See https://github.com/joaotavora/eglot/discussions/894
-(setq eldoc-documentation-strategy 'eldoc-documentation-compose)
+(setq eldoc-documentation-strategy 'eldoc-documentation-compose
+      eldoc-echo-area-use-multiline-p 5)
 
 
 ;; Webjump
