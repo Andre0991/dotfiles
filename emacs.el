@@ -304,3 +304,7 @@
 (setq iedit-toggle-key-default nil)
 (define-key global-map (kbd "C-M-;") #'iedit-mode)
 
+
+;;; org
+(setq org-confirm-babel-evaluate nil)
+
