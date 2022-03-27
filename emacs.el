@@ -177,7 +177,13 @@
 
 
 ;;; Marginalia
+(defun marginalia-use-builtin ()
+  (mapc
+   (lambda (x)
+     (setcdr x (cons 'builtin (remq 'builtin (cdr x)))))
+   marginalia-annotator-registry))
 (marginalia-mode)
+(marginalia-use-builtin)
 
 
 ;;; Vertico
