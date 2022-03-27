@@ -18,6 +18,7 @@
 				  embark-consult
 				  flymake-shellcheck
 				  forge
+				  iedit
 				  inf-clojure
 				  magit
 				  marginalia
@@ -290,3 +291,10 @@
 
 ;;; ERC
 (setq erc-server "irc.libera.chat")
+
+
+;;; iedit
+;; prevents conflict with `embark`
+(setq iedit-toggle-key-default nil)
+(define-key global-map (kbd "C-M-;") #'iedit-mode)
+
