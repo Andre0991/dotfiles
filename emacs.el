@@ -35,6 +35,7 @@
 
 ;;; Global keybindings
 (define-key global-map (kbd "M-o") #'other-window)
+(define-key global-map (kbd "M-O") #'other-frame)
 (define-key global-map (kbd "M-,") 'pop-tag-mark)
 (define-key global-map (kbd "C-c f d") 'delete-file)
 (define-key global-map (kbd "M-Z") 'zap-up-to-char)
@@ -258,7 +259,7 @@
 
 ;;; inf-clojure
 ;; from `elisp-path` 
-(require 'apt-inf-clojure)
+(require 'apt-inf-clojure nil 'noerror)
 (with-eval-after-load 'inf-clojure
   (vilpy-define-key vilpy-mode-map "d" 'inf-clojure-set-ns))
 
@@ -272,18 +273,18 @@
 
 
 ;;; project
-(require 'apt-project-extras)
+(require 'apt-project-extras nil 'noerror)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
 
 
 ;;; Helpers
-(require 'apt-helpers)
+(require 'apt-helpers nil 'noerror)
 
 
 ;;; Nu
-(require 'nu-andre)
+(require 'nu-andre nil 'no-error)
 
 ;;; Magit
 ;; (with-eval-after-load 'project
@@ -308,3 +309,9 @@
 ;;; org
 (setq org-confirm-babel-evaluate nil)
 
+
+;;; isa
+(let ((isa-path "~/dev/nu/isa.el/"))
+  (add-to-list 'load-path isa-path)
+  (require 'isa nil 'noerror)
+  (define-key global-map (kbd "C-c i") #'isa))
