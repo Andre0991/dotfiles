@@ -48,6 +48,10 @@
   (interactive)
   (setq apt--inf-clojure-all-tests-regex (read-string "Regex: ")))
 
+(defun apt-inf-clojure-set-tests-regex ()
+  (interactive)
+  (setq apt--inf-clojure-all-tests-regex (read-string "Regex: ")))
+
 (defun apt-inf-clojure-run-test-at-point ()
   (interactive)
   (save-excursion
