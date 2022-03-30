@@ -2,6 +2,20 @@
 
 ;;; Code:
 
+(defvar apt--inf-clojure-all-tests-regex ".*")
+
+;;; Helpers
+
+(defun apt--loose-thing-at-point ()
+  (let ((symbol-at-point (thing-at-point 'symbol)))
+    (if symbol-at-point
+	symbol-at-point
+      (save-excursion
+	(forward-char 1)
+	(thing-at-point 'symbol)))))
+
+;;; Inf Clojure
+
 (defun apt-inf-clojure-init-repl ()
   "Sane options for using a repl."
   (inf-clojure-eval-string "(do (require '[clojure.main :as m])
@@ -19,24 +33,47 @@
                                                              (pop-thread-bindings)
                                                              (push-thread-bindings bindings)))))"))
 
+(defun apt-inf-clojure-run-all-tests ()
+  (interactive)
+  (let ((cmd (format "(clojure.test/run-all-tests #\"%s\")"
+		     apt--inf-clojure-all-tests-regex)))
+    (message cmd)
+    (inf-clojure-eval-string cmd)))
+
+(defun apt-inf-clojure-run-namespaces-tests ()
+  (interactive)
+  (inf-clojure-eval-string "(clojure.test/run-tests)"))
+
+(defun apt-inf-clojure-set-tests-regex ()
+  (interactive)
+  (setq apt--inf-clojure-all-tests-regex (read-string "Regex: ")))
+
 (defun apt-inf-clojure-run-test-at-point ()
   (interactive)
   (save-excursion
-    (beginning-of-defun)
     (inf-clojure-eval-defun)
+    ;; for when point is at the very beginning of the defun
+    (forward-char 1)
+    (beginning-of-defun)
     (end-of-line)
     (inf-clojure-eval-string (format "(%s)"
                                      (symbol-at-point)))))
 
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (inf-clojure-connect "localhost" "5555")
-  (apt-inf-clojure-init-repl))
+  (let ((inf-clojure-custom-repl-type 'clojure))
+    (inf-clojure-connect "localhost" "5555")
+    (apt-inf-clojure-init-repl)))
 
 (defun apt-inf-clojure-source ()
   (interactive)
   (inf-clojure-eval-string (format "(clojure.repl/source %s)"
-                                   (vilpy--current-function))))
+                                   (apt--loose-thing-at-point))))
+
+(defun apt-inf-clojure-doc ()
+  (interactive)
+  (inf-clojure-eval-string (format "(clojure.repl/doc %s)"
+                                   (apt--loose-thing-at-point))))
 
 (defun apt-inf-clojure-refresh-all ()
   (interactive)
@@ -94,6 +131,22 @@
       (inf-clojure-connect "localhost" shadow-port)
 	(message "No shadow socket repl info found"))))
 
+(with-eval-after-load 'inf-clojure
+  (require 'transient)
+  (transient-define-prefix apt--vilpy-clojure-prefix ()
+    "Displays Clojure-specific commands."
+    ["Clojure"
+     ("c" "Connect" apt-inf-clojure-connect)
+     ("r" "Refresh" apt-inf-clojure-refresh)
+     ("i" "Switch to current ns" (lambda () (interactive) (inf-clojure-set-ns)))
+     ("s" "Source" apt-inf-clojure-source)
+     ("d" "Doc" apt-inf-clojure-doc)
+     ("t a" "Run all tests" apt-inf-clojure-run-all-tests)
+     ("t t" "Run test at point" apt-inf-clojure-run-test-at-point)
+     ("t n" "Run namespace tests" apt-inf-clojure-run-namespaces-tests)
+     ("t s" "Set tests regex" apt-inf-clojure-set-tests-regex)])
+
+  (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix))
 
 (provide 'apt-inf-clojure)
 

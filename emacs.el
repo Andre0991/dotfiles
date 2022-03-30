@@ -50,12 +50,12 @@
   (when (file-directory-p path)
     (add-to-list 'load-path path)))
 
-
+ 
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(when (display-graphic-p)
-  (tool-bar-mode -1))
+
+;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Get rid of "For information about GNU Emacs..." message at startup, unless
 ;; we're in a daemon session where it'll say "Starting Emacs daemon." instead,
@@ -260,8 +260,6 @@
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure nil 'noerror)
-(with-eval-after-load 'inf-clojure
-  (vilpy-define-key vilpy-mode-map "d" 'inf-clojure-set-ns))
 
 
 ;;; eww
@@ -315,3 +313,10 @@
   (add-to-list 'load-path isa-path)
   (require 'isa nil 'noerror)
   (define-key global-map (kbd "C-c i") #'isa))
+
+;; if this is called too early, lines are messed up
+;; example: emacs ~/dev/nu/isa-bff/src/isa_bff/logic/service/alert.clj
+;; the second line indentation horizontal spacing is wrong
+;; why? no idea.
+(when (display-graphic-p)
+  (tool-bar-mode -1))
