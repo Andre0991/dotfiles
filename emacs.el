@@ -98,6 +98,10 @@
       auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
       backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
 
+
+;;; Comint
+(setq comint-scroll-to-bottom-on-output 'others
+      comint-input-ignoredups t)
 
 
 ;;; Windmove
