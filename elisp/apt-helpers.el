@@ -17,4 +17,8 @@
                 (not (setq name (check-next-def)))))
     (message "Found! %s" name)))
 
+(defmacro comment (&rest body)
+  "Comment out one or more s-expressions."
+  nil)
+
 (provide 'apt-helpers)
