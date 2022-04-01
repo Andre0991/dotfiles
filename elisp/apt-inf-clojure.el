@@ -65,9 +65,8 @@
 
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (let ((inf-clojure-custom-repl-type 'clojure))
-    (inf-clojure-connect "localhost" "5555")
-    (apt-inf-clojure-init-repl)))
+  (inf-clojure-connect "localhost" "5555")
+  (apt-inf-clojure-init-repl))
 
 (defun apt-inf-clojure-source ()
   (interactive)
@@ -142,7 +141,7 @@
     ["Clojure"
      ("c" "Connect" apt-inf-clojure-connect)
      ("r" "Refresh" apt-inf-clojure-refresh)
-     ("i" "Switch to current ns" (lambda () (interactive) (inf-clojure-set-ns)))
+     ("i" "Switch to current ns" (lambda () (interactive) (call-interactively 'inf-clojure-set-ns)))
      ("s" "Source" apt-inf-clojure-source)
      ("d" "Doc" apt-inf-clojure-doc)
      ("t a" "Run all tests" apt-inf-clojure-run-all-tests)
