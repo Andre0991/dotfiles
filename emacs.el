@@ -194,7 +194,8 @@
 ;;; Vertico
 (vertico-mode)
 (with-eval-after-load 'vertico
-  (setq vertico-cycle nil))
+  (setq vertico-cycle nil)
+  (define-key vertico-map "\M-q" #'vertico-quick-exit))
 
 
 ;;; Corfu
