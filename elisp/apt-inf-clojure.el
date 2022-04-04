@@ -65,8 +65,9 @@
 
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (inf-clojure-connect "localhost" "5555")
-  (apt-inf-clojure-init-repl))
+  (let ((inf-clojure-custom-repl-type 'clojure))
+    (inf-clojure-connect "localhost" "5555")
+    (apt-inf-clojure-init-repl)))
 
 (defun apt-inf-clojure-source ()
   (interactive)
@@ -127,12 +128,11 @@
          (shadow-port (when (file-exists-p shadow-file)
                         (with-temp-buffer
                           (insert-file-contents shadow-file)
-                          (buffer-substring-no-properties (point-min) (point-max))))))
+                          (buffer-substring-no-properties (point-min) (point-max)))))
+	 (inf-clojure-custom-repl-type 'cljs))
     (if shadow-port
-	;; (let ((inf-clojure-custom-repl-type 'cljs))
-	;;   (inf-clojure-connect "localhost" shadow-port))
-      (inf-clojure-connect "localhost" shadow-port)
-	(message "No shadow socket repl info found"))))
+	(inf-clojure-connect "localhost" shadow-port)
+      (message "No shadow socket repl info found"))))
 
 (with-eval-after-load 'inf-clojure
   (require 'transient)
