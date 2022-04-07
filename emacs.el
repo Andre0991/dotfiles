@@ -32,6 +32,12 @@
 				  which-key
 				  yaml-mode))
 
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (require 'auto-dark)
+  (setq auto-dark--light-theme 'modus-operandi)
+  (setq auto-dark--dark-theme 'modus-vivendi))
+
 
 ;;; Global keybindings
 (define-key global-map (kbd "M-o") #'other-window)
