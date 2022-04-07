@@ -62,19 +62,20 @@
 
 ;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-(defalias 'yes-or-no-p 'y-or-n-p)
 ;; Get rid of "For information about GNU Emacs..." message at startup, unless
 ;; we're in a daemon session where it'll say "Starting Emacs daemon." instead,
 ;; which isn't so bad.
 (unless (daemonp)
   (advice-add #'display-startup-echo-area-message :override #'ignore))
 (setq vc-follow-symlinks t
+      use-short-answers t
       recentf-mode t
       enable-recursive-minibuffers t
       initial-scratch-message nil
       inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       initial-major-mode 'fundamental-mode
+      bookmark-set-fringe-mark nil
       backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
       ;; TAB cycle if there are only few candidates
       completion-cycle-threshold 3
@@ -151,17 +152,13 @@
 (setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
 
 
-;;; Themes
-(setq modus-themes-scale-headings t)
-(when (display-graphic-p)
-  (require 'auto-dark)
-  (setq auto-dark--light-theme 'modus-operandi)
-  (setq auto-dark--dark-theme 'modus-vivendi))
-
-
 ;;; Face
 (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
+
+
+;;; Themes
+(setq modus-themes-scale-headings t)
 
 
 ;;; Writing
@@ -305,10 +302,6 @@
   (require 'forge))
 
 
-;;; ERC
-(setq erc-server "irc.libera.chat")
-
-
 ;;; iedit
 ;; prevents conflict with `embark`
 (setq iedit-toggle-key-default nil)
@@ -325,9 +318,18 @@
   (require 'isa nil 'noerror)
   (define-key global-map (kbd "C-c i") #'isa))
 
-;; if this is called too early, lines are messed up
-;; example: emacs ~/dev/nu/isa-bff/src/isa_bff/logic/service/alert.clj
-;; the second line indentation horizontal spacing is wrong
-;; why? no idea.
-(when (display-graphic-p)
-  (tool-bar-mode -1))
+
+;;; howm
+(require 'howm)
+;; use `rg`
+(setq howm-view-use-grep t)
+(setq howm-view-grep-command "rg")
+(setq howm-view-grep-option "-nH --no-heading --color never")
+(setq howm-view-grep-extended-option nil)
+(setq howm-view-grep-fixed-option "-F")
+(setq howm-view-grep-expr-option nil)
+(setq howm-view-grep-file-stdin-option nil)
+;; do not override `C-h`
+(define-key howm-menu-mode-map "\C-h" nil)
+(define-key riffle-summary-mode-map "\C-h" nil)
+(define-key howm-view-contents-mode-map "\C-h" nil)

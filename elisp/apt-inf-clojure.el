@@ -65,9 +65,9 @@
 
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (let ((inf-clojure-custom-repl-type 'clojure))
-    (inf-clojure-connect "localhost" "5555")
-    (apt-inf-clojure-init-repl)))
+  (setq inf-clojure-custom-repl-type 'clojure)
+  (inf-clojure-connect "localhost" "5555")
+  (apt-inf-clojure-init-repl))
 
 (defun apt-inf-clojure-source ()
   (interactive)
@@ -122,14 +122,14 @@
 ;; taken from https://clojurians-log.clojureverse.org/inf-clojure/2021-03-31
 (defun apt-inf-clojure-connect-shadow-repl ()
   (interactive)
+  (setq inf-clojure-custom-repl-type 'cljs)
   (let* ((shadow-file (expand-file-name "socket-repl.port"
                                         (file-name-as-directory
                                          (concat (file-name-as-directory (clojure-project-dir)) ".shadow-cljs"))))
          (shadow-port (when (file-exists-p shadow-file)
                         (with-temp-buffer
                           (insert-file-contents shadow-file)
-                          (buffer-substring-no-properties (point-min) (point-max)))))
-	 (inf-clojure-custom-repl-type 'cljs))
+                          (buffer-substring-no-properties (point-min) (point-max))))))
     (if shadow-port
 	(inf-clojure-connect "localhost" shadow-port)
       (message "No shadow socket repl info found"))))
