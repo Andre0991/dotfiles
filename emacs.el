@@ -73,6 +73,7 @@
       initial-major-mode 'fundamental-mode
       bookmark-set-fringe-mark nil
       backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
+      context-menu-mode t
       ;; TAB cycle if there are only few candidates
       completion-cycle-threshold 3
       ;; Enable indentation+completion using the TAB key.
