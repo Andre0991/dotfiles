@@ -1,4 +1,3 @@
-
 ;;; Packages
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -26,7 +25,6 @@
 				  modus-themes
 				  olivetti
 				  orderless
-				  ox-slack
 				  vertico
 				  wgrep
 				  which-key
@@ -49,14 +47,12 @@
   ;; translate super to control
   (setq ns-command-modifier 'control))
 
-
 ;;; Load paths
 (dolist (path '("~/dotfiles/elisp/"
 		"~/Dropbox/nu/emacs-lisp"))
   (when (file-directory-p path)
     (add-to-list 'load-path path)))
 
- 
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
@@ -105,23 +101,19 @@
       auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
       backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
 
-
 ;;; Comint
 (setq comint-scroll-to-bottom-on-output 'others
       comint-input-ignoredups t)
 
-
 ;;; Windmove
 (windmove-default-keybindings)
 
-
 ;;; Eldoc
 ;; This displays full docs for clojure functions.
 ;; See https://github.com/joaotavora/eglot/discussions/894
 (setq eldoc-documentation-strategy 'eldoc-documentation-compose
       eldoc-echo-area-use-multiline-p 5)
 
-
 ;; Webjump
 (setq webjump-sites
       '(("Tekton Dashboard" . "https://dashboard.cicd.nubank.world/")
@@ -130,8 +122,6 @@
 	("Zoom"   . "https://nubank.zoom.us/j/6441464215")
 	("Jira"   . "https://nubank.atlassian.net/jira/software/c/projects/CPL/boards/277")))
 
-
-
 ;;; Pulse
 (defun pulse-line (&rest _)
   "Pulse the current line."
@@ -142,7 +132,6 @@
 		   other-window))
   (advice-add command :after #'pulse-line))
 
-
 ;;; Electric pair mode
 (electric-pair-mode)
 (defun apt-inhibit-electric-pair-mode (_char)
@@ -151,16 +140,13 @@
   (minibufferp))
 (setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
 
-
 ;;; Face
 (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
 
-
 ;;; Themes
 (setq modus-themes-scale-headings t)
 
-
 ;;; Writing
 (dolist (hook '(markdown-mode-hook
 		org-mode-hook))
@@ -168,11 +154,9 @@
   ;; (add-hook hook 'olivetti-mode)
   (add-hook hook 'variable-pitch-mode))
 
-
 ;;; Winner mode
 (add-hook 'after-init-hook #'winner-mode)
 
-
 ;;; Which-key
 ;; Manual Activation 
 ;; Allow C-h to trigger which-key before it is done automatically
@@ -183,7 +167,6 @@
       which-key-idle-secondary-delay 0.05)
 (which-key-mode)
 
-
 ;;; Marginalia
 (defun marginalia-use-builtin ()
   (mapc
@@ -193,14 +176,12 @@
 (marginalia-mode)
 (marginalia-use-builtin)
 
-
 ;;; Vertico
 (vertico-mode)
 (with-eval-after-load 'vertico
   (setq vertico-cycle nil)
   (define-key vertico-map "\M-q" #'vertico-quick-exit))
 
-
 ;;; Corfu
 (add-hook 'prog-mode-hook 'corfu-mode)
 (add-hook 'shell-mode-hook 'corfu-mode)
@@ -208,7 +189,6 @@
   (setq corfu-auto nil)
   (define-key corfu-map (kbd "SPC") #'corfu-insert-separator))
 
-
 ;;; Consult
 (setq consult-project-root-function
       (lambda ()
@@ -228,19 +208,16 @@
   (define-key map (kbd "M-g f") #'consult-flymake)
   (define-key map (kbd "M-g i") #'consult-imenu))
 
-
 ;;; Embark
 (with-eval-after-load 'consult
   (with-eval-after-load 'embark
     (require 'embark-consult)))
 (define-key global-map (kbd "C-;") #'embark-act)
 
-
 ;;; Orderless
 (require 'orderless)
 (setq completion-styles '(orderless))
 
-
 ;; Vilpy
 (let ((vilpy-path "~/dev/peric/vilpy/"))
   (add-to-list 'load-path vilpy-path)
@@ -248,11 +225,9 @@
 (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
 (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
 
-
 ;;; Clojure
 (setq clojure-align-forms-automatically t)
 
-
 ;;; Eglot
 (setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout 300)
@@ -264,31 +239,27 @@
   (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
   (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
 
-
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure nil 'noerror)
 
-
 ;;; eww
 (setq eww-search-prefix "https://www.google.com/search?q=")
 
-
 ;;; browse-at-remote
 (global-set-key (kbd "C-c g o") 'browse-at-remote)
 
-
 ;;; project
+;; (project-remember-projects-under "~/dev/nu")
+;; (project-remember-projects-under "~/dev/peric")
 (require 'apt-project-extras nil 'noerror)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
 
-
 ;;; Helpers
 (require 'apt-helpers nil 'noerror)
 
-
 ;;; Nu
 (require 'nu-andre nil 'no-error)
 
@@ -296,29 +267,24 @@
 ;; (with-eval-after-load 'project
 ;;   (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))
 
-
 ;;; Forge
 (with-eval-after-load 'magit
   (require 'forge))
 
-
 ;;; iedit
 ;; prevents conflict with `embark`
 (setq iedit-toggle-key-default nil)
 (define-key global-map (kbd "C-M-;") #'iedit-mode)
 
-
 ;;; org
 (setq org-confirm-babel-evaluate nil)
 
-
 ;;; isa
 (let ((isa-path "~/dev/nu/isa.el/"))
   (add-to-list 'load-path isa-path)
   (require 'isa nil 'noerror)
   (define-key global-map (kbd "C-c i") #'isa))
 
-
 ;;; howm
 (require 'howm)
 ;; use `rg`
