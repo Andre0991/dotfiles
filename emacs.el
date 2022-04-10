@@ -265,8 +265,9 @@
 (require 'nu-andre nil 'no-error)
 
 ;;; Magit
-;; (with-eval-after-load 'project
-;;   (add-to-list 'project-switch-commands '(magit-dispatch "Magit" ?m)))
+(with-eval-after-load 'project
+  (define-key project-prefix-map "m" #'magit-project-status)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
 
 ;;; Forge
 (with-eval-after-load 'magit
