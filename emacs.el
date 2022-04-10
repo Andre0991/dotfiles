@@ -208,6 +208,9 @@
   ;; goto-map
   (define-key map (kbd "M-g f") #'consult-flymake)
   (define-key map (kbd "M-g i") #'consult-imenu))
+(with-eval-after-load 'project
+  (define-key project-prefix-map "r" #'consult-ripgrep)
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t))
 
 ;;; Embark
 (with-eval-after-load 'consult
@@ -256,7 +259,7 @@
 (require 'apt-project-extras nil 'noerror)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 ;; (with-eval-after-load 'consult
-;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r)))
+;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
 ;;; Helpers
 (require 'apt-helpers nil 'noerror)
