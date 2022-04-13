@@ -23,6 +23,7 @@
 				  marginalia
 				  markdown-mode
 				  modus-themes
+				  package-lint
 				  olivetti
 				  orderless
 				  vertico
@@ -285,10 +286,9 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;;; isa
-(let ((isa-path "~/dev/nu/isa.el/"))
-  (add-to-list 'load-path isa-path)
-  (require 'isa nil 'noerror)
-  (define-key global-map (kbd "C-c i") #'isa))
+(add-to-list 'load-path "~/dev/nu/isa.el/")
+(require 'isa)
+(define-key global-map (kbd "C-c i") #'isa)
 
 ;;; howm
 (require 'howm)
