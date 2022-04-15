@@ -15,6 +15,7 @@
 				  eglot
 				  embark
 				  embark-consult
+				  edit-indirect ; for editing blocks in markdown-mode
 				  flymake-shellcheck
 				  forge
 				  iedit
@@ -22,6 +23,7 @@
 				  magit
 				  marginalia
 				  markdown-mode
+				  mermaid-mode
 				  modus-themes
 				  package-lint
 				  olivetti
@@ -109,6 +111,11 @@
 
 ;;; Windmove
 (windmove-default-keybindings)
+
+;;; Flymake
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
 ;;; Eldoc
 ;; This displays full docs for clojure functions.
@@ -287,7 +294,7 @@
 
 ;;; isa
 (add-to-list 'load-path "~/dev/nu/isa.el/")
-(require 'isa)
+(autoload 'isa "isa")
 (define-key global-map (kbd "C-c i") #'isa)
 
 ;;; howm
