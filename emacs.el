@@ -289,6 +289,10 @@
 (setq iedit-toggle-key-default nil)
 (define-key global-map (kbd "C-M-;") #'iedit-mode)
 
+;;; wgrep
+(require 'wgrep)
+(setq wgrep-auto-save-buffer t)
+
 ;;; org
 (setq org-confirm-babel-evaluate nil)
 
