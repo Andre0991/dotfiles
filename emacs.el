@@ -86,7 +86,10 @@
       sentence-end-double-space nil
       auth-sources '("~/.authinfo")
       isearch-lazy-count t
-      async-shell-command-buffer 'new-buffer)
+      async-shell-command-buffer 'new-buffer
+      ;; when there are two dired windows, automatically considers
+      ;; the other as a target (for copying a file, for example)
+      dired-dwim-target t)
 (dolist (cmd '(narrow-to-region
                upcase-region
                downcase-region
