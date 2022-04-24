@@ -1,3 +1,5 @@
+;;; Personal configuration -*- lexical-binding: t -*-
+
 ;;; Packages
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
