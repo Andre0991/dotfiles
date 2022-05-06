@@ -138,16 +138,19 @@
   (require 'transient)
   (transient-define-prefix apt--vilpy-clojure-prefix ()
     "Displays Clojure-specific commands."
-    ["Clojure"
-     ("c" "Connect" apt-inf-clojure-connect)
-     ("r" "Refresh" apt-inf-clojure-refresh)
-     ("i" "Switch to current ns" (lambda () (interactive) (call-interactively 'inf-clojure-set-ns)))
-     ("s" "Source" apt-inf-clojure-source)
-     ("d" "Doc" apt-inf-clojure-doc)
-     ("t a" "Run all tests" apt-inf-clojure-run-all-tests)
-     ("t t" "Run test at point" apt-inf-clojure-run-test-at-point)
-     ("t n" "Run namespace tests" apt-inf-clojure-run-namespaces-tests)
-     ("t s" "Set tests regex" apt-inf-clojure-set-tests-regex)])
+    [["Clojure"
+      ("c" "Connect" apt-inf-clojure-connect)
+      ("r" "Refresh" apt-inf-clojure-refresh)
+      ("i" "Switch to current ns" (lambda () (interactive) (call-interactively 'inf-clojure-set-ns)))
+      ("s" "Source" apt-inf-clojure-source)]
+     ["Tests" ("d" "Doc" apt-inf-clojure-doc)
+      ("t a" "Run all tests" apt-inf-clojure-run-all-tests)
+      ("t t" "Run test at point" apt-inf-clojure-run-test-at-point)
+      ("t n" "Run namespace tests" apt-inf-clojure-run-namespaces-tests)
+      ("t s" "Set tests regex" apt-inf-clojure-set-tests-regex)]
+     ["Repl" ("d" "Doc" apt-inf-clojure-doc)
+      ("z" "Switch to repl" inf-clojure-switch-to-repl)
+      ("o" "Clear repl" inf-clojure-clear-repl-buffer)]])
 
   (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix))
 
