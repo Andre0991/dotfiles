@@ -302,9 +302,11 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;;; isa
-(add-to-list 'load-path "~/dev/nu/isa.el/")
-(autoload 'isa "isa")
-(define-key global-map (kbd "C-c i") #'isa)
+(let ((isa-path "~/dev/nu/isa.el/"))
+  (when (file-directory-p isa-path)
+    (add-to-list 'load-path isa-path)
+    (require 'isa)
+    (define-key global-map (kbd "C-c i") #'isa)))
 
 ;;; howm
 (require 'howm)
