@@ -274,6 +274,9 @@
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
+;;; tab bar
+(require 'apt-tab-bar-extras nil 'noerror)
+
 ;;; Helpers
 (require 'apt-helpers nil 'noerror)
 
