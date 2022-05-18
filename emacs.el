@@ -168,6 +168,12 @@
   ;; (add-hook hook 'olivetti-mode)
   (add-hook hook 'variable-pitch-mode))
 
+;;; Markdown mode
+(setq markdown-fontify-code-blocks-natively t)
+(with-eval-after-load 'markdown-mode
+  (dolist (face '(markdown-inline-code-face markdown-code-face))
+    (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))
+
 ;;; Winner mode
 (add-hook 'after-init-hook #'winner-mode)
 
