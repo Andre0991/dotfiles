@@ -171,7 +171,9 @@
 ;;; Markdown mode
 (setq markdown-fontify-code-blocks-natively t)
 (with-eval-after-load 'markdown-mode
-  (dolist (face '(markdown-inline-code-face markdown-code-face))
+  (dolist (face '(markdown-inline-code-face
+		  markdown-code-face
+		  markdown-table-face))
     (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))
 
 ;;; Winner mode
@@ -320,13 +322,13 @@
 ;;; howm
 (require 'howm)
 ;; use `rg`
-(setq howm-view-use-grep t)
-(setq howm-view-grep-command "rg")
-(setq howm-view-grep-option "-nH --no-heading --color never")
-(setq howm-view-grep-extended-option nil)
-(setq howm-view-grep-fixed-option "-F")
-(setq howm-view-grep-expr-option nil)
-(setq howm-view-grep-file-stdin-option nil)
+(setq howm-view-use-grep t
+      howm-view-grep-command "rg"
+      howm-view-grep-option "-nH --no-heading --color never"
+      howm-view-grep-extended-option nil
+      howm-view-grep-fixed-option "-F"
+      howm-view-grep-expr-option nil
+      howm-view-grep-file-stdin-option nil)
 ;; do not override `C-h`
 (define-key howm-menu-mode-map "\C-h" nil)
 (define-key riffle-summary-mode-map "\C-h" nil)
