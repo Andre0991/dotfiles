@@ -143,7 +143,8 @@
 (dolist (command '(scroll-up-command
 		   scroll-down-command
                    recenter-top-bottom
-		   other-window))
+		   other-window
+		   other-frame))
   (advice-add command :after #'pulse-line))
 
 ;;; Electric pair mode
