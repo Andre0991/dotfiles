@@ -283,6 +283,9 @@
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
+;; smerge
+(require 'apt-smerge-extras nil 'noerror)
+
 ;;; tab bar
 (require 'apt-tab-bar-extras nil 'noerror)
 
