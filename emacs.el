@@ -274,6 +274,7 @@
 
 ;;; browse-at-remote
 (global-set-key (kbd "C-c g o") 'browse-at-remote)
+(setq browse-at-remote-prefer-symbolic nil)
 
 ;;; project
 ;; (project-remember-projects-under "~/dev/nu")
