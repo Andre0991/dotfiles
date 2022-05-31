@@ -265,6 +265,10 @@
   (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
   (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
 
+;;; ltex-ls
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls"))))
+
 ;;; inf-clojure
 ;; from `elisp-path` 
 (require 'apt-inf-clojure nil 'noerror)
