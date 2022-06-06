@@ -14,6 +14,7 @@
 				  clojure-mode
 				  consult
 				  corfu
+				  diminish
 				  eglot
 				  embark
 				  embark-consult
@@ -35,13 +36,13 @@
 				  which-key
 				  yaml-mode))
 
+;;; Theming
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (require 'auto-dark)
   (setq auto-dark--light-theme 'modus-operandi)
   (setq auto-dark--dark-theme 'modus-vivendi))
 
-
 ;;; Global keybindings
 (define-key global-map (kbd "M-o") #'other-window)
 (define-key global-map (kbd "M-O") #'other-frame)
@@ -162,6 +163,18 @@
 ;;; Themes
 (setq modus-themes-scale-headings t)
 
+;;; Diminish
+;; for hiding items from modeline
+(require 'diminish)
+(diminish 'inf-clojure-mode)
+(diminish 'inf-clojure-mode)
+(diminish 'auto-revert-mode)
+(diminish 'vilpy-mode)
+(diminish 'which-key-mode)
+(diminish 'eldoc-mode)
+(diminish 'inf-clojure-minor-mode)
+(diminish 'inf-clojure-mode)
+
 ;;; Writing
 (dolist (hook '(markdown-mode-hook
 		org-mode-hook))
@@ -244,7 +257,7 @@
 (require 'orderless)
 (setq completion-styles '(orderless))
 
-;; Vilpy
+;;; Vilpy
 (let ((vilpy-path "~/dev/peric/vilpy/"))
   (add-to-list 'load-path vilpy-path)
   (require 'vilpy))
@@ -285,6 +298,7 @@
 ;; (project-remember-projects-under "~/dev/peric")
 (require 'apt-project-extras nil 'noerror)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
+(define-key global-map (kbd "C-x p P") #'apt-open-project-in-new-tab)
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
