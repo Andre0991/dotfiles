@@ -3,6 +3,7 @@
 ;;; Code:
 
 (defvar apt--inf-clojure-all-tests-regex ".*")
+(defvar apt--inf-clojure-run-test-test "")
 
 ;;; Helpers
 
@@ -40,6 +41,13 @@
     (message cmd)
     (inf-clojure-eval-string cmd)))
 
+(defun apt-inf-clojure-run-single-test ()
+  (interactive)
+  (let ((cmd (format "(clojure.test/run-test %s)"
+		     apt--inf-clojure-run-test-test)))
+    (message cmd)
+    (inf-clojure-eval-string cmd)))
+
 (defun apt-inf-clojure-run-namespaces-tests ()
   (interactive)
   (inf-clojure-eval-string "(clojure.test/run-tests)"))
@@ -48,9 +56,9 @@
   (interactive)
   (setq apt--inf-clojure-all-tests-regex (read-string "Regex: ")))
 
-(defun apt-inf-clojure-set-tests-regex ()
+(defun apt-inf-clojure-set-single-test ()
   (interactive)
-  (setq apt--inf-clojure-all-tests-regex (read-string "Regex: ")))
+  (setq apt--inf-clojure-run-test-test (read-string "Test: ")))
 
 (defun apt-inf-clojure-run-test-at-point ()
   (interactive)
@@ -63,11 +71,19 @@
     (inf-clojure-eval-string (format "(%s)"
                                      (symbol-at-point)))))
 
+(defun apt-inf-clojure-repl-name ()
+  (let* ((project (project-current))
+	(project-name (car (last (split-string (project-root project) "/" 't)))))
+    (format "*inf-clojure %s*" project-name)))
+
 (defun apt-inf-clojure-connect ()
   (interactive)
-  (setq inf-clojure-custom-repl-type 'clojure)
-  (inf-clojure-connect "localhost" "5555")
-  (apt-inf-clojure-init-repl))
+  (apt-open-in-other-frame
+   (lambda () 
+     (setq inf-clojure-custom-repl-type 'clojure)
+     (inf-clojure-connect "localhost" "5555")
+     (apt-inf-clojure-init-repl)
+     (apt-inf-clojure-repl-name))))
 
 (defun apt-inf-clojure-source ()
   (interactive)
@@ -122,6 +138,8 @@
 ;; taken from https://clojurians-log.clojureverse.org/inf-clojure/2021-03-31
 (defun apt-inf-clojure-connect-shadow-repl ()
   (interactive)
+  ;; TODO: Add require to deps declaration
+  (require 'clojure-mode)
   (setq inf-clojure-custom-repl-type 'cljs)
   (let* ((shadow-file (expand-file-name "socket-repl.port"
                                         (file-name-as-directory
@@ -134,6 +152,15 @@
 	(inf-clojure-connect "localhost" shadow-port)
       (message "No shadow socket repl info found"))))
 
+(defun apt-toggle-comint-scroll-to-bottom-on-output
+    ()
+  (interactive)
+  (setq comint-scroll-to-bottom-on-output (if (equal 'others comint-scroll-to-bottom-on-output)
+					      (progn (message "Setting `comint-scroll-to-bottom-on-output` to nil")
+						     nil)
+					    (progn (message "Setting `comint-scroll-to-bottom-on-output` to 'others")
+						   'others))))
+
 (with-eval-after-load 'inf-clojure
   (require 'transient)
   (transient-define-prefix apt--vilpy-clojure-prefix ()
@@ -144,13 +171,16 @@
       ("i" "Switch to current ns" (lambda () (interactive) (call-interactively 'inf-clojure-set-ns)))
       ("s" "Source" apt-inf-clojure-source)]
      ["Tests" ("d" "Doc" apt-inf-clojure-doc)
+      ("t r" "Run a single test" apt-inf-clojure-run-single-test)
+      ("t R" "Set single test" apt-inf-clojure-set-single-test)
       ("t a" "Run all tests" apt-inf-clojure-run-all-tests)
+      ("t A" "Set all tests regex" apt-inf-clojure-set-tests-regex)
       ("t t" "Run test at point" apt-inf-clojure-run-test-at-point)
-      ("t n" "Run namespace tests" apt-inf-clojure-run-namespaces-tests)
-      ("t s" "Set tests regex" apt-inf-clojure-set-tests-regex)]
+      ("t n" "Run namespace tests" apt-inf-clojure-run-namespaces-tests)]
      ["Repl" ("d" "Doc" apt-inf-clojure-doc)
       ("z" "Switch to repl" inf-clojure-switch-to-repl)
-      ("o" "Clear repl" inf-clojure-clear-repl-buffer)]])
+      ("o" "Clear repl" inf-clojure-clear-repl-buffer)
+      ("b" "Toggle comint-scroll-to-bottom-on-output" apt-toggle-comint-scroll-to-bottom-on-output)]])
 
   (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix))
 

@@ -59,6 +59,13 @@
   (when (file-directory-p path)
     (add-to-list 'load-path path)))
 
+;;; Dired
+(when (string= system-type "darwin")
+  ;; otherwise, Emacs get this warning: 'ls does not support --dired; see ‘dired-use-ls-dired’ for more details.'
+  (setq dired-use-ls-dired t
+        insert-directory-program "/usr/local/bin/gls"))
+
+
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
@@ -123,12 +130,6 @@
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
-;;; Eldoc
-;; This displays full docs for clojure functions.
-;; See https://github.com/joaotavora/eglot/discussions/894
-(setq eldoc-documentation-strategy 'eldoc-documentation-compose
-      eldoc-echo-area-use-multiline-p 5)
-
 ;; Webjump
 (setq webjump-sites
       '(("Tekton Dashboard" . "https://dashboard.cicd.nubank.world/")
@@ -166,8 +167,6 @@
 ;;; Diminish
 ;; for hiding items from modeline
 (require 'diminish)
-(diminish 'inf-clojure-mode)
-(diminish 'inf-clojure-mode)
 (diminish 'auto-revert-mode)
 (diminish 'vilpy-mode)
 (diminish 'which-key-mode)
@@ -277,6 +276,16 @@
   (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
   (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
   (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
+(add-hook 'eglot-managed-mode-hook
+	  ;; This displays full docs for clojure functions.
+	  ;; See https://github.com/joaotavora/eglot/discussions/894
+	  #'(lambda ()
+	      (setq-local eldoc-documentation-strategy
+			  #'eldoc-documentation-compose
+
+			  eldoc-echo-area-use-multiline-p
+			  5)))
+
 
 ;;; ltex-ls
 (with-eval-after-load 'eglot
@@ -284,6 +293,7 @@
 
 ;;; inf-clojure
 ;; from `elisp-path` 
+(setq inf-clojure-enable-eldoc nil)
 (require 'apt-inf-clojure nil 'noerror)
 
 ;;; eww
@@ -307,6 +317,8 @@
 
 ;;; tab bar
 (require 'apt-tab-bar-extras nil 'noerror)
+(define-key global-map (kbd "C-x t a") #'apt-tab-bar-auto-rename-tab)
+(define-key global-map (kbd "C-x t k") #'tab-bar-close-tab)
 
 ;;; Helpers
 (require 'apt-helpers nil 'noerror)

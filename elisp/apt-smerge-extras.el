@@ -4,11 +4,12 @@
 
 (provide 'apt-smerge-extras)
 
+;; TODO: Load before smerge?
 (with-eval-after-load 'smerge
   (require 'transient)
   (transient-define-prefix apt--smerge-prefix ()
     "Resolve conflicts with smerge"
-     :transient-suffix     'transient--do-stay
+    :transient-suffix     'transient--do-stay
     [["Navigation"
       ("n" "Next" smerge-next :transient t)
       ("p" "Previous" smerge-prev)]

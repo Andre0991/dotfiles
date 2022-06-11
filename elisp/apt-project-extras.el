@@ -30,4 +30,11 @@
 				  test-suffix
 				  (file-name-extension buffer-file-name))))))))
 
+(defun apt-open-project-in-new-tab
+    ()
+  (interactive)
+  (tab-bar-new-tab)
+  (call-interactively 'project-switch-project)
+  (apt-tab-bar-auto-rename-tab))
+
 (provide 'apt-project-extras)
