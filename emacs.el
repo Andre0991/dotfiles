@@ -392,7 +392,7 @@
 (define-key howm-view-contents-mode-map "\C-h" nil)
 
 ;;; diminish
-(diminish 'auto-revert-mode)
+(add-hook 'auto-revert-mode-hook (lambda () (diminish 'auto-revert-mode)))
 
 ;;; Eldoc
 (add-hook 'eldoc-mode-hook (lambda () (diminish 'eldoc-mode)))
