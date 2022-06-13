@@ -45,7 +45,7 @@
       modus-themes-bold-constructs nil
       modus-themes-tabs-accented nil
       modus-themes-mode-line '(accented borderless (padding . 4) (height . 0.9))
-      modus-themes-hl-line '(intense)
+      modus-themes-hl-line nil
       modus-themes-paren-match nil
       modus-themes-links '(neutral-underline background)
       modus-themes-completions '((matches . (extrabold))
@@ -85,6 +85,8 @@
   (setq dired-use-ls-dired t
         insert-directory-program "/usr/local/bin/gls"))
 
+;;; elisp
+(add-hook 'emacs-lisp-mode-hook (lambda () (diminish 'elisp-mode)))
 
 ;;; Emacs
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -182,14 +184,9 @@
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
 
 ;;; Diminish
-;; for hiding items from modeline
+;; just load it, as diminish requires
+;; the modes not to be loaded before it's activated
 (require 'diminish)
-(diminish 'auto-revert-mode)
-(diminish 'vilpy-mode)
-(diminish 'which-key-mode)
-(diminish 'eldoc-mode)
-(diminish 'inf-clojure-minor-mode)
-(diminish 'inf-clojure-mode)
 
 ;;; Writing
 (dolist (hook '(markdown-mode-hook
@@ -218,6 +215,7 @@
       which-key-idle-delay 10000
       which-key-idle-secondary-delay 0.05)
 (which-key-mode)
+(diminish 'which-key-mode)
 
 ;;; Marginalia
 (defun marginalia-use-builtin ()
@@ -279,9 +277,13 @@
   (require 'vilpy))
 (add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
 (add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
+(add-hook 'vilpy-mode-hook (lambda () (diminish 'vilpy-mode)))
 
 ;;; Clojure
 (setq clojure-align-forms-automatically t)
+(add-hook 'clojure-mode-hook (lambda () (diminish 'clojure-mode)))
+(add-hook 'clojurec-mode-hook (lambda () (diminish 'clojure-mode)))
+(add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode)))
 
 ;;; Eglot
 (setq eglot-confirm-server-initiated-edits nil)
@@ -310,7 +312,10 @@
 
 ;;; inf-clojure
 ;; from `elisp-path` 
-(setq inf-clojure-enable-eldoc nil)
+(setq inf-clojure-enable-eldoc nil
+      inf-clojure-mode-line nil)
+(add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
+(add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
 (require 'apt-inf-clojure nil 'noerror)
 
 ;;; eww
@@ -385,3 +390,9 @@
 (define-key howm-menu-mode-map "\C-h" nil)
 (define-key riffle-summary-mode-map "\C-h" nil)
 (define-key howm-view-contents-mode-map "\C-h" nil)
+
+;;; diminish
+(diminish 'auto-revert-mode)
+
+;;; Eldoc
+(add-hook 'eldoc-mode-hook (lambda () (diminish 'eldoc-mode)))
