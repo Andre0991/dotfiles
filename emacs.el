@@ -37,6 +37,26 @@
 				  yaml-mode))
 
 ;;; Theming
+;; modus' variables need to be set *before* the package is loaded
+;; modifications need to reload the theme:
+;; (modus-themes-load-vivendi)
+(setq modus-themes-scale-headings t
+      modus-themes-italic-constructs nil
+      modus-themes-bold-constructs nil
+      modus-themes-tabs-accented nil
+      modus-themes-mode-line '(accented borderless (padding . 4) (height . 0.9))
+      modus-themes-hl-line '(intense)
+      modus-themes-paren-match nil
+      modus-themes-links '(neutral-underline background)
+      modus-themes-completions '((matches . (extrabold))
+				 (selection . (semibold accented))
+				 (popup . (accented intense)))
+      modus-themes-region '(accented))
+
+;;; hl-line mode
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (require 'auto-dark)
@@ -160,9 +180,6 @@
 ;;; Face
 (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
-
-;;; Themes
-(setq modus-themes-scale-headings t)
 
 ;;; Diminish
 ;; for hiding items from modeline
