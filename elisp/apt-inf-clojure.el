@@ -76,12 +76,15 @@
 	(project-name (car (last (split-string (project-root project) "/" 't)))))
     (format "*inf-clojure %s*" project-name)))
 
-(defun apt-inf-clojure-connect ()
-  (interactive)
+(defun apt-inf-clojure-connect (arg)
+  (interactive "P")
   (apt-open-in-other-frame
    (lambda () 
      (setq inf-clojure-custom-repl-type 'clojure)
-     (inf-clojure-connect "localhost" "5555")
+     (cond
+      ((not arg) (inf-clojure-connect "localhost" "5555"))
+      ((equal '(4) arg) (inf-clojure-connect "localhost" "5556"))
+      ((equal '(16) arg) (inf-clojure-connect "localhost" "5557")))
      (apt-inf-clojure-init-repl)
      (apt-inf-clojure-repl-name))))
 

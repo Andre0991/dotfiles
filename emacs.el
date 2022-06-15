@@ -183,6 +183,9 @@
 (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
 
+;;; Whitespacee
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+
 ;;; Diminish
 ;; just load it, as diminish requires
 ;; the modes not to be loaded before it's activated
