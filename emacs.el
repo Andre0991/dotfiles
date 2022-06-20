@@ -36,6 +36,9 @@
 				  which-key
 				  yaml-mode))
 
+;;; Customize
+(setq custom-file (make-temp-file "emacs-custom-"))
+
 ;;; Theming
 ;; modus' variables need to be set *before* the package is loaded
 ;; modifications need to reload the theme:
