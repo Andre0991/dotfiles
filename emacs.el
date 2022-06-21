@@ -382,6 +382,13 @@
     (require 'isa)
     (define-key global-map (kbd "C-c i") #'isa)))
 
+;;; nu indentation
+(let ((nu-clj-indentation-path "~/dev/nu/nudev/ides/emacs/"))
+  (when (file-directory-p nu-clj-indentation-path)
+    (require 'nu-clj-indentation (expand-file-name "nu-clj-indentation" nu-clj-indentation-path))))
+(eval-after-load 'clojure-mode
+  '(set-nu-clj-indent))
+
 ;;; howm
 (require 'howm)
 ;; use `rg`
