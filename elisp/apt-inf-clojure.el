@@ -4,6 +4,7 @@
 
 (defvar apt--inf-clojure-all-tests-regex ".*")
 (defvar apt--inf-clojure-run-test-test "")
+(defvar apt--inf-clojure-eval-form)
 
 ;;; Helpers
 
@@ -79,7 +80,7 @@
 (defun apt-inf-clojure-connect (arg)
   (interactive "P")
   (apt-open-in-other-frame
-   (lambda () 
+   (lambda ()
      (setq inf-clojure-custom-repl-type 'clojure)
      (cond
       ((not arg) (inf-clojure-connect "localhost" "5555"))
@@ -164,6 +165,27 @@
 					    (progn (message "Setting `comint-scroll-to-bottom-on-output` to 'others")
 						   'others))))
 
+(defun apt-set-evaluation-form ()
+  (interactive)
+  (save-excursion
+    (mark-sexp)
+    (setq apt--inf-clojure-eval-form
+	  (buffer-substring (region-beginning)
+			    (region-end)))
+    (deactivate-mark)))
+
+(defun apt-eval-last-set-form ()
+  (interactive)
+  (let* ((eval-form (format "(let [old-ns (symbol (str *ns*))]
+  (in-ns '%s)
+  %s
+  (in-ns old-ns)
+)"
+			    (clojure-find-ns)
+			    apt--inf-clojure-eval-form)))
+    (message apt--inf-clojure-eval-form)
+    (inf-clojure-eval-string eval-form)))
+
 (with-eval-after-load 'inf-clojure
   (require 'transient)
   (transient-define-prefix apt--vilpy-clojure-prefix ()
@@ -173,6 +195,9 @@
       ("r" "Refresh" apt-inf-clojure-refresh)
       ("i" "Switch to current ns" (lambda () (interactive) (call-interactively 'inf-clojure-set-ns)))
       ("s" "Source" apt-inf-clojure-source)]
+     ["Eval"
+      ("e s" "Set evaluation expression" apt-set-evaluation-form)
+      ("e e" "Eval latest set expression" apt-eval-last-set-form)]
      ["Tests" ("d" "Doc" apt-inf-clojure-doc)
       ("t r" "Run a single test" apt-inf-clojure-run-single-test)
       ("t R" "Set single test" apt-inf-clojure-set-single-test)
