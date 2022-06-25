@@ -5,6 +5,7 @@
 (defvar apt--inf-clojure-all-tests-regex ".*")
 (defvar apt--inf-clojure-run-test-test "")
 (defvar apt--inf-clojure-eval-form)
+(defvar apt--inf-clojure-eval-form-ns)
 
 ;;; Helpers
 
@@ -172,19 +173,33 @@
     (setq apt--inf-clojure-eval-form
 	  (buffer-substring (region-beginning)
 			    (region-end)))
-    (deactivate-mark)))
+    (deactivate-mark)
+    (setq apt--inf-clojure-eval-form-ns (clojure-find-ns))))
 
 (defun apt-eval-last-set-form ()
   (interactive)
-  (let* ((eval-form (format "(let [old-ns (symbol (str *ns*))]
+  (let* ((ns-before (clojure-find-ns))
+	 (eval-form (format "
   (in-ns '%s)
   %s
-  (in-ns old-ns)
-)"
-			    (clojure-find-ns)
-			    apt--inf-clojure-eval-form)))
+  (in-ns '%s)"
+			    apt--inf-clojure-eval-form-ns
+			    apt--inf-clojure-eval-form
+			    ns-before)))
+    (message eval-form)
     (message apt--inf-clojure-eval-form)
-    (inf-clojure-eval-string eval-form)))
+    (inf-clojure-eval-string eval-form)
+    (comment (inf-clojure-eval-string
+	      (format "(println\"first\")
+(let [current-ns (symbol (str *ns*))]
+  (println \"second\")
+  (in-ns '%s)
+  (println \"after switch\")
+  (println (str *ns*))
+  %s
+  (in-ns current-ns)
+)" apt--inf-clojure-eval-form-ns
+ apt--inf-clojure-eval-form)))))
 
 (with-eval-after-load 'inf-clojure
   (require 'transient)
