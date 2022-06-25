@@ -180,26 +180,17 @@
   (interactive)
   (let* ((ns-before (clojure-find-ns))
 	 (eval-form (format "
-  (in-ns '%s)
-  %s
-  (in-ns '%s)"
+(do
+  (with-out-str (in-ns '%s))
+  (let [res %s]
+    (with-out-str (in-ns '%s))
+    res))
+"
 			    apt--inf-clojure-eval-form-ns
 			    apt--inf-clojure-eval-form
 			    ns-before)))
-    (message eval-form)
     (message apt--inf-clojure-eval-form)
-    (inf-clojure-eval-string eval-form)
-    (comment (inf-clojure-eval-string
-	      (format "(println\"first\")
-(let [current-ns (symbol (str *ns*))]
-  (println \"second\")
-  (in-ns '%s)
-  (println \"after switch\")
-  (println (str *ns*))
-  %s
-  (in-ns current-ns)
-)" apt--inf-clojure-eval-form-ns
- apt--inf-clojure-eval-form)))))
+    (inf-clojure-eval-string eval-form)))
 
 (with-eval-after-load 'inf-clojure
   (require 'transient)
