@@ -3,11 +3,13 @@
 ;;; Packages
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
 ;; Install missing packages:
 ;; (package-install-selected-packages)
 
 ;; Remove unused packages:
 ;; (package-autoremove)
+
 (setq package-selected-packages '(auto-dark
 				  avy
 				  browse-at-remote
@@ -57,8 +59,9 @@
       modus-themes-region '(accented))
 
 ;;; hl-line mode
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
+(dolist (hook '(prog-mode-hook
+		text-mode-hook))
+  (add-hook hook #'hl-line-mode))
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -117,6 +120,7 @@
       ;; Enable indentation+completion using the TAB key.
       ;; Completion is often bound to M-TAB.
       tab-always-indent 'complete
+      completions-detailed t
       compilation-scroll-output 't
       sentence-end-double-space nil
       auth-sources '("~/.authinfo")
@@ -233,10 +237,16 @@
 (marginalia-use-builtin)
 
 ;;; Vertico
-(vertico-mode)
-(with-eval-after-load 'vertico
-  (setq vertico-cycle nil)
-  (define-key vertico-map "\M-q" #'vertico-quick-exit))
+;; (vertico-mode)
+;; (with-eval-after-load 'vertico
+;;   (setq vertico-cycle nil)
+;;   (define-key vertico-map "\M-q" #'vertico-quick-exit))
+
+(icomplete-vertical-mode)
+(setq icomplete-show-matches-on-no-input t
+      icomplete-delay-completions-threshold 0
+      icomplete-max-delay-chars 0
+      icomplete-compute-delay 0)
 
 ;;; Corfu
 (add-hook 'prog-mode-hook 'corfu-mode)
@@ -292,6 +302,16 @@
 (add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode)))
 
 ;;; Eglot
+;; TODO: move to eglot extras file
+(defun format-if-clojure
+    (&rest _)
+  (when (and buffer-file-name
+	     (buffer-modified-p)
+	     (derived-mode-p 'clojure-mode)
+	     (bound-and-true-p eglot-managed-mode-hook)
+	     (bound-and-true-p inf-clojure-minor-mode))
+    (eglot-format)))
+
 (setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout 300)
 (add-hook 'clojure-mode-hook 'eglot-ensure)
@@ -300,7 +320,10 @@
   (define-key eglot-mode-map (kbd "C-c l l") #'eglot)
   (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
   (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references))
+  (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references)
+  (dolist (command '(other-window
+		     other-frame))
+    (advice-add command :before #'format-if-clojure)))
 (add-hook 'eglot-managed-mode-hook
 	  ;; This displays full docs for clojure functions.
 	  ;; See https://github.com/joaotavora/eglot/discussions/894
@@ -317,7 +340,7 @@
   (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls"))))
 
 ;;; inf-clojure
-;; from `elisp-path` 
+;; from `elisp-path`
 (setq inf-clojure-enable-eldoc nil
       inf-clojure-mode-line nil)
 (add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
@@ -367,6 +390,8 @@
 ;; prevents conflict with `embark`
 (setq iedit-toggle-key-default nil)
 (define-key global-map (kbd "C-M-;") #'iedit-mode)
+(with-eval-after-load 'embark
+  (define-key embark-general-map (kbd "I") #'iedit-mode))
 
 ;;; wgrep
 (require 'wgrep)
@@ -409,3 +434,15 @@
 
 ;;; Eldoc
 (add-hook 'eldoc-mode-hook (lambda () (diminish 'eldoc-mode)))
+
+;;; nuact
+(let ((nuact-path "~/dev/nu/nuact.el"))
+  (when (file-directory-p nuact-path)
+    (add-to-list 'load-path nuact-path)
+    (require 'nuact)
+    ;; TODO: C-return ∫depend on GUI/CLI? https://emacs.stackexchange.com/questions/31375/how-can-i-bind-c-return-with-define-key-and-kbd
+    (with-eval-after-load 'vilpy
+      (define-key vilpy-mode-map (kbd "<C-return>") #'nuact))
+    (with-eval-after-load 'inf-clojure
+      (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
+      (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact))))
