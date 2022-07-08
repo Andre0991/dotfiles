@@ -285,7 +285,8 @@
 
 ;;; Orderless
 (require 'orderless)
-(setq completion-styles '(orderless))
+(setq completion-styles '(orderless initials basic)
+      completion-category-overrides '((file (styles basic partial-completion))))
 
 ;;; Vilpy
 (let ((vilpy-path "~/dev/peric/vilpy/"))
