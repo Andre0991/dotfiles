@@ -158,14 +158,6 @@
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
-;; Webjump
-(setq webjump-sites
-      '(("Tekton Dashboard" . "https://dashboard.cicd.nubank.world/")
-        ("The Drunkard's Walk"   . "https://meet.google.com/jgf-bogh-oop")
-	("Eagles eyes"   . "https://meet.google.com/xgc-wmqr-kvn")
-	("Zoom"   . "https://nubank.zoom.us/j/6441464215")
-	("Jira"   . "https://nubank.atlassian.net/jira/software/c/projects/CPL/boards/277")))
-
 ;;; Pulse
 (defun pulse-line (&rest _)
   "Pulse the current line."
@@ -425,7 +417,7 @@
 (define-key riffle-summary-mode-map "\C-h" nil)
 (define-key howm-view-contents-mode-map "\C-h" nil)
 
-;;; diminish
+;;; auto-revert-mode
 (add-hook 'auto-revert-mode-hook (lambda () (diminish 'auto-revert-mode)))
 
 ;;; Eldoc
