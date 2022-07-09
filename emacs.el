@@ -33,7 +33,6 @@
 				  package-lint
 				  olivetti
 				  orderless
-				  vertico
 				  wgrep
 				  which-key
 				  yaml-mode))
@@ -236,12 +235,7 @@
 (marginalia-mode)
 (marginalia-use-builtin)
 
-;;; Vertico
-;; (vertico-mode)
-;; (with-eval-after-load 'vertico
-;;   (setq vertico-cycle nil)
-;;   (define-key vertico-map "\M-q" #'vertico-quick-exit))
-
+;;; Icomplete
 (icomplete-vertical-mode)
 (setq icomplete-show-matches-on-no-input t
       icomplete-delay-completions-threshold 0
@@ -308,10 +302,10 @@
 (defun format-if-clojure
     (&rest _)
   (when (and buffer-file-name
-	     (buffer-modified-p)
 	     (derived-mode-p 'clojure-mode)
 	     (bound-and-true-p eglot-managed-mode-hook)
-	     (bound-and-true-p inf-clojure-minor-mode))
+	     (bound-and-true-p inf-clojure-minor-mode)
+	     (buffer-modified-p))
     (eglot-format)))
 
 (setq eglot-confirm-server-initiated-edits nil)
