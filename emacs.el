@@ -334,6 +334,7 @@
 (add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
 (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
 (require 'apt-inf-clojure nil 'noerror)
+(define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
 
 ;;; eww
 (setq eww-search-prefix "https://www.google.com/search?q=")
@@ -361,6 +362,7 @@
 
 ;;; Helpers
 (require 'apt-helpers nil 'noerror)
+(define-key global-map (kbd "C-S-l") #'apt-lein-socket-repl)
 
 ;;; Nu
 (require 'nu-andre nil 'no-error)
