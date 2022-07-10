@@ -114,12 +114,11 @@
       bookmark-set-fringe-mark nil
       backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
       context-menu-mode t
-      ;; TAB cycle if there are only few candidates
-      completion-cycle-threshold 3
+
       ;; Enable indentation+completion using the TAB key.
       ;; Completion is often bound to M-TAB.
       tab-always-indent 'complete
-      completions-detailed t
+      ;; completions-detailed t
       compilation-scroll-output 't
       sentence-end-double-space nil
       auth-sources '("~/.authinfo")
@@ -145,6 +144,26 @@
 (setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
       auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
       backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
+
+;;; Completion
+(defun apt--enable-truncate-lines
+    ()
+  "A trivial function that sets `truncate-lines` to t, just
+for better naming in the hooks it is listed."
+  (setq truncate-lines t))
+
+(add-hook 'minibuffer-setup-hook
+	  (lambda () #'apt--enable-truncate-lines))
+
+;; Tab cycle if there are only few candidates
+(setq completion-cycle-threshold 2)
+
+;;; Icomplete
+(icomplete-vertical-mode)
+(setq icomplete-show-matches-on-no-input t
+      icomplete-delay-completions-threshold 0
+      icomplete-max-delay-chars 0
+      icomplete-compute-delay 0)
 
 ;;; Comint
 (setq comint-scroll-to-bottom-on-output 'others
@@ -226,13 +245,6 @@
    marginalia-annotator-registry))
 (marginalia-mode)
 (marginalia-use-builtin)
-
-;;; Icomplete
-(icomplete-vertical-mode)
-(setq icomplete-show-matches-on-no-input t
-      icomplete-delay-completions-threshold 0
-      icomplete-max-delay-chars 0
-      icomplete-compute-delay 0)
 
 ;;; Corfu
 (add-hook 'prog-mode-hook 'corfu-mode)
@@ -436,3 +448,8 @@
     (with-eval-after-load 'inf-clojure
       (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
       (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact))))
+
+(comment
+ (setq icomplete-hide-common-prefix nil)
+ (setq icomplete-in-buffer t)
+ (setq icomplete-prospects-height ))
