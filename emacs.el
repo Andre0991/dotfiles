@@ -361,6 +361,9 @@ for better naming in the hooks it is listed."
 (require 'apt-project-extras nil 'noerror)
 (define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
 (define-key global-map (kbd "C-x p P") #'apt-open-project-in-new-tab)
+(with-eval-after-load 'project
+  (define-key project-prefix-map "!" #'project-shell-command)
+  (add-to-list 'project-switch-commands '(project-shell-command "Shell command") t))
 ;; (with-eval-after-load 'consult
 ;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
