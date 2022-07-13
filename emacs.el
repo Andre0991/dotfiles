@@ -74,6 +74,12 @@
 (define-key global-map (kbd "M-,") 'pop-tag-mark)
 (define-key global-map (kbd "C-c f d") 'delete-file)
 (define-key global-map (kbd "M-Z") 'zap-up-to-char)
+(defun apt-switch-to-scratch
+    ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+(define-key global-map (kbd "C-S-s") #'apt-switch-to-scratch)
+
 (when (string= system-type 'darwin)
   ;; translate super to control
   (setq ns-command-modifier 'control))
@@ -199,9 +205,6 @@ for better naming in the hooks it is listed."
 ;;; Face
 (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
-
-;;; Whitespacee
-(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 ;;; Diminish
 ;; just load it, as diminish requires
