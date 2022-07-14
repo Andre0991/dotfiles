@@ -216,7 +216,8 @@
       ("o" "Clear repl" inf-clojure-clear-repl-buffer)
       ("b" "Toggle comint-scroll-to-bottom-on-output" apt-toggle-comint-scroll-to-bottom-on-output)]])
 
-  (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix))
+  (with-eval-after-load 'vilpy
+    (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix)))
 
 (provide 'apt-inf-clojure)
 

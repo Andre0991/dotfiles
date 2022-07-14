@@ -38,7 +38,8 @@
 				  which-key
 				  yaml-mode))
 
-(setq use-package-enable-imenu-support t)
+(setq use-package-enable-imenu-support t
+      use-package-compute-statistics t)
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -271,119 +272,123 @@ for better naming in the hooks it is listed."
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator)))
 
-;;; Consult
-(setq consult-project-root-function
-      (lambda ()
-        (when-let (project (project-current))
-          (project-root project)))
-      xref-show-xrefs-function #'consult-xref
-      xref-show-definitions-function #'consult-xref)
-(let ((map global-map))
-  (define-key map (kbd "C-c k") #'consult-kmacro)
-  (define-key map (kbd "C-x b") #'consult-buffer)
-  (define-key map (kbd "C-x 4 b") #'consult-buffer-other-window)
-  (define-key map (kbd "M-y") #'consult-yank-pop)
-  (define-key map (kbd "M-s l") #'consult-line)
-  (define-key map (kbd "M-s k") #'consult-keep-lines)
-  (define-key map (kbd "M-s r") #'consult-ripgrep)
-  ;; goto-map
-  (define-key map (kbd "M-g f") #'consult-flymake)
-  (define-key map (kbd "M-g i") #'consult-imenu))
-(with-eval-after-load 'project
-  (define-key project-prefix-map "r" #'consult-ripgrep)
+(use-package consult
+  :bind
+  (("C-c k" . consult-kmacro)
+   ("C-x b" . consult-buffer)
+   ("C-x 4 b" . consult-buffer-other-window)
+   ("C-x 5 b" . consult-buffer-other-frame)
+   ("M-y" . consult-yank-pop)
+   ("M-s l" . consult-line)
+   ("M-s k" . consult-keep-lines)
+   ("M-s r" . consult-ripgrep)
+   ("M-g f" . consult-flymake)
+   ("M-g i" . consult-imenu))
+  :init
+  (setq register-preview-delay 0.5
+	register-preview-function #'consult-register-format
+	xref-show-xrefs-function #'consult-xref
+	xref-show-definitions-function #'consult-xref))
+
+(use-package project
+  :bind
+  (:map project-prefix-map ("r" . #'consult-ripgrep))
+  :config
   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t))
 
-;;; Embark
-(with-eval-after-load 'consult
-  (with-eval-after-load 'embark
-    (require 'embark-consult)))
-(define-key global-map (kbd "C-;") #'embark-act)
+(use-package embark
+  :bind
+  (("C-;" . embark-act)))
 
-;;; Orderless
-(require 'orderless)
-(setq completion-styles '(orderless initials basic)
-      completion-category-overrides '((file (styles basic partial-completion))
-				      (project-file (styles basic partial-completion))))
+(use-package embark-consult
+  :after (embark consult))
 
-;;; Vilpy
-(let ((vilpy-path "~/dev/peric/vilpy/"))
-  (add-to-list 'load-path vilpy-path)
-  (require 'vilpy))
-(add-hook 'emacs-lisp-mode-hook (lambda () (vilpy-mode 1)))
-(add-hook 'clojure-mode-hook (lambda () (vilpy-mode 1)))
-(add-hook 'vilpy-mode-hook (lambda () (diminish 'vilpy-mode)))
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion))
+				   (project-file (styles basic partial-completion)))))
 
-;;; Clojure
-(setq clojure-align-forms-automatically t)
-(add-hook 'clojure-mode-hook (lambda () (diminish 'clojure-mode)))
-(add-hook 'clojurec-mode-hook (lambda () (diminish 'clojure-mode)))
-(add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode)))
+(use-package vilpy
+  :load-path
+  "~/dev/peric/vilpy/"
+  :hook
+  ((emacs-lisp-mode clojure-mode) . vilpy-mode)
+  :diminish vilpy-mode)
 
-;;; Eglot
-;; TODO: move to eglot extras file
-(defun format-if-clojure
-    (&rest _)
-  (when (and buffer-file-name
-	     (derived-mode-p 'clojure-mode)
-	     (bound-and-true-p eglot-managed-mode-hook)
-	     (bound-and-true-p inf-clojure-minor-mode)
-	     (buffer-modified-p))
-    (eglot-format)))
+(use-package clojure-mode
+  :custom
+  (clojure-align-forms-automatically t)
+  :diminish clojure-mode
+  :init
+  (add-hook 'clojurec-mode-hook (lambda () (diminish 'clojure-mode)))
+  (add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode))))
 
-(setq eglot-confirm-server-initiated-edits nil)
-(setq eglot-connect-timeout 300)
-(add-hook 'clojure-mode-hook 'eglot-ensure)
-(with-eval-after-load 'eglot
-  (define-key eglot-mode-map (kbd "C-c l a") #'eglot-code-actions)
-  (define-key eglot-mode-map (kbd "C-c l l") #'eglot)
-  (define-key eglot-mode-map (kbd "C-c l q") #'eglot-shutdown)
-  (define-key eglot-mode-map (kbd "C-c l r") #'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c l u") #'xref-find-references)
+(use-package eglot
+  :init
+  (defun apt-eglot-format-if-clojure
+      (&rest _)
+    (when (and buffer-file-name
+	       (derived-mode-p 'clojure-mode)
+	       (bound-and-true-p eglot-managed-mode-hook)
+	       (bound-and-true-p inf-clojure-minor-mode)
+	       (buffer-modified-p))
+      (eglot-format)))
+  (add-hook 'clojure-mode-hook 'eglot-ensure)
+  :custom
+  (eglot-confirm-server-initiated-edits nil)
+  (eglot-connect-timeout 300)
+  :bind
+  ("C-c l a" . eglot-code-actions)
+  ("C-c l l" . eglot)
+  ("C-c l q" . eglot-shutdown)
+  ("C-c l r" . eglot-rename)
+  ("C-c l u" . xref-find-references)
+  :config
+  (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls")))
   (dolist (command '(other-window
 		     other-frame))
-    (advice-add command :before #'format-if-clojure)))
-(add-hook 'eglot-managed-mode-hook
-	  ;; This displays full docs for clojure functions.
-	  ;; See https://github.com/joaotavora/eglot/discussions/894
-	  #'(lambda ()
-	      (setq-local eldoc-documentation-strategy
-			  #'eldoc-documentation-compose
+    (advice-add command :before #'apt-eglot-format-if-clojure))
+  (add-hook 'eglot-managed-mode-hook
+	    ;; This displays full docs for clojure functions.
+	    ;; See https://github.com/joaotavora/eglot/discussions/894
+	    #'(lambda ()
+		(setq-local eldoc-documentation-strategy
+			    #'eldoc-documentation-compose
 
-			  eldoc-echo-area-use-multiline-p
-			  5)))
+			    eldoc-echo-area-use-multiline-p
+			    5))))
 
+(use-package inf-clojure
+  :custom
+  (inf-clojure-enable-eldoc nil)
+  (inf-clojure-mode-line nil)
+  :init
+  (add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
+  (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode))))
 
-;;; ltex-ls
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls"))))
-
-;;; inf-clojure
-;; from `elisp-path`
-(setq inf-clojure-enable-eldoc nil
-      inf-clojure-mode-line nil)
-(add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
-(add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
 (require 'apt-inf-clojure nil 'noerror)
 (define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
 
-;;; eww
-(setq eww-search-prefix "https://www.google.com/search?q=")
+(use-package eww
+  :custom
+  (eww-search-prefix "https://www.google.com/search?q="))
 
-;;; browse-at-remote
-(global-set-key (kbd "C-c g o") 'browse-at-remote)
-(setq browse-at-remote-prefer-symbolic nil)
+(use-package browse-at-remote
+  :custom
+  (browse-at-remote-prefer-symbolic nil)
+  :bind
+  ("C-c g o" . browse-at-remote))
 
-;;; project
-;; (project-remember-projects-under "~/dev/nu")
-;; (project-remember-projects-under "~/dev/peric")
 (require 'apt-project-extras nil 'noerror)
-(define-key project-prefix-map (kbd "t") 'apt-project-switch-between-test-and-implementation)
-(define-key global-map (kbd "C-x p P") #'apt-open-project-in-new-tab)
-(with-eval-after-load 'project
+
+(use-package project
+  :bind
+  (("C-x p P" . apt-open-project-in-new-tab)
+   :map project-prefix-map ("t" . apt-project-switch-between-test-and-implementation))
+  :config
   (define-key project-prefix-map "!" #'project-shell-command)
   (add-to-list 'project-switch-commands '(project-shell-command "Shell command") t))
-;; (with-eval-after-load 'consult
-;;   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep" ?r))∑)
 
 ;; smerge
 (require 'apt-smerge-extras nil 'noerror)
