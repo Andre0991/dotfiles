@@ -44,6 +44,8 @@
   (require 'use-package))
 (require 'diminish)
 
+(require 'apt-helpers nil 'noerror)
+
 ;; `emacs` a valid value because (featurep 'emacs) is t
 (use-package emacs
   :init
@@ -219,6 +221,9 @@ for better naming in the hooks it is listed."
   (electric-pair-mode))
 
 (use-package org
+  :defer t
+  :custom 
+  (org-confirm-babel-evaluate nil)
   :init
   (add-hook 'org-mode-hook 'variable-pitch-mode))
 
@@ -290,11 +295,19 @@ for better naming in the hooks it is listed."
 	xref-show-xrefs-function #'consult-xref
 	xref-show-definitions-function #'consult-xref))
 
+(require 'apt-project-extras nil 'noerror)
 (use-package project
   :bind
-  (:map project-prefix-map ("r" . #'consult-ripgrep))
+  (("C-x p P" . apt-open-project-in-new-tab)
+   (:map project-prefix-map
+	 ("r" . #'consult-ripgrep)
+	 ("t" . apt-project-switch-between-test-and-implementation)))
   :config
-  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t))
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
+  (define-key project-prefix-map "m" #'magit-project-status)
+  (define-key project-prefix-map "!" #'project-shell-command)
+  (add-to-list 'project-switch-commands '(project-shell-command "Shell command") t))
 
 (use-package embark
   :bind
@@ -371,6 +384,7 @@ for better naming in the hooks it is listed."
 (define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
 
 (use-package eww
+  :defer t
   :custom
   (eww-search-prefix "https://www.google.com/search?q="))
 
@@ -380,60 +394,43 @@ for better naming in the hooks it is listed."
   :bind
   ("C-c g o" . browse-at-remote))
 
-(require 'apt-project-extras nil 'noerror)
-
-(use-package project
-  :bind
-  (("C-x p P" . apt-open-project-in-new-tab)
-   :map project-prefix-map ("t" . apt-project-switch-between-test-and-implementation))
-  :config
-  (define-key project-prefix-map "!" #'project-shell-command)
-  (add-to-list 'project-switch-commands '(project-shell-command "Shell command") t))
-
-;; smerge
 (require 'apt-smerge-extras nil 'noerror)
 
-;;; tab bar
 (require 'apt-tab-bar-extras nil 'noerror)
-(define-key global-map (kbd "C-x t a") #'apt-tab-bar-auto-rename-tab)
-(define-key global-map (kbd "C-x t k") #'tab-bar-close-tab)
 
-;;; Helpers
-(require 'apt-helpers nil 'noerror)
-(define-key global-map (kbd "C-S-l") #'apt-lein-socket-repl)
+(use-package tab-bar
+  :bind
+  ("C-x t a" . apt-tab-bar-auto-rename-tab)
+  ("C-x t k" . tab-bar-close-tab))
 
-;;; Nu
-(require 'nu-andre nil 'no-error)
+(use-package nu-andre
+  :load-path
+  "~/Dropbox/nu/emacs-lisp"
+  :bind
+  ("C-S-l" . apt-lein-socket-repl))
 
-;;; Magit
-(with-eval-after-load 'project
-  (define-key project-prefix-map "m" #'magit-project-status)
-  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
+(use-package forge
+  :after (magit))
 
-;;; Forge
-(with-eval-after-load 'magit
-  (require 'forge))
+(use-package iedit
+  :init
+  (with-eval-after-load 'embark
+    (define-key embark-general-map (kbd "I") #'iedit-mode))
+  :bind
+  ("C-M-;" . iedit-mode) ;; prevents conflict with `embark`
+  :custom
+  (iedit-toggle-key-default nil))
 
-;;; iedit
-;; prevents conflict with `embark`
-(setq iedit-toggle-key-default nil)
-(define-key global-map (kbd "C-M-;") #'iedit-mode)
-(with-eval-after-load 'embark
-  (define-key embark-general-map (kbd "I") #'iedit-mode))
+(use-package wgrep
+  :custom
+  (wgrep-auto-save-buffer t))
 
-;;; wgrep
-(require 'wgrep)
-(setq wgrep-auto-save-buffer t)
-
-;;; org
-(setq org-confirm-babel-evaluate nil)
-
-;;; isa
-(let ((isa-path "~/dev/nu/isa.el/"))
-  (when (file-directory-p isa-path)
-    (add-to-list 'load-path isa-path)
-    (require 'isa)
-    (define-key global-map (kbd "C-c i") #'isa)))
+(use-package isa
+  :if
+  (file-directory-p "~/dev/nu/isa.el/")
+  :load-path
+  "~/dev/nu/isa.el/"
+  :bind ("C-c i" . isa))
 
 ;;; nu indentation
 (let ((nu-clj-indentation-path "~/dev/nu/nudev/ides/emacs/"))
@@ -442,35 +439,34 @@ for better naming in the hooks it is listed."
 (eval-after-load 'clojure-mode
   '(set-nu-clj-indent))
 
-;;; howm
-(require 'howm)
-;; use `rg`
-(setq howm-view-use-grep t
-      howm-view-grep-command "rg"
-      howm-view-grep-option "-nH --no-heading --color never"
-      howm-view-grep-extended-option nil
-      howm-view-grep-fixed-option "-F"
-      howm-view-grep-expr-option nil
-      howm-view-grep-file-stdin-option nil)
-;; do not override `C-h`
-(define-key howm-menu-mode-map "\C-h" nil)
-(define-key riffle-summary-mode-map "\C-h" nil)
-(define-key howm-view-contents-mode-map "\C-h" nil)
+(use-package howm
+  :init
+  (setq howm-view-use-grep t
+	howm-view-grep-command "rg"
+	howm-view-grep-option "-nH --no-heading --color never"
+	howm-view-grep-extended-option nil
+	howm-view-grep-fixed-option "-F"
+	howm-view-grep-expr-option nil
+	howm-view-grep-file-stdin-option nil)
+  :config
+  ;; do not override `C-h`
+  (define-key howm-menu-mode-map "\C-h" nil)
+  (define-key riffle-summary-mode-map "\C-h" nil)
+  (define-key howm-view-contents-mode-map "\C-h" nil))
 
-;;; auto-revert-mode
-(add-hook 'auto-revert-mode-hook (lambda () (diminish 'auto-revert-mode)))
+(use-package autorevert
+  :diminish auto-revert-mode)
 
-;;; Eldoc
-(add-hook 'eldoc-mode-hook (lambda () (diminish 'eldoc-mode)))
+(use-package eldoc
+  :diminish eldoc-mode)
 
 ;;; nuact
-(let ((nuact-path "~/dev/nu/nuact.el"))
-  (when (file-directory-p nuact-path)
-    (add-to-list 'load-path nuact-path)
-    (require 'nuact)
-    ;; TODO: C-return ∫depend on GUI/CLI? https://emacs.stackexchange.com/questions/31375/how-can-i-bind-c-return-with-define-key-and-kbd
-    (with-eval-after-load 'vilpy
-      (define-key vilpy-mode-map (kbd "<C-return>") #'nuact))
-    (with-eval-after-load 'inf-clojure
-      (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
-      (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact))))
+(use-package nuact
+  :if (file-directory-p "~/dev/nu/nuact.el")
+  :load-path "~/dev/nu/nuact.el"
+  :init
+  (with-eval-after-load 'vilpy
+    (define-key vilpy-mode-map (kbd "<C-return>") #'nuact))
+  (with-eval-after-load 'inf-clojure
+    (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
+    (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact)))
