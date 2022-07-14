@@ -41,10 +41,19 @@
 (eval-when-compile
   (require 'use-package))
 
+;; `emacs` a valid value because (featurep 'emacs) is t
 (use-package emacs
-  ;; `emacs` a valid value because (featurep 'emacs) is t
   :init
-  (setq custom-file (make-temp-file "emacs-custom-")))
+  (setq custom-file (make-temp-file "emacs-custom-"))
+  (when (string= system-type 'darwin)
+    ;; translate super to control
+    (setq ns-command-modifier 'control))
+  :bind
+  (("M-o" . other-window)
+   ("M-O" . other-frame)
+   ("M-," . pop-tag-mark)
+   ("C-c f d" . delete-file)
+   ("M-Z" . zap-up-to-char)))
 
 (use-package modus-themes
   ;; modus' variables need to be set *before* the package is loaded
@@ -81,21 +90,10 @@
   :config
   (tool-bar-mode -1))
 
-;;; Global keybindings
-(define-key global-map (kbd "M-o") #'other-window)
-(define-key global-map (kbd "M-O") #'other-frame)
-(define-key global-map (kbd "M-,") 'pop-tag-mark)
-(define-key global-map (kbd "C-c f d") 'delete-file)
-(define-key global-map (kbd "M-Z") 'zap-up-to-char)
-(defun apt-switch-to-scratch
-    ()
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-(define-key global-map (kbd "C-S-s") #'apt-switch-to-scratch)
-
-(when (string= system-type 'darwin)
-  ;; translate super to control
-  (setq ns-command-modifier 'control))
+(use-package apt-helpers
+  :bind
+  (("C-c f D" . apt-delete-file-and-buffer)
+   ("C-S-s" . apt-switch-to-scratch)))
 
 ;;; Load paths
 (dolist (path '("~/dotfiles/elisp/"
