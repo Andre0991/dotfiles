@@ -38,8 +38,10 @@
 				  which-key
 				  yaml-mode))
 
+(setq use-package-enable-imenu-support t)
 (eval-when-compile
   (require 'use-package))
+(require 'diminish)
 
 ;; `emacs` a valid value because (featurep 'emacs) is t
 (use-package emacs
@@ -47,7 +49,50 @@
   (setq custom-file (make-temp-file "emacs-custom-"))
   (when (string= system-type 'darwin)
     ;; translate super to control
-    (setq ns-command-modifier 'control))
+    (setq ns-command-modifier 'control
+	  insert-directory-program "/usr/local/bin/gls"))
+  (unless (daemonp)
+    (advice-add #'display-startup-echo-area-message :override #'ignore))
+  (setq vc-follow-symlinks t
+	use-short-answers t
+	recentf-mode t
+	enable-recursive-minibuffers t
+	initial-scratch-message nil
+	inhibit-startup-screen t
+	inhibit-startup-echo-area-message user-login-name
+	initial-major-mode 'fundamental-mode
+	bookmark-set-fringe-mark nil
+	backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
+	context-menu-mode t
+	;; Enable indentation+completion using the TAB key.
+	;; Completion is often bound to M-TAB.
+	tab-always-indent 'complete
+	;; completions-detailed t
+	compilation-scroll-output 't
+	sentence-end-double-space nil
+	auth-sources '("~/.authinfo")
+	isearch-lazy-count t
+	async-shell-command-buffer 'new-buffer)
+  (dolist (cmd '(narrow-to-region
+		 upcase-region
+		 downcase-region
+		 narrow-to-page
+		 scroll-left
+		 scroll-right))
+    (put cmd 'disabled nil))
+  ;; triggered automatically on long *files*
+  ;; (not on text inserted in a buffer)
+  (global-so-long-mode)
+  ;; lock file, backup file
+  (let ((aux-dir "~/.emacs.d/aux"))
+    (unless (file-exists-p aux-dir)
+      (make-directory aux-dir)))
+  (setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
+	auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
+	backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
+  (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
+  (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
+
   :bind
   (("M-o" . other-window)
    ("M-O" . other-frame)
@@ -91,76 +136,27 @@
   (tool-bar-mode -1))
 
 (use-package apt-helpers
+  :load-path
+  ;; TODO: elisp brings more than apt-helpers 
+  "~/dotfiles/elisp/"
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-s" . apt-switch-to-scratch)))
 
-;;; Load paths
-(dolist (path '("~/dotfiles/elisp/"
-		"~/Dropbox/nu/emacs-lisp"))
-  (when (file-directory-p path)
-    (add-to-list 'load-path path)))
+;;; TODO: remove me after use-package migration
+;; (comment
+;;  (dolist (path '("~/dotfiles/elisp/"
+;; 		 "~/Dropbox/nu/emacs-lisp"))
+;;    (when (file-directory-p path)
+;;      (add-to-list 'load-path path))))
 
-;;; Dired
-(when (string= system-type "darwin")
-  ;; otherwise, Emacs get this warning: 'ls does not support --dired; see ‘dired-use-ls-dired’ for more details.'
-  (setq dired-use-ls-dired t
-        insert-directory-program "/usr/local/bin/gls"))
+(use-package dired
+  :custom
+  ((dired-use-ls-dired t)
+   (dired-dwim-target t)))
 
-;;; elisp
-(add-hook 'emacs-lisp-mode-hook (lambda () (diminish 'elisp-mode)))
-
-;;; Emacs
-;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-
-;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-;; Get rid of "For information about GNU Emacs..." message at startup, unless
-;; we're in a daemon session where it'll say "Starting Emacs daemon." instead,
-;; which isn't so bad.
-(unless (daemonp)
-  (advice-add #'display-startup-echo-area-message :override #'ignore))
-(setq vc-follow-symlinks t
-      use-short-answers t
-      recentf-mode t
-      enable-recursive-minibuffers t
-      initial-scratch-message nil
-      inhibit-startup-screen t
-      inhibit-startup-echo-area-message user-login-name
-      initial-major-mode 'fundamental-mode
-      bookmark-set-fringe-mark nil
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
-      context-menu-mode t
-
-      ;; Enable indentation+completion using the TAB key.
-      ;; Completion is often bound to M-TAB.
-      tab-always-indent 'complete
-      ;; completions-detailed t
-      compilation-scroll-output 't
-      sentence-end-double-space nil
-      auth-sources '("~/.authinfo")
-      isearch-lazy-count t
-      async-shell-command-buffer 'new-buffer
-      ;; when there are two dired windows, automatically considers
-      ;; the other as a target (for copying a file, for example)
-      dired-dwim-target t)
-(dolist (cmd '(narrow-to-region
-               upcase-region
-               downcase-region
-               narrow-to-page
-               scroll-left
-               scroll-right))
-  (put cmd 'disabled nil))
-;; triggered automatically on long *files*
-;; (not on text inserted in a buffer)
-(global-so-long-mode)
-;; lock file, backup file
-(let ((aux-dir "~/.emacs.d/aux"))
-  (unless (file-exists-p aux-dir)
-    (make-directory aux-dir)))
-(setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
-      auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
-      backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
+(use-package elisp-mode
+  :diminish emacs-lisp-mode)
 
 ;;; Completion
 (defun apt--enable-truncate-lines
@@ -170,102 +166,110 @@ for better naming in the hooks it is listed."
   (setq truncate-lines t))
 
 (add-hook 'minibuffer-setup-hook
-	  (lambda () #'apt--enable-truncate-lines))
+	  #'apt--enable-truncate-lines)
 
 ;; Tab cycle if there are only few candidates
 (setq completion-cycle-threshold 2)
 
-;;; Icomplete
-(icomplete-vertical-mode)
-(setq icomplete-show-matches-on-no-input t
-      icomplete-delay-completions-threshold 0
-      icomplete-max-delay-chars 0
-      icomplete-compute-delay 0)
+(use-package icomplete
+  :custom
+  ((icomplete-show-matches-on-no-input t)
+   (icomplete-delay-completions-threshold 0)
+   (icomplete-max-delay-chars 0)
+   (icomplete-compute-delay 0))
+  :config
+  (icomplete-vertical-mode))
 
-;;; Comint
-(setq comint-scroll-to-bottom-on-output 'others
-      comint-input-ignoredups t)
+(use-package comint
+  :custom
+  ((comint-move-point-for-output 'others)
+   (comint-input-ignoredups t)))
 
-;;; Windmove
-(windmove-default-keybindings)
+(use-package windmove
+  :config
+  (windmove-default-keybindings))
 
-;;; Flymake
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+(use-package flymake
+  :bind
+  (:map flymake-mode-map
+	("M-n" . flymake-goto-next-error)
+	("M-p" . flymake-goto-prev-error)))
 
-;;; Pulse
-(defun pulse-line (&rest _)
-  "Pulse the current line."
-  (pulse-momentary-highlight-one-line (point)))
-(dolist (command '(scroll-up-command
-		   scroll-down-command
-                   recenter-top-bottom
-		   other-window
-		   other-frame))
-  (advice-add command :after #'pulse-line))
+(use-package pulse
+  :init
+  (defun pulse-line (&rest _)
+    "Pulse the current line."
+    (pulse-momentary-highlight-one-line (point)))
+  (dolist (command '(scroll-up-command
+		     scroll-down-command
+                     recenter-top-bottom
+		     other-window
+		     other-frame))
+    (advice-add command :after #'pulse-line)))
 
-;;; Electric pair mode
-(electric-pair-mode)
-(defun apt-inhibit-electric-pair-mode (_char)
-  ;; do not use electrict pair mode in minifuffer, as
-  ;; it is common to use a single parens for searching
-  (minibufferp))
-(setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
+(use-package elec-pair
+  :init
+  (defun apt-inhibit-electric-pair-mode (_char)
+    ;; do not use electrict pair mode in minifuffer, as
+    ;; it is common to use a single parens for searching
+    (minibufferp))
+  (setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
+  :config
+  (electric-pair-mode))
 
-;;; Face
-(set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
-(set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
+(use-package org
+  :init
+  (add-hook 'org-mode-hook 'variable-pitch-mode))
 
-;;; Diminish
-;; just load it, as diminish requires
-;; the modes not to be loaded before it's activated
-(require 'diminish)
-
-;;; Writing
-(dolist (hook '(markdown-mode-hook
-		org-mode-hook))
-  ;; experimental: is it too intrusive to be automatic?
-  ;; (add-hook hook 'olivetti-mode)
-  (add-hook hook 'variable-pitch-mode))
-
-;;; Markdown mode
-(setq markdown-fontify-code-blocks-natively t)
-(with-eval-after-load 'markdown-mode
+(use-package markdown-mode
+  :custom
+  (markdown-fontify-code-blocks-natively t)
+  :init
+  (add-hook 'markdown-mode-hook 'variable-pitch-mode)
+  :config
   (dolist (face '(markdown-inline-code-face
 		  markdown-code-face
 		  markdown-table-face))
     (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))
 
-;;; Winner mode
-(add-hook 'after-init-hook #'winner-mode)
+(use-package winner
+  :init
+  (add-hook 'after-init-hook #'winner-mode))
 
-;;; Which-key
-;; Manual Activation 
-;; Allow C-h to trigger which-key before it is done automatically
-(setq which-key-show-early-on-C-h t
-      ;; make sure which-key doesn't show normally but refreshes quickly after it is
-      ;; triggered.
-      which-key-idle-delay 10000
-      which-key-idle-secondary-delay 0.05)
-(which-key-mode)
-(diminish 'which-key-mode)
+(use-package which-key
+  :custom
+  ((which-key-show-early-on-C-h t)
+   ;; make sure which-key doesn't show automatically,
+   ;; but refreshes quickly after it is triggered.
+   (which-key-idle-delay 10000)
+   (which-key-idle-secondary-delay 0.05))
+  :config
+  (which-key-mode)
+  :diminish which-key-mode)
 
-;;; Marginalia
-(defun marginalia-use-builtin ()
-  (mapc
-   (lambda (x)
-     (setcdr x (cons 'builtin (remq 'builtin (cdr x)))))
-   marginalia-annotator-registry))
-(marginalia-mode)
-(marginalia-use-builtin)
+(use-package marginalia
+  :init
+  (defun marginalia-use-builtin ()
+    (mapc
+     (lambda (x)
+       (setcdr x (cons 'builtin (remq 'builtin (cdr x)))))
+     marginalia-annotator-registry))
+  :bind
+  (:map minibuffer-local-map
+	("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode)
+  (marginalia-use-builtin))
 
-;;; Corfu
-(add-hook 'prog-mode-hook 'corfu-mode)
-(add-hook 'shell-mode-hook 'corfu-mode)
-(with-eval-after-load 'corfu
-  (setq corfu-auto nil)
-  (define-key corfu-map (kbd "SPC") #'corfu-insert-separator))
+(use-package corfu
+  :custom
+  ((corfu-auto nil))
+  :hook
+  ((prog-mode . corfu-mode)
+   (shell-mode . corfu-mode)
+   (eshell-mode . corfu-mode))
+  :bind
+  (:map corfu-map ("SPC" . corfu-insert-separator)))
 
 ;;; Consult
 (setq consult-project-root-function
@@ -465,8 +469,3 @@ for better naming in the hooks it is listed."
     (with-eval-after-load 'inf-clojure
       (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
       (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact))))
-
-(comment
- (setq icomplete-hide-common-prefix nil)
- (setq icomplete-in-buffer t)
- (setq icomplete-prospects-height ))
