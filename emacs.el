@@ -30,43 +30,56 @@
 				  markdown-mode
 				  mermaid-mode
 				  modus-themes
-				  package-lint
 				  olivetti
 				  orderless
+				  package-lint
+				  use-package
 				  wgrep
 				  which-key
 				  yaml-mode))
 
-;;; Customize
-(setq custom-file (make-temp-file "emacs-custom-"))
+(eval-when-compile
+  (require 'use-package))
 
-;;; Theming
-;; modus' variables need to be set *before* the package is loaded
-;; modifications need to reload the theme:
-;; (modus-themes-load-vivendi)
-(setq modus-themes-scale-headings t
-      modus-themes-italic-constructs nil
-      modus-themes-bold-constructs nil
-      modus-themes-tabs-accented nil
-      modus-themes-mode-line '(accented borderless (padding . 4) (height . 0.9))
-      modus-themes-hl-line nil
-      modus-themes-paren-match nil
-      modus-themes-links '(neutral-underline background)
-      modus-themes-completions '((matches . (extrabold))
-				 (selection . (semibold accented))
-				 (popup . (accented intense)))
-      modus-themes-region '(accented))
+(use-package emacs
+  ;; `emacs` a valid value because (featurep 'emacs) is t
+  :init
+  (setq custom-file (make-temp-file "emacs-custom-")))
 
-;;; hl-line mode
-(dolist (hook '(prog-mode-hook
-		text-mode-hook))
-  (add-hook hook #'hl-line-mode))
+(use-package modus-themes
+  ;; modus' variables need to be set *before* the package is loaded
+  ;; change require reloading the theme:
+  ;; (modus-themes-load-vivendi)
+  :custom
+  (modus-themes-italic-constructs nil)
+  (modus-themes-bold-constructs nil)
+  (modus-themes-tabs-accented nil)
+  (modus-themes-mode-line '(accented borderless (padding . 4) (height . 0.9)))
+  (modus-themes-hl-line nil)
+  (modus-themes-paren-match nil)
+  (modus-themes-links '(neutral-underline background))
+  (modus-themes-completions '((matches . (extrabold))
+			      (selection . (semibold accented))
+			      (popup . (accented intense))))
+  (modus-themes-region '(accented)))
 
-(when (display-graphic-p)
-  (tool-bar-mode -1)
-  (require 'auto-dark)
-  (setq auto-dark--light-theme 'modus-operandi)
-  (setq auto-dark--dark-theme 'modus-vivendi))
+(use-package hl-line
+  :hook ((prog-mode text-mode) . hl-line-mode))
+
+(use-package auto-dark
+  :if
+  (string= system-type 'darwin)
+  :custom
+  (auto-dark--light-theme 'modus-operandi)
+  (auto-dark--dark-theme 'modus-vivendi)
+  :config
+  (require 'auto-dark))
+
+(use-package tool-bar
+  :if
+  (display-graphic-p)
+  :config
+  (tool-bar-mode -1))
 
 ;;; Global keybindings
 (define-key global-map (kbd "M-o") #'other-window)
