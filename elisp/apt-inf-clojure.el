@@ -192,6 +192,18 @@
     (message apt--inf-clojure-eval-form)
     (inf-clojure-eval-string eval-form)))
 
+(defun apt--inf-clojure-repl-apropos
+    ()
+  (interactive)
+  (if-let ((sym (symbol-at-point)))
+    (progn
+      (inf-clojure-switch-to-recent-buffer)
+      (let ((pattern (read-string "Pattern: "
+				  (symbol-name sym))))
+	(when pattern
+	  (xref-find-apropos pattern))))
+    (message "No symbol at point.")))
+
 (with-eval-after-load 'inf-clojure
   (require 'transient)
   (transient-define-prefix apt--vilpy-clojure-prefix ()
