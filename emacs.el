@@ -407,7 +407,8 @@ for better naming in the hooks it is listed."
   :load-path
   "~/Dropbox/nu/emacs-lisp"
   :bind
-  ("C-S-l" . apt-lein-socket-repl))
+  ("C-S-l" . apt-lein-socket-repl)
+  :demand t)
 
 (use-package forge
   :after (magit))
@@ -440,6 +441,7 @@ for better naming in the hooks it is listed."
   '(set-nu-clj-indent))
 
 (use-package howm
+  :defer t
   :init
   (setq howm-view-use-grep t
 	howm-view-grep-command "rg"
@@ -460,7 +462,6 @@ for better naming in the hooks it is listed."
 (use-package eldoc
   :diminish eldoc-mode)
 
-;;; nuact
 (use-package nuact
   :if (file-directory-p "~/dev/nu/nuact.el")
   :load-path "~/dev/nu/nuact.el"
