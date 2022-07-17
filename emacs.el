@@ -34,6 +34,7 @@
 				  orderless
 				  package-lint
 				  use-package
+				  vertico
 				  wgrep
 				  which-key
 				  yaml-mode))
@@ -175,6 +176,7 @@ for better naming in the hooks it is listed."
 (setq completion-cycle-threshold 2)
 
 (use-package icomplete
+  :disabled t
   :custom
   ((icomplete-show-matches-on-no-input t)
    (icomplete-delay-completions-threshold 0)
@@ -182,6 +184,34 @@ for better naming in the hooks it is listed."
    (icomplete-compute-delay 0))
   :config
   (icomplete-vertical-mode))
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package vertico-directory
+  :after
+  vertico
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook
+  (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package vertico-multiform
+  :after
+  vertico
+  :init
+  (vertico-multiform-mode)
+  (vertico-multiform-mode)
+  (setq vertico-multiform-commands
+	'((consult-imenu buffer indexed)
+	  (execute-extended-command unobtrusive))
+	vertico-multiform-categories
+	'((file grid)
+	  (consult-grep buffer))))
 
 (use-package comint
   :custom
