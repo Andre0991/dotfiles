@@ -262,6 +262,8 @@ for better naming in the hooks it is listed."
 (use-package markdown-mode
   :custom
   (markdown-fontify-code-blocks-natively t)
+  ;; https://github.com/jrblevin/markdown-mode/issues/578
+  (markdown-nested-imenu-heading-index nil)
   :init
   (add-hook 'markdown-mode-hook 'variable-pitch-mode)
   :config
