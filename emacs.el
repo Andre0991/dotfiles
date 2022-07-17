@@ -102,7 +102,9 @@
    ("M-O" . other-frame)
    ("M-," . pop-tag-mark)
    ("C-c f d" . delete-file)
-   ("M-Z" . zap-up-to-char)))
+   ("M-Z" . zap-up-to-char)
+   ("C-S-p" . previous-buffer)
+   ("C-S-n" . next-buffer)))
 
 (use-package modus-themes
   ;; modus' variables need to be set *before* the package is loaded
@@ -323,7 +325,17 @@ for better naming in the hooks it is listed."
   (setq register-preview-delay 0.5
 	register-preview-function #'consult-register-format
 	xref-show-xrefs-function #'consult-xref
-	xref-show-definitions-function #'consult-xref))
+	xref-show-definitions-function #'consult-xref)
+  :config
+  (defun apt-ripgrep-insert-glob
+      ()
+    (interactive)
+    (insert " -- -g *."))
+  (defvar my-consult-ripgrep-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "\M-g" #'apt-ripgrep-insert-glob)
+      map))
+  (consult-customize consult-ripgrep :keymap my-consult-ripgrep-map))
 
 (require 'apt-project-extras nil 'noerror)
 (use-package project
@@ -348,7 +360,7 @@ for better naming in the hooks it is listed."
 
 (use-package orderless
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(orderless basic initials))
   (completion-category-overrides '((file (styles basic partial-completion))
 				   (project-file (styles basic partial-completion)))))
 
