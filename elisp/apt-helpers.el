@@ -43,6 +43,11 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
+(defun apt-switch-to-emacs-init
+    ()
+  (interactive)
+  (find-file "~/dotfiles/emacs.el"))
+
 (provide 'apt-helpers)
 
 ;;; apt-helpers.el ends here
