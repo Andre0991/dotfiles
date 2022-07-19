@@ -36,7 +36,6 @@
 				  use-package
 				  vertico
 				  wgrep
-				  which-key
 				  yaml-mode))
 
 (setq use-package-enable-imenu-support t
@@ -47,9 +46,14 @@
 
 (require 'apt-helpers nil 'noerror)
 
-;; `emacs` a valid value because (featurep 'emacs) is t
 (use-package emacs
   :init
+  (setq initial-frame-alist
+	'((top . 1)
+	  (left . 1)
+	  (fullscreen . fullheight))
+	default-frame-alist '((left . (+ 1200))
+			      (fullscreen . fullheight)))
   (setq custom-file (make-temp-file "emacs-custom-"))
   (when (string= system-type 'darwin)
     ;; translate super to control
@@ -68,6 +72,7 @@
 	bookmark-set-fringe-mark nil
 	backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
 	context-menu-mode t
+	completion-cycle-threshold 2
 	;; Enable indentation+completion using the TAB key.
 	;; Completion is often bound to M-TAB.
 	tab-always-indent 'complete
@@ -102,9 +107,16 @@
    ("M-O" . other-frame)
    ("M-," . pop-tag-mark)
    ("C-c f d" . delete-file)
+   ("C-z" . zap-up-to-char)
    ("M-Z" . zap-up-to-char)
    ("C-S-p" . previous-buffer)
    ("C-S-n" . next-buffer)))
+
+(use-package hideshow
+  :hook (prog-mode . hs-minor-mode)
+  :bind
+  ("C-S-h" . hs-hide-all)
+  ("C-S-d" . hs-show-block))
 
 (use-package modus-themes
   ;; modus' variables need to be set *before* the package is loaded
@@ -147,7 +159,8 @@
   "~/dotfiles/elisp/"
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
-   ("C-S-s" . apt-switch-to-scratch)))
+   ("C-S-s" . apt-switch-to-scratch)
+   ("C-S-e" . apt-switch-to-emacs-init)))
 
 ;;; TODO: remove me after use-package migration
 ;; (comment
@@ -164,21 +177,18 @@
 (use-package elisp-mode
   :diminish emacs-lisp-mode)
 
-;;; Completion
-(defun apt--enable-truncate-lines
-    ()
-  "A trivial function that sets `truncate-lines` to t, just
-for better naming in the hooks it is listed."
-  (setq truncate-lines t))
-
-(add-hook 'minibuffer-setup-hook
-	  #'apt--enable-truncate-lines)
-
-;; Tab cycle if there are only few candidates
-(setq completion-cycle-threshold 2)
-
 (use-package icomplete
   :disabled t
+  :init
+  (defun apt--enable-truncate-lines
+      ()
+    "A trivial function that sets `truncate-lines` to t, just
+for better naming in the hooks it is listed."
+    (setq truncate-lines t))
+
+  (add-hook 'minibuffer-setup-
+	    hook
+	    #'apt--enable-truncate-lines)
   :custom
   ((icomplete-show-matches-on-no-input t)
    (icomplete-delay-completions-threshold 0)
@@ -187,7 +197,13 @@ for better naming in the hooks it is listed."
   :config
   (icomplete-vertical-mode))
 
+(use-package savehist
+  :init
+  (savehist-mode))
+
 (use-package vertico
+  :bind (:map vertico-map
+              ("M-V" . #'vertico-multiform-vertical))
   :init
   (vertico-mode))
 
@@ -277,6 +293,7 @@ for better naming in the hooks it is listed."
   (add-hook 'after-init-hook #'winner-mode))
 
 (use-package which-key
+  :disabled t
   :custom
   ((which-key-show-early-on-C-h t)
    ;; make sure which-key doesn't show automatically,
@@ -302,12 +319,10 @@ for better naming in the hooks it is listed."
   (marginalia-use-builtin))
 
 (use-package corfu
+  :init
+  (global-corfu-mode)
   :custom
-  ((corfu-auto nil))
-  :hook
-  ((prog-mode . corfu-mode)
-   (shell-mode . corfu-mode)
-   (eshell-mode . corfu-mode))
+  (corfu-auto nil)
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator)))
 
@@ -355,7 +370,15 @@ for better naming in the hooks it is listed."
 
 (use-package embark
   :bind
-  (("C-;" . embark-act)))
+  (("C-;" . embark-act))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+		 nil
+		 (window-parameters (mode-line-format . none)))))
 
 (use-package embark-consult
   :after (embark consult))
@@ -460,7 +483,8 @@ for better naming in the hooks it is listed."
 (use-package iedit
   :init
   (with-eval-after-load 'embark
-    (define-key embark-general-map (kbd "I") #'iedit-mode))
+    (define-key embark-general-map (kbd "I") #'iedit-mode)
+    (define-key embark-command-map (kbd "I") #'iedit-mode))
   :bind
   ("C-M-;" . iedit-mode) ;; prevents conflict with `embark`
   :custom
