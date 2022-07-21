@@ -16,6 +16,8 @@
 				  clojure-mode
 				  consult
 				  corfu
+				  code-review
+				  denote
 				  diminish
 				  eglot
 				  embark
@@ -28,11 +30,13 @@
 				  magit
 				  marginalia
 				  markdown-mode
+				  md4rd
 				  mermaid-mode
 				  modus-themes
 				  olivetti
 				  orderless
 				  package-lint
+				  pdf-tools
 				  use-package
 				  vertico
 				  wgrep
@@ -63,7 +67,6 @@
     (advice-add #'display-startup-echo-area-message :override #'ignore))
   (setq vc-follow-symlinks t
 	use-short-answers t
-	recentf-mode t
 	enable-recursive-minibuffers t
 	initial-scratch-message nil
 	inhibit-startup-screen t
@@ -101,6 +104,7 @@
 	backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
   (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
+  (recentf-mode)
 
   :bind
   (("M-o" . other-window)
@@ -161,13 +165,6 @@
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-s" . apt-switch-to-scratch)
    ("C-S-e" . apt-switch-to-emacs-init)))
-
-;;; TODO: remove me after use-package migration
-;; (comment
-;;  (dolist (path '("~/dotfiles/elisp/"
-;; 		 "~/Dropbox/nu/emacs-lisp"))
-;;    (when (file-directory-p path)
-;;      (add-to-list 'load-path path))))
 
 (use-package dired
   :custom
@@ -539,3 +536,27 @@ for better naming in the hooks it is listed."
   (with-eval-after-load 'inf-clojure
     (define-key inf-clojure-mode-map (kbd "<C-return>") #'nuact)
     (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact)))
+
+(use-package md4rd
+  :defer t
+  :custom
+  (md4rd-subs-active '(emacs clojure neovim))
+  :config
+  (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
+
+(use-package code-review
+  :after magit
+  :custom
+  (code-review-auth-login-marker 'forge))
+
+(use-package pdf-tools
+  :defer t)
+
+(use-package denote
+  :custom
+  (denote-directory (expand-file-name "~/denote"))
+  (denote-known-keywords '("emacs" "tech"))
+  (denote-file-type 'markdown-yaml)
+  (denote-dired-directories (list denote-directory))
+  :config
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories))
