@@ -583,3 +583,11 @@ for better naming in the hooks it is listed."
   (gif-screencast-capture-format "ppm")
   :bind
   (("<f9>" . gif-screencast-start-or-stop)))
+
+(use-package xwidget
+  :bind
+  (:map xwidget-webkit-mode-map
+	("l" . xwidget-webkit-back)
+	("r" . xwidget-webkit-forward)
+	("o" . xwidget-webkit-browse-url)
+	("r" . xwidget-webkit-reload)))
