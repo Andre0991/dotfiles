@@ -560,3 +560,17 @@ for better naming in the hooks it is listed."
   (denote-dired-directories (list denote-directory))
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories))
+(use-package shr-heading
+  :commands
+  shr-heading-setup-imenu
+  shr-heading-next
+  shr-heading-previous)
+(use-package eww
+  :bind
+  (:map eww-mode-map
+	("P" . pocket-reader-eww-add-page)
+	("{" . backward-paragraph)
+	("}" . forward-paragraph)
+	("C-c C-p" . shr-heading-previous)
+	("C-c C-n" . shr-heading-next))
+  :hook (eww-mode . shr-heading-setup-imenu))
