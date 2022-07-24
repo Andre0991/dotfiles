@@ -574,3 +574,12 @@ for better naming in the hooks it is listed."
 	("C-c C-p" . shr-heading-previous)
 	("C-c C-n" . shr-heading-next))
   :hook (eww-mode . shr-heading-setup-imenu))
+(use-package gif-screencast
+  ;; on first run, might need to reset permissions:
+  ;; https://apple.stackexchange.com/questions/374158/why-is-screencapture-taking-the-screenshot-of-the-desktop-image-and-not-the-wind
+  :custom
+  (gif-screencast-args '("-x")) ;; To shut up the shutter sound of `screencapture' (see `gif-screencast-command').
+  (gif-screencast-cropping-program "mogrify") ;; Optional: Used to crop the capture to the Emacs frame.
+  (gif-screencast-capture-format "ppm")
+  :bind
+  (("<f9>" . gif-screencast-start-or-stop)))
