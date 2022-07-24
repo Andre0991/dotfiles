@@ -10,26 +10,26 @@
 ;; Remove unused packages:
 ;; (package-autoremove)
 
-(setq package-selected-packages '(auto-dark
-				  avy
-				  browse-at-remote
+(setq package-selected-packages '(avy
 				  clojure-mode
+				  code-review
 				  consult
 				  corfu
-				  code-review
 				  denote
 				  diminish
+				  edit-indirect ; for editing blocks in markdown-mode
 				  eglot
 				  embark
 				  embark-consult
-				  edit-indirect ; for editing blocks in markdown-mode
 				  flymake-shellcheck
 				  forge
+				  git-screencast
 				  iedit
 				  inf-clojure
 				  magit
 				  marginalia
 				  markdown-mode
+				  browse-at-remote
 				  md4rd
 				  mermaid-mode
 				  modus-themes
@@ -139,17 +139,17 @@
 			      (popup . (accented intense))))
   (modus-themes-region '(accented)))
 
+;; emacs-mac specific. See https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
+(defun apt-apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'modus-operandi t))
+    ('dark (load-theme 'modus-vivendi t))))
+(add-hook 'ns-system-appearance-change-functions #'apt-apply-theme)
+
 (use-package hl-line
   :hook ((prog-mode text-mode) . hl-line-mode))
-
-(use-package auto-dark
-  :if
-  (string= system-type 'darwin)
-  :custom
-  (auto-dark--light-theme 'modus-operandi)
-  (auto-dark--dark-theme 'modus-vivendi)
-  :config
-  (require 'auto-dark))
 
 (use-package tool-bar
   :if
