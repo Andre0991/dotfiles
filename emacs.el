@@ -26,6 +26,7 @@
 				  git-screencast
 				  iedit
 				  inf-clojure
+				  link-hint
 				  magit
 				  marginalia
 				  markdown-mode
@@ -591,3 +592,8 @@ for better naming in the hooks it is listed."
 	("r" . xwidget-webkit-forward)
 	("o" . xwidget-webkit-browse-url)
 	("r" . xwidget-webkit-reload)))
+(use-package link-hint
+  :ensure t
+  :bind
+  ("C-c o" . link-hint-open-link)
+  ("C-c o" . link-hint-copy-link))
