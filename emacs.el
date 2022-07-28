@@ -38,6 +38,7 @@
 				  orderless
 				  package-lint
 				  pdf-tools
+				  sx
 				  use-package
 				  vertico
 				  wgrep
@@ -597,3 +598,5 @@ for better naming in the hooks it is listed."
   :bind
   ("C-c o" . link-hint-open-link)
   ("C-c o" . link-hint-copy-link))
+
+(use-package sx)
