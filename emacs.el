@@ -12,7 +12,6 @@
 
 (setq package-selected-packages '(avy
 				  clojure-mode
-				  code-review
 				  consult
 				  corfu
 				  denote
@@ -550,11 +549,6 @@ for better naming in the hooks it is listed."
   (md4rd-subs-active '(emacs clojure neovim))
   :config
   (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
-
-(use-package code-review
-  :after magit
-  :custom
-  (code-review-auth-login-marker 'forge))
 
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
