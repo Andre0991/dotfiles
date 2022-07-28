@@ -23,7 +23,7 @@
 				  embark-consult
 				  flymake-shellcheck
 				  forge
-				  git-screencast
+				  gif-screencast
 				  iedit
 				  inf-clojure
 				  link-hint
