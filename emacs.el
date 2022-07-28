@@ -353,8 +353,12 @@ for better naming in the hooks it is listed."
       map))
   (consult-customize consult-ripgrep :keymap my-consult-ripgrep-map))
 
+
 (require 'apt-project-extras nil 'noerror)
 (use-package project
+  ;; Use this on a new config:
+  ;; (project-remember-projects-under "~/dev/nu")
+  ;; (project-remember-projects-under "~/dev/peric")
   :bind
   (("C-x p P" . apt-open-project-in-new-tab)
    (:map project-prefix-map
