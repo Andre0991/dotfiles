@@ -556,7 +556,13 @@ for better naming in the hooks it is listed."
   (code-review-auth-login-marker 'forge))
 
 (use-package pdf-tools
-  :defer t)
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :magic ("%PDF" . pdf-view-mode)
+  :config
+  ;; assumes (pdf-tools-install) worked once before
+  (pdf-tools-install-noverify)
+  (setq pdf-view-midnight-colors '("#ffffff" .
+				   "#000000")))
 
 (use-package denote
   :custom
