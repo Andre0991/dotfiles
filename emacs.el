@@ -30,6 +30,7 @@
 				  magit
 				  marginalia
 				  markdown-mode
+				  nov
 				  browse-at-remote
 				  md4rd
 				  mermaid-mode
@@ -610,3 +611,6 @@ for better naming in the hooks it is listed."
   ("C-c o" . link-hint-copy-link))
 
 (use-package sx)
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
