@@ -481,7 +481,16 @@ for better naming in the hooks it is listed."
   :demand t)
 
 (use-package forge
-  :after (magit))
+  :after (magit)
+  :config
+  ;; Display only unread
+  ;; https://github.com/magit/forge/discussions/341
+  (fset 'forge--list-notifications-all
+	(symbol-function 'forge--list-notifications-unread))
+  :bind
+  ("C-c f l" . forge-edit-topic-labels)
+  ("C-c f w" . forge-copy-url-at-point-as-kill)
+  ("C-c f b" . forge-browse-pullreq))
 
 (use-package iedit
   :init
