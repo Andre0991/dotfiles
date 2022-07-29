@@ -620,6 +620,10 @@ for better naming in the hooks it is listed."
 	("r" . xwidget-webkit-forward)
 	("o" . xwidget-webkit-browse-url)
 	("r" . xwidget-webkit-reload)))
+(use-package vc
+  :bind
+  ("C-x v F" . vc-pull))
+
 (use-package link-hint
   :ensure t
   :bind
