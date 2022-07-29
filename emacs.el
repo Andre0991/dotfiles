@@ -20,6 +20,7 @@
 				  eglot
 				  embark
 				  embark-consult
+				  engine-mode
 				  flymake-shellcheck
 				  forge
 				  gif-screencast
@@ -634,3 +635,24 @@ for better naming in the hooks it is listed."
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
+
+(use-package engine-mode
+  :ensure t
+  :custom
+  (engine/browser-function 'eww-browse-url)
+  :config
+  (engine-mode t)
+  (defengine google
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+    :keybinding "g")
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :keybinding "h")
+  (defengine stack-overflow
+    "https://stackoverflow.com/search?q=%s"
+    :keybinding "s")
+  (defengine wikipedia
+    "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+    :keybinding "w"))
+
+(use-package grip-mode)
