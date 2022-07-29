@@ -281,11 +281,12 @@ for better naming in the hooks it is listed."
   (markdown-nested-imenu-heading-index nil)
   :init
   (add-hook 'markdown-mode-hook 'variable-pitch-mode)
-  :config
-  (dolist (face '(markdown-inline-code-face
-		  markdown-code-face
-		  markdown-table-face))
-    (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))
+  (add-hook 'markdown-mode-hook
+	    (lambda ()
+	      (dolist (face '(markdown-inline-code-face
+			      markdown-code-face
+			      markdown-table-face))
+		(set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))))
 
 (use-package winner
   :init
