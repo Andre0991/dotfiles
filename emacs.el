@@ -11,7 +11,7 @@
 ;; (package-autoremove)
 
 (setq package-selected-packages '(avy
-				  clojure-mode
+				  browse-at-remote
 				  consult
 				  corfu
 				  denote
@@ -25,6 +25,7 @@
 				  gif-screencast
 				  iedit
 				  inf-clojure
+				  keycast
 				  link-hint
 				  magit
 				  marginalia
@@ -599,7 +600,10 @@ for better naming in the hooks it is listed."
   (gif-screencast-cropping-program "mogrify") ;; Optional: Used to crop the capture to the Emacs frame.
   (gif-screencast-capture-format "ppm")
   :bind
-  (("<f9>" . gif-screencast-start-or-stop)))
+  (("<f9>" . (lambda ()
+	       (interactive)
+	       (keycast-mode)
+	       (gif-screencast-start-or-stop)))))
 
 (use-package xwidget
   :bind
