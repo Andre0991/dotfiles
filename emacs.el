@@ -571,13 +571,21 @@ for better naming in the hooks it is listed."
 				   "#000000")))
 
 (use-package denote
+  :init
+  (defun apt-denote-project
+      ()
+    (interactive)
+    (project-switch-project "~/denote"))
   :custom
   (denote-directory (expand-file-name "~/denote"))
   (denote-known-keywords '("emacs" "tech"))
   (denote-file-type 'markdown-yaml)
   (denote-dired-directories (list denote-directory))
   :config
-  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories))
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  :bind
+  ("C-S-d" . apt-denote-project))
+
 (use-package shr-heading
   :commands
   shr-heading-setup-imenu
