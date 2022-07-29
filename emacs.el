@@ -392,8 +392,9 @@ for better naming in the hooks it is listed."
 (use-package orderless
   :custom
   (completion-styles '(orderless basic initials))
-  (completion-category-overrides '((file (styles basic partial-completion))
-				   (project-file (styles basic partial-completion)))))
+  ;; TODO: Use add-to-list instead?
+  ;; (https://github.com/joaotavora/eglot/issues/131)
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package vilpy
   :load-path
@@ -434,7 +435,9 @@ for better naming in the hooks it is listed."
   (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls")))
   (dolist (command '(other-window
 		     other-frame))
-    (advice-add command :before #'apt-eglot-format-if-clojure))
+    ;; TODO: might timeout and make Emacs lag
+    ;; (advice-add command :before #'apt-eglot-format-if-clojure)
+    )
   (add-hook 'eglot-managed-mode-hook
 	    ;; This displays full docs for clojure functions.
 	    ;; See https://github.com/joaotavora/eglot/discussions/894
@@ -455,11 +458,6 @@ for better naming in the hooks it is listed."
 
 (require 'apt-inf-clojure nil 'noerror)
 (define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
-
-(use-package eww
-  :defer t
-  :custom
-  (eww-search-prefix "https://www.google.com/search?q="))
 
 (use-package browse-at-remote
   :custom
@@ -593,8 +591,17 @@ for better naming in the hooks it is listed."
   shr-heading-next
   shr-heading-previous)
 (use-package eww
+  :defer t
+  :init
+  (defun apt-sx-open-link
+      ()
+    (interactive)
+    (sx-open-link (plist-get eww-data :url)))
+  :custom
+  (eww-search-prefix "https://www.google.com/search?q=")
   :bind
   (:map eww-mode-map
+	("x" . apt-sx-open-link)
 	("P" . pocket-reader-eww-add-page)
 	("{" . backward-paragraph)
 	("}" . forward-paragraph)
