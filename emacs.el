@@ -57,6 +57,11 @@
 
 (use-package emacs
   :init
+  (when (string= system-type 'darwin)
+    ;; translate super to control
+    (setq ns-command-modifier 'control
+	  insert-directory-program "/usr/local/bin/gls"))
+
   (setq initial-frame-alist
 	'((top . 1)
 	  (left . 1)
@@ -64,10 +69,6 @@
 	default-frame-alist '((left . (+ 1200))
 			      (fullscreen . fullheight)))
   (setq custom-file (make-temp-file "emacs-custom-"))
-  (when (string= system-type 'darwin)
-    ;; translate super to control
-    (setq ns-command-modifier 'control
-	  insert-directory-program "/usr/local/bin/gls"))
   (unless (daemonp)
     (advice-add #'display-startup-echo-area-message :override #'ignore))
   (setq vc-follow-symlinks t
