@@ -561,6 +561,12 @@ for better naming in the hooks it is listed."
   (add-hook 'md4rd-mode-hook 'md4rd-indent-all-the-lines))
 
 (use-package pdf-tools
+  :init
+  (defun apt-abort-if-file-too-large-unless-pdf
+      (fn size op-type filename &optional offer-raw)
+    (unless (string-match-p "\\.pdf\\'" filename)
+      (funcall fn size op-type filename offer-raw)))
+  (advice-add #'abort-if-file-too-large :around  #'apt-abort-if-file-too-large-unless-pdf)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   :config
