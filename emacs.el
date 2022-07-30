@@ -41,6 +41,7 @@
 				  package-lint
 				  pdf-tools
 				  sx
+				  sly
 				  use-package
 				  vertico
 				  wgrep
@@ -691,3 +692,14 @@ for better naming in the hooks it is listed."
     :keybinding "w"))
 
 (use-package grip-mode)
+
+(use-package sly
+  :config
+  (with-eval-after-load 'vilpy
+    (add-to-list 'vilpy--handlers-alist
+		 '(:sly . ((:decider-fn . (lambda () (derived-mode-p 'sly-mode)))
+			   (:eval-last-sexp . sly-eval-last-expression)
+			   (:eval-defun . sly-eval-defun)
+			   (:eval-region . sly-eval-region)
+			   (:eval-buffer . sly-eval-buffer)
+			   (:describe-symbol . sly-describe-symbol))))))
