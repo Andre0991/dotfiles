@@ -654,7 +654,22 @@ for better naming in the hooks it is listed."
 (use-package sx)
 
 (use-package nov
-  :mode ("\\.epub\\'" . nov-mode))
+  :init
+  (defun apt-backward-and-recenter
+      ()
+    (interactive)
+    (backward-paragraph 1)
+    (recenter))
+  (defun apt-forward-and-recenter
+      ()
+    (interactive)
+    (forward-paragraph 1)
+    (recenter))
+  :custom (nov-text-width 80)
+  :mode ("\\.epub\\'" . nov-mode)
+  :bind (:map nov-mode-map
+	      ("<up>" . apt-backward-and-recenter)
+	      ("<down>" . apt-forward-and-recenter)))
 
 (use-package engine-mode
   :ensure t
