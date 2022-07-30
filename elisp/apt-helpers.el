@@ -48,6 +48,11 @@
   (interactive)
   (find-file "~/dotfiles/emacs.el"))
 
+(defun apt-pop-to-messages-buffer
+    ()
+  (interactive)
+  (pop-to-buffer "*Messages*"))
+
 (provide 'apt-helpers)
 
 ;;; apt-helpers.el ends here

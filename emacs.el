@@ -168,7 +168,8 @@
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-s" . apt-switch-to-scratch)
-   ("C-S-e" . apt-switch-to-emacs-init)))
+   ("C-S-e" . apt-switch-to-emacs-init)
+   ("C-S-m" . apt-pop-to-messages-buffer)))
 
 (use-package dired
   :custom
