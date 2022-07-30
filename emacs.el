@@ -218,7 +218,7 @@ for better naming in the hooks it is listed."
 
 (use-package vertico
   :bind (:map vertico-map
-              ("M-V" . #'vertico-multiform-vertical))
+              ("C-l" . #'vertico-multiform-vertical))
   :init
   (vertico-mode))
 
