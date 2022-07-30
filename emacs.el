@@ -591,6 +591,12 @@ for better naming in the hooks it is listed."
   :bind
   ("C-S-d" . apt-denote-project))
 
+(use-package shr
+  :custom
+  (shr-use-colors nil)
+  (shr-max-image-proportion 0.7)
+  (shr-image-animate nil))
+
 (use-package shr-heading
   :commands
   shr-heading-setup-imenu
