@@ -414,7 +414,7 @@ for better naming in the hooks it is listed."
   :load-path
   "~/dev/peric/vilpy/"
   :hook
-  ((emacs-lisp-mode clojure-mode) . vilpy-mode)
+  ((emacs-lisp-mode clojure-mode sly-mode) . vilpy-mode)
   :diminish vilpy-mode)
 
 (use-package clojure-mode
@@ -707,6 +707,8 @@ for better naming in the hooks it is listed."
 (use-package grip-mode)
 
 (use-package sly
+  :custom
+  (inferior-lisp-program "clisp")
   :config
   (with-eval-after-load 'vilpy
     (add-to-list 'vilpy--handlers-alist
