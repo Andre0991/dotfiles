@@ -24,6 +24,7 @@
 				  flymake-shellcheck
 				  forge
 				  gif-screencast
+				  grip-mode
 				  iedit
 				  inf-clojure
 				  keycast
