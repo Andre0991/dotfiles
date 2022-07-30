@@ -45,6 +45,7 @@
 				  sly
 				  use-package
 				  vertico
+				  vc-backup
 				  wgrep
 				  yaml-mode))
 
@@ -80,7 +81,6 @@
 	inhibit-startup-echo-area-message user-login-name
 	initial-major-mode 'fundamental-mode
 	bookmark-set-fringe-mark nil
-	backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/")))
 	context-menu-mode t
 	completion-cycle-threshold 2
 	;; Enable indentation+completion using the TAB key.
@@ -103,12 +103,22 @@
   ;; (not on text inserted in a buffer)
   (global-so-long-mode)
   ;; lock file, backup file
-  (let ((aux-dir "~/.emacs.d/aux"))
-    (unless (file-exists-p aux-dir)
-      (make-directory aux-dir)))
-  (setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
-	auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/aux/\\1" t))
-	backup-directory-alist '((".*" . "~/.emacs.d/aux/")))
+  (let ((backup-dir "~/.emacs.d/backups"))
+    (unless (file-exists-p backup-dir)
+      (make-directory backup-dir)))
+  (setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
+	auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
+	backup-directory-alist '((".*" . "~/.emacs.d/backups/"))
+	version-control t
+	backup-by-copying t
+	vc-make-backup-files t
+	kept-new-versions 100
+	kept-new-versions 100
+	delete-old-versions t
+	auto-save-default t
+	auto-save-timeout 20
+	auto-save-interval 200)
+  ;; faces
   (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
   (recentf-mode)
@@ -644,6 +654,7 @@ for better naming in the hooks it is listed."
 	("r" . xwidget-webkit-forward)
 	("o" . xwidget-webkit-browse-url)
 	("r" . xwidget-webkit-reload)))
+
 (use-package vc
   :bind
   ("C-x v F" . vc-pull))
