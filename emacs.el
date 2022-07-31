@@ -107,18 +107,23 @@
   (let ((backup-dir "~/.emacs.d/backups"))
     (unless (file-exists-p backup-dir)
       (make-directory backup-dir)))
-  (setq lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
-	auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
-	backup-directory-alist '((".*" . "~/.emacs.d/backups/"))
-	version-control t
-	backup-by-copying t
-	vc-make-backup-files t
-	kept-new-versions 100
-	kept-new-versions 100
-	delete-old-versions t
-	auto-save-default t
-	auto-save-timeout 20
-	auto-save-interval 200)
+  (setq-default lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
+                auto-save-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "~/.emacs.d/backups/\\1" t))
+                backup-directory-alist '((".*" . "~/.emacs.d/backups/"))
+                version-control t
+                backup-by-copying t
+                vc-make-backup-files t
+                kept-new-versions 5
+                kept-new-versions 3
+                delete-old-versions t
+                auto-save-default t
+                auto-save-timeout 20
+                auto-save-interval 200)
+  (setq-default indent-tabs-mode nil  ; Don't use tabs for indentation
+                tab-width 4
+                c-basic-offset 4)
+
+
   ;; faces
   (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
@@ -734,4 +739,3 @@ for better naming in the hooks it is listed."
          ("C-c p a" . cape-abbrev)
          ("C-c p l" . cape-line)
          ("C-c p w" . cape-dict)))
-
