@@ -496,7 +496,10 @@ for better naming in the hooks it is listed."
 (require 'apt-tab-bar-extras nil 'noerror)
 
 (use-package tab-bar
+  :custom
+  (tab-bar-new-tab-choice "*scratch*")
   :bind
+  ("C-x t c" . tab-new)
   ("C-x t a" . apt-tab-bar-auto-rename-tab)
   ("C-x t k" . tab-bar-close-tab))
 
