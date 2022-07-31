@@ -12,6 +12,7 @@
 
 (setq package-selected-packages '(avy
 				  browse-at-remote
+				  cape
 				  consult
 				  corfu
 				  denote
@@ -345,6 +346,7 @@ for better naming in the hooks it is listed."
 (use-package consult
   :bind
   (("C-c k" . consult-kmacro)
+   ("C-o" . consult-buffer)
    ("C-x b" . consult-buffer)
    ("C-x 4 b" . consult-buffer-other-window)
    ("C-x 5 b" . consult-buffer-other-frame)
@@ -712,7 +714,7 @@ for better naming in the hooks it is listed."
   :config
   (with-eval-after-load 'vilpy
     (add-to-list 'vilpy--handlers-alist
-		 '(:sly . ((:decider-fn . (lambda () (derived-mode-p 'sly-mode)))
+		 '(:sly . ((:decider-fn . (lambda () (bound-and-true-p sly-mode)))
 			   (:eval-last-sexp . sly-eval-last-expression)
 			   (:eval-defun . sly-eval-defun)
 			   (:eval-region . sly-eval-region)
@@ -723,3 +725,13 @@ for better naming in the hooks it is listed."
   ;; usage: go to a backup file in the `backup-directory-alist`
   ;; and use `vc-print-log` (C-x v l)
   )
+
+(use-package cape
+  :bind (("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-symbol)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)))
+
