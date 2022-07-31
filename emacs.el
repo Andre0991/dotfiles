@@ -11,44 +11,44 @@
 ;; (package-autoremove)
 
 (setq package-selected-packages '(avy
-				  browse-at-remote
-				  cape
-				  consult
-				  corfu
-				  denote
-				  diminish
-				  edit-indirect ; for editing blocks in markdown-mode
-				  eglot
-				  embark
-				  embark-consult
-				  engine-mode
-				  flymake-shellcheck
-				  forge
-				  gif-screencast
-				  grip-mode
-				  iedit
-				  inf-clojure
-				  keycast
-				  link-hint
-				  magit
-				  marginalia
-				  markdown-mode
-				  nov
-				  browse-at-remote
-				  md4rd
-				  mermaid-mode
-				  modus-themes
-				  olivetti
-				  orderless
-				  package-lint
-				  pdf-tools
-				  sx
-				  sly
-				  use-package
-				  vertico
-				  vc-backup
-				  wgrep
-				  yaml-mode))
+                                  browse-at-remote
+                                  cape
+                                  consult
+                                  corfu
+                                  denote
+                                  diminish
+                                  edit-indirect ; for editing blocks in markdown-mode
+                                  eglot
+                                  embark
+                                  embark-consult
+                                  engine-mode
+                                  flymake-shellcheck
+                                  forge
+                                  gif-screencast
+                                  grip-mode
+                                  iedit
+                                  inf-clojure
+                                  keycast
+                                  link-hint
+                                  magit
+                                  marginalia
+                                  markdown-mode
+                                  nov
+                                  browse-at-remote
+                                  md4rd
+                                  mermaid-mode
+                                  modus-themes
+                                  olivetti
+                                  orderless
+                                  package-lint
+                                  pdf-tools
+                                  sx
+                                  sly
+                                  use-package
+                                  vertico
+                                  vc-backup
+                                  wgrep
+                                  yaml-mode))
 
 (setq use-package-enable-imenu-support t
       use-package-compute-statistics t)
@@ -63,42 +63,42 @@
   (when (string= system-type 'darwin)
     ;; translate super to control
     (setq ns-command-modifier 'control
-	  insert-directory-program "/usr/local/bin/gls"))
+          insert-directory-program "/usr/local/bin/gls"))
 
   (setq initial-frame-alist
-	'((top . 1)
-	  (left . 1)
-	  (fullscreen . fullheight))
-	default-frame-alist '((left . (+ 1200))
-			      (fullscreen . fullheight)))
+        '((top . 1)
+          (left . 1)
+          (fullscreen . fullheight))
+        default-frame-alist '((left . (+ 1200))
+                              (fullscreen . fullheight)))
   (setq custom-file (make-temp-file "emacs-custom-"))
   (unless (daemonp)
     (advice-add #'display-startup-echo-area-message :override #'ignore))
   (setq vc-follow-symlinks t
-	use-short-answers t
-	enable-recursive-minibuffers t
-	initial-scratch-message nil
-	inhibit-startup-screen t
-	inhibit-startup-echo-area-message user-login-name
-	initial-major-mode 'fundamental-mode
-	bookmark-set-fringe-mark nil
-	context-menu-mode t
-	completion-cycle-threshold 2
-	;; Enable indentation+completion using the TAB key.
-	;; Completion is often bound to M-TAB.
-	tab-always-indent 'complete
-	;; completions-detailed t
-	compilation-scroll-output 't
-	sentence-end-double-space nil
-	auth-sources '("~/.authinfo")
-	isearch-lazy-count t
-	async-shell-command-buffer 'new-buffer)
+        use-short-answers t
+        enable-recursive-minibuffers t
+        initial-scratch-message nil
+        inhibit-startup-screen t
+        inhibit-startup-echo-area-message user-login-name
+        initial-major-mode 'fundamental-mode
+        bookmark-set-fringe-mark nil
+        context-menu-mode t
+        completion-cycle-threshold 2
+        ;; Enable indentation+completion using the TAB key.
+        ;; Completion is often bound to M-TAB.
+        tab-always-indent 'complete
+        ;; completions-detailed t
+        compilation-scroll-output 't
+        sentence-end-double-space nil
+        auth-sources '("~/.authinfo")
+        isearch-lazy-count t
+        async-shell-command-buffer 'new-buffer)
   (dolist (cmd '(narrow-to-region
-		 upcase-region
-		 downcase-region
-		 narrow-to-page
-		 scroll-left
-		 scroll-right))
+                 upcase-region
+                 downcase-region
+                 narrow-to-page
+                 scroll-left
+                 scroll-right))
     (put cmd 'disabled nil))
   ;; triggered automatically on long *files*
   ;; (not on text inserted in a buffer)
@@ -125,7 +125,12 @@
 
 
   ;; faces
-  (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
+  ;; DejaVu is great, but it has this bug:
+  ;; https://old.reddit.com/r/emacs/comments/3wmw8z/dejavu_sans_mono_line_height_bug/
+  ;; (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
+
+  ;; from https://git.sr.ht/~protesilaos/iosevka-comfy
+  (set-face-attribute 'default nil :height 220 :family "Iosevka Comfy")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
   (recentf-mode)
 
