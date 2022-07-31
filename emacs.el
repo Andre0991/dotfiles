@@ -609,9 +609,9 @@ for better naming in the hooks it is listed."
   (defun apt-denote-project
       ()
     (interactive)
-    (project-switch-project "~/denote"))
+    (project-switch-project "~/dropbox/denote"))
   :custom
-  (denote-directory (expand-file-name "~/denote"))
+  (denote-directory (expand-file-name "~/dropbox/denote"))
   (denote-known-keywords '("emacs" "tech"))
   (denote-file-type 'markdown-yaml)
   (denote-dired-directories (list denote-directory))
