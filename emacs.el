@@ -601,8 +601,7 @@ for better naming in the hooks it is listed."
   :config
   ;; assumes (pdf-tools-install) worked once before
   (pdf-tools-install-noverify)
-  (setq pdf-view-midnight-colors '("#ffffff" .
-				   "#000000")))
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000")))
 
 (use-package denote
   :init
@@ -622,6 +621,9 @@ for better naming in the hooks it is listed."
 
 (use-package shr
   :custom
+  (shr-use-xwidgets-for-media t)
+  (shr-max-width 65)
+  (shr-inhibit-images t)
   (shr-use-colors nil)
   (shr-max-image-proportion 0.7)
   (shr-image-animate nil))
