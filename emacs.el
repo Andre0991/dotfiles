@@ -619,6 +619,10 @@ for better naming in the hooks it is listed."
   :bind
   ("C-S-d" . apt-denote-project))
 
+(use-package browse-url
+  :custom
+  (browse-url-secondary-browser-function 'xwidget-webkit-browse-url))
+
 (use-package shr
   :custom
   (shr-use-xwidgets-for-media t)
