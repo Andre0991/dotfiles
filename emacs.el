@@ -673,7 +673,7 @@ for better naming in the hooks it is listed."
 	    ("l" . xwidget-webkit-back)
 	    ("r" . xwidget-webkit-forward)
 	    ("o" . xwidget-webkit-browse-url)
-	    ("r" . xwidget-webkit-reload)))
+	    ("g" . xwidget-webkit-reload)))
 
 (use-package vc
   :bind
