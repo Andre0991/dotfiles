@@ -163,8 +163,8 @@
   (modus-themes-paren-match nil)
   (modus-themes-links '(neutral-underline background))
   (modus-themes-completions '((matches . (extrabold))
-			      (selection . (semibold accented))
-			      (popup . (accented intense))))
+			                  (selection . (semibold accented))
+			                  (popup . (accented intense))))
   (modus-themes-region '(accented)))
 
 ;; emacs-mac specific. See https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change
@@ -213,8 +213,8 @@ for better naming in the hooks it is listed."
     (setq truncate-lines t))
 
   (add-hook 'minibuffer-setup-
-	    hook
-	    #'apt--enable-truncate-lines)
+	        hook
+	        #'apt--enable-truncate-lines)
   :custom
   ((icomplete-show-matches-on-no-input t)
    (icomplete-delay-completions-threshold 0)
@@ -251,11 +251,11 @@ for better naming in the hooks it is listed."
   (vertico-multiform-mode)
   (vertico-multiform-mode)
   (setq vertico-multiform-commands
-	'((consult-imenu buffer indexed)
-	  (execute-extended-command unobtrusive))
-	vertico-multiform-categories
-	'((file grid)
-	  (consult-grep buffer))))
+	    '((consult-imenu buffer indexed)
+	      (execute-extended-command unobtrusive))
+	    vertico-multiform-categories
+	    '((file grid)
+	      (consult-grep buffer))))
 
 (use-package comint
   :custom
@@ -269,8 +269,8 @@ for better naming in the hooks it is listed."
 (use-package flymake
   :bind
   (:map flymake-mode-map
-	("M-n" . flymake-goto-next-error)
-	("M-p" . flymake-goto-prev-error)))
+	    ("M-n" . flymake-goto-next-error)
+	    ("M-p" . flymake-goto-prev-error)))
 
 (use-package pulse
   :init
@@ -278,10 +278,10 @@ for better naming in the hooks it is listed."
     "Pulse the current line."
     (pulse-momentary-highlight-one-line (point)))
   (dolist (command '(scroll-up-command
-		     scroll-down-command
+		             scroll-down-command
                      recenter-top-bottom
-		     other-window
-		     other-frame))
+		             other-window
+		             other-frame))
     (advice-add command :after #'pulse-line)))
 
 (use-package elec-pair
@@ -309,11 +309,11 @@ for better naming in the hooks it is listed."
   :init
   (add-hook 'markdown-mode-hook 'variable-pitch-mode)
   (add-hook 'markdown-mode-hook
-	    (lambda ()
-	      (dolist (face '(markdown-inline-code-face
-			      markdown-code-face
-			      markdown-table-face))
-		(set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))))
+	        (lambda ()
+	          (dolist (face '(markdown-inline-code-face
+			                  markdown-code-face
+			                  markdown-table-face))
+		        (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))))
 
 (use-package winner
   :init
@@ -340,7 +340,7 @@ for better naming in the hooks it is listed."
      marginalia-annotator-registry))
   :bind
   (:map minibuffer-local-map
-	("M-A" . marginalia-cycle))
+	    ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode)
   (marginalia-use-builtin))
@@ -368,9 +368,9 @@ for better naming in the hooks it is listed."
    ("M-g i" . consult-imenu))
   :init
   (setq register-preview-delay 0.5
-	register-preview-function #'consult-register-format
-	xref-show-xrefs-function #'consult-xref
-	xref-show-definitions-function #'consult-xref)
+	    register-preview-function #'consult-register-format
+	    xref-show-xrefs-function #'consult-xref
+	    xref-show-definitions-function #'consult-xref)
   :config
   (defun apt-ripgrep-insert-glob
       ()
@@ -391,8 +391,8 @@ for better naming in the hooks it is listed."
   :bind
   (("C-x p P" . apt-open-project-in-new-tab)
    (:map project-prefix-map
-	 ("r" . #'consult-ripgrep)
-	 ("t" . apt-project-switch-between-test-and-implementation)))
+	     ("r" . #'consult-ripgrep)
+	     ("t" . apt-project-switch-between-test-and-implementation)))
   :config
   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
@@ -408,9 +408,9 @@ for better naming in the hooks it is listed."
   :config
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-		 nil
-		 (window-parameters (mode-line-format . none)))))
+	           '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+		         nil
+		         (window-parameters (mode-line-format . none)))))
 
 (use-package embark-consult
   :after (embark consult))
@@ -442,10 +442,10 @@ for better naming in the hooks it is listed."
   (defun apt-eglot-format-if-clojure
       (&rest _)
     (when (and buffer-file-name
-	       (derived-mode-p 'clojure-mode)
-	       (bound-and-true-p eglot-managed-mode-hook)
-	       (bound-and-true-p inf-clojure-minor-mode)
-	       (buffer-modified-p))
+	           (derived-mode-p 'clojure-mode)
+	           (bound-and-true-p eglot-managed-mode-hook)
+	           (bound-and-true-p inf-clojure-minor-mode)
+	           (buffer-modified-p))
       (eglot-format)))
   (add-hook 'clojure-mode-hook 'eglot-ensure)
   :custom
@@ -460,19 +460,19 @@ for better naming in the hooks it is listed."
   :config
   (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls")))
   (dolist (command '(other-window
-		     other-frame))
+		             other-frame))
     ;; TODO: might timeout and make Emacs lag
     ;; (advice-add command :before #'apt-eglot-format-if-clojure)
     )
   (add-hook 'eglot-managed-mode-hook
-	    ;; This displays full docs for clojure functions.
-	    ;; See https://github.com/joaotavora/eglot/discussions/894
-	    #'(lambda ()
-		(setq-local eldoc-documentation-strategy
-			    #'eldoc-documentation-compose
+	        ;; This displays full docs for clojure functions.
+	        ;; See https://github.com/joaotavora/eglot/discussions/894
+	        #'(lambda ()
+		        (setq-local eldoc-documentation-strategy
+			                #'eldoc-documentation-compose
 
-			    eldoc-echo-area-use-multiline-p
-			    5))))
+			                eldoc-echo-area-use-multiline-p
+			                5))))
 
 (use-package inf-clojure
   :custom
@@ -516,7 +516,7 @@ for better naming in the hooks it is listed."
   ;; Display only unread
   ;; https://github.com/magit/forge/discussions/341
   (fset 'forge--list-notifications-all
-	(symbol-function 'forge--list-notifications-unread))
+	    (symbol-function 'forge--list-notifications-unread))
   :bind
   ("C-c f l" . forge-edit-topic-labels)
   ("C-c f w" . forge-copy-url-at-point-as-kill)
@@ -554,12 +554,12 @@ for better naming in the hooks it is listed."
   :defer t
   :init
   (setq howm-view-use-grep t
-	howm-view-grep-command "rg"
-	howm-view-grep-option "-nH --no-heading --color never"
-	howm-view-grep-extended-option nil
-	howm-view-grep-fixed-option "-F"
-	howm-view-grep-expr-option nil
-	howm-view-grep-file-stdin-option nil)
+	    howm-view-grep-command "rg"
+	    howm-view-grep-option "-nH --no-heading --color never"
+	    howm-view-grep-extended-option nil
+	    howm-view-grep-fixed-option "-F"
+	    howm-view-grep-expr-option nil
+	    howm-view-grep-file-stdin-option nil)
   :config
   ;; do not override `C-h`
   (define-key howm-menu-mode-map "\C-h" nil)
@@ -648,12 +648,12 @@ for better naming in the hooks it is listed."
   (eww-search-prefix "https://www.google.com/search?q=")
   :bind
   (:map eww-mode-map
-	("x" . apt-sx-open-link)
-	("P" . pocket-reader-eww-add-page)
-	("{" . backward-paragraph)
-	("}" . forward-paragraph)
-	("C-c C-p" . shr-heading-previous)
-	("C-c C-n" . shr-heading-next))
+	    ("x" . apt-sx-open-link)
+	    ("P" . pocket-reader-eww-add-page)
+	    ("{" . backward-paragraph)
+	    ("}" . forward-paragraph)
+	    ("C-c C-p" . shr-heading-previous)
+	    ("C-c C-n" . shr-heading-next))
   :hook (eww-mode . shr-heading-setup-imenu))
 (use-package gif-screencast
   ;; on first run, might need to reset permissions:
@@ -664,17 +664,17 @@ for better naming in the hooks it is listed."
   (gif-screencast-capture-format "ppm")
   :bind
   (("<f9>" . (lambda ()
-	       (interactive)
-	       (keycast-mode)
-	       (gif-screencast-start-or-stop)))))
+	           (interactive)
+	           (keycast-mode)
+	           (gif-screencast-start-or-stop)))))
 
 (use-package xwidget
   :bind
   (:map xwidget-webkit-mode-map
-	("l" . xwidget-webkit-back)
-	("r" . xwidget-webkit-forward)
-	("o" . xwidget-webkit-browse-url)
-	("r" . xwidget-webkit-reload)))
+	    ("l" . xwidget-webkit-back)
+	    ("r" . xwidget-webkit-forward)
+	    ("o" . xwidget-webkit-browse-url)
+	    ("r" . xwidget-webkit-reload)))
 
 (use-package vc
   :bind
@@ -703,8 +703,8 @@ for better naming in the hooks it is listed."
   :custom (nov-text-width 80)
   :mode ("\\.epub\\'" . nov-mode)
   :bind (:map nov-mode-map
-	      ("<up>" . apt-backward-and-recenter)
-	      ("<down>" . apt-forward-and-recenter)))
+	          ("<up>" . apt-backward-and-recenter)
+	          ("<down>" . apt-forward-and-recenter)))
 
 (use-package engine-mode
   :ensure t
@@ -733,12 +733,12 @@ for better naming in the hooks it is listed."
   :config
   (with-eval-after-load 'vilpy
     (add-to-list 'vilpy--handlers-alist
-		 '(:sly . ((:decider-fn . (lambda () (bound-and-true-p sly-mode)))
-			   (:eval-last-sexp . sly-eval-last-expression)
-			   (:eval-defun . sly-eval-defun)
-			   (:eval-region . sly-eval-region)
-			   (:eval-buffer . sly-eval-buffer)
-			   (:describe-symbol . sly-describe-symbol))))))
+		         '(:sly . ((:decider-fn . (lambda () (bound-and-true-p sly-mode)))
+			               (:eval-last-sexp . sly-eval-last-expression)
+			               (:eval-defun . sly-eval-defun)
+			               (:eval-region . sly-eval-region)
+			               (:eval-buffer . sly-eval-buffer)
+			               (:describe-symbol . sly-describe-symbol))))))
 
 (use-package vc-backup
   ;; usage: go to a backup file in the `backup-directory-alist`
