@@ -46,7 +46,6 @@
                                   sly
                                   use-package
                                   vertico
-                                  vc-backup
                                   wgrep
                                   yaml-mode))
 
@@ -741,6 +740,7 @@ for better naming in the hooks it is listed."
 			               (:describe-symbol . sly-describe-symbol))))))
 
 (use-package vc-backup
+  :disabled t
   ;; usage: go to a backup file in the `backup-directory-alist`
   ;; and use `vc-print-log` (C-x v l)
   )
