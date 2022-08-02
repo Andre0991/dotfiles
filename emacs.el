@@ -197,7 +197,10 @@
 (use-package dired
   :custom
   ((dired-use-ls-dired t)
-   (dired-dwim-target t)))
+   (dired-dwim-target t))
+  :bind (:map dired-mode-map
+              ("C-o" . consult-buffer)
+              ("C-c C-o" . dired-display-file)))
 
 (use-package elisp-mode
   :diminish emacs-lisp-mode)
@@ -604,6 +607,12 @@ for better naming in the hooks it is listed."
 
 (use-package denote
   :init
+  (defun apt-commit-denote
+      ()
+    (interactive)
+    (when (and buffer-file-name
+               (string-prefix-p (expand-file-name "~/dropbox/denote") buffer-file-name))
+      (start-process "apt-git-comimt" nil "git" "commit" "-am" "Update")))
   (defun apt-denote-project
       ()
     (interactive)
@@ -615,12 +624,14 @@ for better naming in the hooks it is listed."
   (denote-dired-directories (list denote-directory))
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  (add-hook 'after-save-hook 'apt-commit-denote)
   :bind
   ("C-S-d" . apt-denote-project))
 
 (use-package browse-url
   :custom
-  (browse-url-secondary-browser-function 'xwidget-webkit-browse-url))
+  (browse-url-browser-function 'xwidget-webkit-browse-url)
+  (browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (use-package shr
   :custom
@@ -636,6 +647,7 @@ for better naming in the hooks it is listed."
   shr-heading-setup-imenu
   shr-heading-next
   shr-heading-previous)
+
 (use-package eww
   :defer t
   :init
@@ -647,12 +659,14 @@ for better naming in the hooks it is listed."
   (eww-search-prefix "https://www.google.com/search?q=")
   :bind
   (:map eww-mode-map
-	    ("x" . apt-sx-open-link)
-	    ("P" . pocket-reader-eww-add-page)
-	    ("{" . backward-paragraph)
-	    ("}" . forward-paragraph)
-	    ("C-c C-p" . shr-heading-previous)
-	    ("C-c C-n" . shr-heading-next))
+        ("x" . apt-sx-open-link)
+        ("P" . pocket-reader-eww-add-page)
+        ("{" . backward-paragraph)
+        ("}" . forward-paragraph)
+        ("C-c C-p" . shr-heading-previous)
+        ("C-c C-n" . shr-heading-next)
+        ("<up>" . apt-backward-and-recenter)
+        ("<down>" . apt-forward-and-recenter))
   :hook (eww-mode . shr-heading-setup-imenu))
 (use-package gif-screencast
   ;; on first run, might need to reset permissions:
@@ -688,17 +702,6 @@ for better naming in the hooks it is listed."
 (use-package sx)
 
 (use-package nov
-  :init
-  (defun apt-backward-and-recenter
-      ()
-    (interactive)
-    (backward-paragraph 1)
-    (recenter))
-  (defun apt-forward-and-recenter
-      ()
-    (interactive)
-    (forward-paragraph 1)
-    (recenter))
   :custom (nov-text-width 80)
   :mode ("\\.epub\\'" . nov-mode)
   :bind (:map nov-mode-map

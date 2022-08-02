@@ -53,6 +53,18 @@
   (interactive)
   (pop-to-buffer "*Messages*"))
 
+(defun apt-backward-and-recenter
+    ()
+  (interactive)
+  (backward-paragraph 1)
+  (recenter))
+
+(defun apt-forward-and-recenter
+    ()
+  (interactive)
+  (forward-paragraph 1)
+  (recenter))
+
 (provide 'apt-helpers)
 
 ;;; apt-helpers.el ends here
