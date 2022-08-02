@@ -612,7 +612,11 @@ for better naming in the hooks it is listed."
     (interactive)
     (when (and buffer-file-name
                (string-prefix-p (expand-file-name "~/dropbox/denote") buffer-file-name))
-      (start-process "apt-git-comimt" nil "git" "commit" "-am" "Update")))
+      ;; as `start-process` is async, the first one might end before the second call.
+      ;; but this does not matter much: in the worst case, files will end up commited
+      ;; anyway in the next save.
+      (start-process "apt-git-add" nil "git" "add" ".")
+      (start-process "apt-git-commit" nil "git" "commit" "-am" "Update")))
   (defun apt-denote-project
       ()
     (interactive)
