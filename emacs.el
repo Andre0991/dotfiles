@@ -613,7 +613,7 @@ for better naming in the hooks it is listed."
     (when (and buffer-file-name
                (string-prefix-p (expand-file-name "~/dropbox/denote") buffer-file-name))
       ;; as `start-process` is async, the first one might end before the second call.
-      ;; but this does not matter much: in the worst case, files will end up commited
+      ;; but this does not matter much: in the worst case, new files will end up commited
       ;; anyway in the next save.
       (start-process "apt-git-add" nil "git" "add" ".")
       (start-process "apt-git-commit" nil "git" "commit" "-am" "Update")))
@@ -621,14 +621,13 @@ for better naming in the hooks it is listed."
       ()
     (interactive)
     (project-switch-project "~/dropbox/denote"))
+  (add-hook 'after-save-hook #'apt-commit-denote)
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   :custom
   (denote-directory (expand-file-name "~/dropbox/denote"))
   (denote-known-keywords '("emacs" "tech"))
   (denote-file-type 'markdown-yaml)
   (denote-dired-directories (list denote-directory))
-  :config
-  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-  (add-hook 'after-save-hook 'apt-commit-denote)
   :bind
   ("C-S-d" . apt-denote-project))
 
