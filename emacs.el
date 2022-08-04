@@ -456,6 +456,7 @@ for better naming in the hooks it is listed."
   ("C-c l u" . xref-find-references)
   :config
   (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls")))
+  (add-to-list 'eglot-server-programs '(org-mode . ("ltex-ls")))
   (dolist (command '(other-window
 		             other-frame))
     ;; TODO: might timeout and make Emacs lag
