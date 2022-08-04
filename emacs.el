@@ -41,6 +41,7 @@
                                   olivetti
                                   orderless
                                   ox-gfm
+                                  ox-slack
                                   package-lint
                                   pdf-tools
                                   sx
