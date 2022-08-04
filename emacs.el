@@ -40,6 +40,7 @@
                                   modus-themes
                                   olivetti
                                   orderless
+                                  ox-gfm
                                   package-lint
                                   pdf-tools
                                   sx
@@ -295,13 +296,6 @@ for better naming in the hooks it is listed."
   (setq electric-pair-inhibit-predicate #'apt-inhibit-electric-pair-mode)
   :config
   (electric-pair-mode))
-
-(use-package org
-  :defer t
-  :custom 
-  (org-confirm-babel-evaluate nil)
-  :init
-  (add-hook 'org-mode-hook 'variable-pitch-mode))
 
 (use-package markdown-mode
   :custom
@@ -759,3 +753,31 @@ for better naming in the hooks it is listed."
          ("C-c p a" . cape-abbrev)
          ("C-c p l" . cape-line)
          ("C-c p w" . cape-dict)))
+
+(use-package org
+  :defer t
+  :config
+  ;; 'This variable needs to be set before org.el is loaded.'
+  (add-to-list 'org-export-backends 'md)
+  :custom
+  (org-confirm-babel-evaluate nil)
+  (org-special-ctrl-a/e t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-ellipsis "…")
+  ;; See https://github.com/minad/org-modern/issues/15
+  (org-modern-hide-stars nil)
+  (org-hide-leading-stars t))
+
+(use-package org-modern
+  :after org
+  ;; TODO: Not applied
+  :hook (org-modern-mode-hook . apt-org-modern-spacing)
+  :init
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (defun apt-org-modern-spacing ()
+    (setq-local line-spacing
+                (if org-modern-mode
+                    0.1 0.0))))
+
+
