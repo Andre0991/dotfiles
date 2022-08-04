@@ -34,7 +34,7 @@
                                   marginalia
                                   markdown-mode
                                   nov
-                                  browse-at-remote
+                                  org-modern
                                   md4rd
                                   mermaid-mode
                                   modus-themes
