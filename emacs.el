@@ -367,7 +367,8 @@ for better naming in the hooks it is listed."
   (setq register-preview-delay 0.5
 	    register-preview-function #'consult-register-format
 	    xref-show-xrefs-function #'consult-xref
-	    xref-show-definitions-function #'consult-xref)
+	    xref-show-definitions-function #'consult-xref
+        consult-preview-excluded-files '(".*\\.org$"))
   :config
   (defun apt-ripgrep-insert-glob
       ()
@@ -774,12 +775,15 @@ for better naming in the hooks it is listed."
 (use-package org-modern
   :after org
   ;; TODO: Not applied
-  :hook (org-modern-mode-hook . apt-org-modern-spacing)
   :init
   (add-hook 'org-mode-hook #'org-modern-mode)
   (defun apt-org-modern-spacing ()
     (setq-local line-spacing
                 (if org-modern-mode
-                    0.1 0.0))))
+                    0.1 0.0)))
+  :hook (org-modern-mode-hook . apt-org-modern-spacing))
 
 
+;; TODO:
+;; Add DOING keyword in org-mode
+;; Make headings bigger in org-mode? (with fixed pitch font)
