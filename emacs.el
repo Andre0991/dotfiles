@@ -131,8 +131,8 @@
   ;; (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
 
   ;; from https://git.sr.ht/~protesilaos/iosevka-comfy
-  (set-face-attribute 'default nil :height 220 :family "Iosevka Comfy")
-  (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 210)
+  (set-face-attribute 'default nil :height 260 :family "Iosevka Comfy")
+  (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
   (recentf-mode)
 
   :bind
@@ -299,6 +299,7 @@ for better naming in the hooks it is listed."
   (electric-pair-mode))
 
 (use-package markdown-mode
+  :defer t
   :custom
   (markdown-fontify-code-blocks-natively t)
   ;; https://github.com/jrblevin/markdown-mode/issues/578
@@ -583,6 +584,12 @@ for better naming in the hooks it is listed."
 
 (use-package md4rd
   :defer t
+  :init
+  (defun md4rd-browse-thread
+      ()
+    (interactive)
+    (let ((url "https://old.reddit.com/r/emacs/comments/wdwmch/what_is_the_current_state_of_the_art_for_emacs/"))
+      (md4rd--fetch-comments (concat (replace-regexp-in-string "/$" "" url) ".json"))))
   :custom
   (md4rd-subs-active '(emacs clojure neovim))
   :config
@@ -699,7 +706,8 @@ for better naming in the hooks it is listed."
   ("C-c o" . link-hint-open-link)
   ("C-c o" . link-hint-copy-link))
 
-(use-package sx)
+(use-package sx
+  :defer t)
 
 (use-package nov
   :custom (nov-text-width 80)
@@ -730,17 +738,18 @@ for better naming in the hooks it is listed."
 (use-package grip-mode)
 
 (use-package sly
+  :defer t
   :custom
   (inferior-lisp-program "clisp")
   :config
   (with-eval-after-load 'vilpy
     (add-to-list 'vilpy--handlers-alist
-		         '(:sly . ((:decider-fn . (lambda () (bound-and-true-p sly-mode)))
-			               (:eval-last-sexp . sly-eval-last-expression)
-			               (:eval-defun . sly-eval-defun)
-			               (:eval-region . sly-eval-region)
-			               (:eval-buffer . sly-eval-buffer)
-			               (:describe-symbol . sly-describe-symbol))))))
+                 '(:sly . ((:decider-fn . (lambda () (bound-and-true-p sly-mode)))
+                           (:eval-last-sexp . sly-eval-last-expression)
+                           (:eval-defun . sly-eval-defun)
+                           (:eval-region . sly-eval-region)
+                           (:eval-buffer . sly-eval-buffer)
+                           (:describe-symbol . sly-describe-symbol))))))
 
 (use-package vc-backup
   :disabled t
