@@ -779,10 +779,15 @@ for better naming in the hooks it is listed."
   (org-ellipsis "…")
   ;; See https://github.com/minad/org-modern/issues/15
   (org-modern-hide-stars nil)
-  (org-hide-leading-stars t))
+  (org-hide-leading-stars t)
+  (org-todo-keywords '((sequence "TODO" "DOING" "DONE"))))
 
 (use-package org-modern
   :after org
+  :custom
+  (org-modern-todo-faces '(("DOING"
+                            :background "blue"
+                            :foreground "white")))
   ;; TODO: Not applied
   :init
   (add-hook 'org-mode-hook #'org-modern-mode)
@@ -794,5 +799,4 @@ for better naming in the hooks it is listed."
 
 
 ;; TODO:
-;; Add DOING keyword in org-mode
 ;; Make headings bigger in org-mode? (with fixed pitch font)
