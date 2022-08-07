@@ -24,6 +24,7 @@
                                   engine-mode
                                   flymake-shellcheck
                                   forge
+                                  graphviz-dot-mode
                                   gif-screencast
                                   grip-mode
                                   iedit
@@ -779,6 +780,7 @@ for better naming in the hooks it is listed."
   ;; 'This variable needs to be set before org.el is loaded.'
   (add-to-list 'org-export-backends 'md)
   (add-to-list 'org-babel-load-languages '(dot . t))
+  (add-to-list 'org-src-lang-modes '(dot . graphviz-dot))
   :custom
   (org-confirm-babel-evaluate nil)
   (org-special-ctrl-a/e t)
