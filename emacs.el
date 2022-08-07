@@ -157,6 +157,11 @@
   ;; change require reloading the theme:
   ;; (modus-themes-load-vivendi)
   :custom
+  (modus-themes-headings
+   '((1 . (variable-pitch 1.5))
+     (2 . (variable-pitch 1.2))
+     (3 . (variable-pitch 1.0))
+     (t . (monochrome))))
   (modus-themes-italic-constructs nil)
   (modus-themes-bold-constructs nil)
   (modus-themes-tabs-accented nil)
