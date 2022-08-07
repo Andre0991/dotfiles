@@ -636,7 +636,6 @@ for better naming in the hooks it is listed."
   :custom
   (denote-directory (expand-file-name "~/dropbox/denote"))
   (denote-known-keywords '("emacs" "tech"))
-  (denote-file-type 'markdown-yaml)
   (denote-dired-directories (list denote-directory))
   :bind
   ("C-S-d" . apt-denote-project))
