@@ -601,13 +601,19 @@ for better naming in the hooks it is listed."
       (fn size op-type filename &optional offer-raw)
     (unless (string-match-p "\\.pdf\\'" filename)
       (funcall fn size op-type filename offer-raw)))
+  (defun apt-match-system-appearance
+      ()
+    (when (and (eql 'dark ns-system-appearance)
+               (not (pdf-view-midnight-minor-mode)))
+      (pdf-view-midnight-minor-mode)))
   (advice-add #'abort-if-file-too-large :around  #'apt-abort-if-file-too-large-unless-pdf)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   :config
   ;; assumes (pdf-tools-install) worked once before
   (pdf-tools-install-noverify)
-  (setq pdf-view-midnight-colors '("#ffffff" . "#000000")))
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+  (add-hook 'pdf-view-mode-hook 'apt-match-system-appearance))
 
 (use-package denote
   :init
@@ -667,7 +673,7 @@ for better naming in the hooks it is listed."
   :bind
   (:map eww-mode-map
         ("x" . apt-sx-open-link)
-        ("P" . pocket-reader-eww-add-page)
+        ;; ("P" . pocket-reader-eww-add-page)
         ("{" . backward-paragraph)
         ("}" . forward-paragraph)
         ("C-c C-p" . shr-heading-previous)
@@ -675,6 +681,7 @@ for better naming in the hooks it is listed."
         ("<up>" . apt-backward-and-recenter)
         ("<down>" . apt-forward-and-recenter))
   :hook (eww-mode . shr-heading-setup-imenu))
+
 (use-package gif-screencast
   ;; on first run, might need to reset permissions:
   ;; https://apple.stackexchange.com/questions/374158/why-is-screencapture-taking-the-screenshot-of-the-desktop-image-and-not-the-wind
@@ -791,6 +798,7 @@ for better naming in the hooks it is listed."
   ;; TODO: Not applied
   :init
   (add-hook 'org-mode-hook #'org-modern-mode)
+  :config
   (defun apt-org-modern-spacing ()
     (setq-local line-spacing
                 (if org-modern-mode
