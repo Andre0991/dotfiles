@@ -128,7 +128,7 @@
   ;; faces
   ;; DejaVu is great, but it has this bug:
   ;; https://old.reddit.com/r/emacs/comments/3wmw8z/dejavu_sans_mono_line_height_bug/
-  ;; (set-face-attribute 'default nil :height 190 :family "DejaVu Sans Mono")
+  ;; (set-face-attribute 'default nil :height 260 :family "DejaVu Sans Mono")
 
   ;; from https://git.sr.ht/~protesilaos/iosevka-comfy
   (set-face-attribute 'default nil :height 260 :family "Iosevka Comfy")
@@ -484,6 +484,7 @@ for better naming in the hooks it is listed."
 
 (require 'apt-inf-clojure nil 'noerror)
 (define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
+(define-key global-map (kbd "C-S-b") #'apt-inf-clojure-open-bb)
 
 (use-package browse-at-remote
   :custom
@@ -777,6 +778,7 @@ for better naming in the hooks it is listed."
   :config
   ;; 'This variable needs to be set before org.el is loaded.'
   (add-to-list 'org-export-backends 'md)
+  (add-to-list 'org-babel-load-languages '(dot . t))
   :custom
   (org-confirm-babel-evaluate nil)
   (org-special-ctrl-a/e t)

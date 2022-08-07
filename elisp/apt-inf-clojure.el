@@ -231,6 +231,12 @@
   (with-eval-after-load 'vilpy
     (vilpy-define-key vilpy-mode-map "c" 'apt--vilpy-clojure-prefix)))
 
+(defun apt-inf-clojure-open-bb
+    ()
+  (interactive)
+  (find-file "/Users/andreperictavares/dev/peric/bb-playground/sample.clj")
+  (inf-clojure "bb"))
+
 (provide 'apt-inf-clojure)
 
 ;;; apt-inf-clojure.el ends here
