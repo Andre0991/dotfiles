@@ -1,8 +1,13 @@
 ;;; Personal configuration -*- lexical-binding: t -*-
 
 ;;; Packages
-
+(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("elpa-devel" . "https://elpa.gnu.org/devel/"))
+
+;; eglot dev moved to Emacs 29
+(setq package-pinned-packages
+      '((eglot . "elpa-devel")))
 
 ;; Install missing packages:
 ;; (package-install-selected-packages)
@@ -29,6 +34,7 @@
                                   grip-mode
                                   iedit
                                   inf-clojure
+                                  jarchive
                                   keycast
                                   link-hint
                                   magit
@@ -94,7 +100,9 @@
         sentence-end-double-space nil
         auth-sources '("~/.authinfo")
         isearch-lazy-count t
-        async-shell-command-buffer 'new-buffer)
+        async-shell-command-buffer 'new-buffer
+        ;; save buffers in project context (instead of all buffers)
+        save-some-buffers-default-predicate #'save-some-buffers-root)
   (dolist (cmd '(narrow-to-region
                  upcase-region
                  downcase-region
@@ -158,9 +166,14 @@
   ;; (modus-themes-load-vivendi)
   :custom
   (modus-themes-headings
-   '((1 . (variable-pitch 1.5))
-     (2 . (variable-pitch 1.2))
-     (3 . (variable-pitch 1.0))
+   '((1 . (variable-pitch 1.7))
+     (2 . (variable-pitch 1.5))
+     (3 . (variable-pitch 1.3))
+     (4 . (variable-pitch 1))
+     (5 . (variable-pitch 1))
+     (6 . (variable-pitch 1))
+     (7 . (variable-pitch 1))
+     (8 . (variable-pitch 1))
      (t . (monochrome))))
   (modus-themes-italic-constructs nil)
   (modus-themes-bold-constructs nil)
@@ -311,13 +324,14 @@ for better naming in the hooks it is listed."
   ;; https://github.com/jrblevin/markdown-mode/issues/578
   (markdown-nested-imenu-heading-index nil)
   :init
-  (add-hook 'markdown-mode-hook 'variable-pitch-mode)
-  (add-hook 'markdown-mode-hook
-	        (lambda ()
-	          (dolist (face '(markdown-inline-code-face
-			                  markdown-code-face
-			                  markdown-table-face))
-		        (set-face-attribute face nil :height 190 :family "DejaVu Sans Mono")))))
+  ;; (add-hook 'markdown-mode-hook 'variable-pitch-mode)
+  ;; (add-hook 'markdown-mode-hook
+  ;;           (lambda ()
+  ;;             (dolist (face '(markdown-inline-code-face
+  ;;   		                  markdown-code-face
+  ;;   		                  markdown-table-face))
+  ;;   	        (set-face-attribute 'default nil :height 190 :family "Iosevka Comfy"))))
+  )
 
 (use-package winner
   :init
@@ -386,7 +400,6 @@ for better naming in the hooks it is listed."
       (define-key map "\M-g" #'apt-ripgrep-insert-glob)
       map))
   (consult-customize consult-ripgrep :keymap my-consult-ripgrep-map))
-
 
 (require 'apt-project-extras nil 'noerror)
 (use-package project
@@ -480,6 +493,11 @@ for better naming in the hooks it is listed."
 			                eldoc-echo-area-use-multiline-p
 			                5))))
 
+(use-package jarchive
+  :config
+  (jarchive-setup)
+  :after (eglot))
+
 (use-package inf-clojure
   :custom
   (inf-clojure-enable-eldoc nil)
@@ -496,7 +514,8 @@ for better naming in the hooks it is listed."
   :custom
   (browse-at-remote-prefer-symbolic nil)
   :bind
-  ("C-c g o" . browse-at-remote))
+  ("C-c g o" . browse-at-remote-kill)
+  ("C-c g O" . browse-at-remote))
 
 (require 'apt-smerge-extras nil 'noerror)
 
@@ -785,8 +804,11 @@ for better naming in the hooks it is listed."
   ;; 'This variable needs to be set before org.el is loaded.'
   (add-to-list 'org-export-backends 'md)
   (add-to-list 'org-babel-load-languages '(dot . t))
-  (add-to-list 'org-src-lang-modes '(dot . graphviz-dot))
+  (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
   :custom
+  (org-directory "~/Dropbox/denote")
+  (org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+  (org-mobile-inbox-for-pull "~/org/flagged.org")
   (org-confirm-babel-evaluate nil)
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
@@ -813,6 +835,6 @@ for better naming in the hooks it is listed."
                     0.1 0.0)))
   :hook (org-modern-mode-hook . apt-org-modern-spacing))
 
-
-;; TODO:
-;; Make headings bigger in org-mode? (with fixed pitch font)
+(use-package graphviz-dot-mode
+  :config
+  (setq graphviz-dot-indent-width 4))
