@@ -838,3 +838,18 @@ for better naming in the hooks it is listed."
 (use-package graphviz-dot-mode
   :config
   (setq graphviz-dot-indent-width 4))
+
+;; experiments
+;; TODO: Only for Clojure mode?
+(defun apt--widen
+    (&rest _)
+  (widen))
+
+(defun apt--narrow-to-defun
+      (&rest _)
+  (narrow-to-defun))
+
+(advice-add #'xref-find-definitions :after #'apt--narrow-to-defun)
+(advice-add #'xref-find-definitions-other-window :after #'apt--narrow-to-defun)
+(advice-add #'xref-go-back :before #'apt--widen)
+(advice-add #'xref-go-back :after #'apt--narrow-to-defun)
