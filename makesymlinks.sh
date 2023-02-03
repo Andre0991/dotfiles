@@ -1,5 +1,5 @@
 #!/bin/bash
-# Modified version of Michael Smalley's script
+# Modified version of Michael Smalley's script.
 # Source: http://blog.smalleycreative.com/tutorials/using-git-and-github-to-manage-your-dotfiles/
 ############################
 # .make.sh
