@@ -133,14 +133,18 @@
                 tab-width 4
                 c-basic-offset 4)
 
-
   ;; faces
   ;; DejaVu is great, but it has this bug:
   ;; https://old.reddit.com/r/emacs/comments/3wmw8z/dejavu_sans_mono_line_height_bug/
   ;; (set-face-attribute 'default nil :height 260 :family "DejaVu Sans Mono")
 
   ;; from https://git.sr.ht/~protesilaos/iosevka-comfy
-  (set-face-attribute 'default nil :height 260 :family "Iosevka Comfy")
+  ;; (defun font-exists-p (font)
+  ;;   "check if font exists"
+  ;;   (if (null (x-list-fonts font)) nil t))
+
+  ;; brew install homebrew/cask-fonts/font-iosevka-comfyx
+  (set-face-attribute 'default nil :height 240 :family "Iosevka Comfy")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
   (recentf-mode)
 
@@ -207,8 +211,8 @@
 
 (use-package apt-helpers
   :load-path
-  ;; TODO: elisp brings more than apt-helpers 
-  "~/dotfiles/elisp/"
+  ;; TODO: elisp brings more than apt-helpers
+  "~/dev/peric/dotfiles/elisp/"
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-s" . apt-switch-to-scratch)
@@ -441,6 +445,7 @@ for better naming in the hooks it is listed."
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package vilpy
+  ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/Andre0991/vilpy.git
   :load-path
   "~/dev/peric/vilpy/"
   :hook
@@ -807,8 +812,6 @@ for better naming in the hooks it is listed."
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
   :custom
   (org-directory "~/Dropbox/denote")
-  (org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (org-mobile-inbox-for-pull "~/org/flagged.org")
   (org-confirm-babel-evaluate nil)
   (org-special-ctrl-a/e t)
   (org-hide-emphasis-markers t)
