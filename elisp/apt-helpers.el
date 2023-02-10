@@ -46,7 +46,7 @@
 (defun apt-switch-to-emacs-init
     ()
   (interactive)
-  (find-file "~/dotfiles/emacs.el"))
+  (find-file "~/.emacs.el"))
 
 (defun apt-pop-to-messages-buffer
     ()

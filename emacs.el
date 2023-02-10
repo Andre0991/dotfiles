@@ -103,6 +103,8 @@
         async-shell-command-buffer 'new-buffer
         ;; save buffers in project context (instead of all buffers)
         save-some-buffers-default-predicate #'save-some-buffers-root)
+  ;; personal
+  (setq apt-narrow-screen t)
   (dolist (cmd '(narrow-to-region
                  upcase-region
                  downcase-region
@@ -128,7 +130,8 @@
                 delete-old-versions t
                 auto-save-default t
                 auto-save-timeout 20
-                auto-save-interval 200)
+                auto-save-interval 200
+                ring-bell-function #'ignore)
   (setq-default indent-tabs-mode nil  ; Don't use tabs for indentation
                 tab-width 4
                 c-basic-offset 4)
@@ -462,6 +465,18 @@ for better naming in the hooks it is listed."
 
 (use-package eglot
   :init
+  (setq apt-eldoc-echo-area-use-multiline-p (if apt-narrow-screen
+                                                nil
+                                              5))
+  (defun apt-eglot-hooks
+      ()
+    ;; This displays full docs for clojure functions.
+    ;; See https://github.com/joaotavora/eglot/discussions/894
+    (setq-local eldoc-documentation-strategy
+                #'eldoc-documentation-compose
+
+                eldoc-echo-area-use-multiline-p
+                apt-eldoc-echo-area-use-multiline-p))
   (defun apt-eglot-format-if-clojure
       (&rest _)
     (when (and buffer-file-name
@@ -491,12 +506,7 @@ for better naming in the hooks it is listed."
   (add-hook 'eglot-managed-mode-hook
 	        ;; This displays full docs for clojure functions.
 	        ;; See https://github.com/joaotavora/eglot/discussions/894
-	        #'(lambda ()
-		        (setq-local eldoc-documentation-strategy
-			                #'eldoc-documentation-compose
-
-			                eldoc-echo-area-use-multiline-p
-			                5))))
+	        #'apt-eglot-hooks))
 
 (use-package jarchive
   :config
@@ -672,6 +682,8 @@ for better naming in the hooks it is listed."
   ("C-S-d" . apt-denote-project))
 
 (use-package browse-url
+  ;; enable when using xwidgets
+  :disabled t
   :custom
   (browse-url-browser-function 'xwidget-webkit-browse-url)
   (browse-url-secondary-browser-function 'browse-url-default-browser))
