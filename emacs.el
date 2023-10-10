@@ -9,6 +9,9 @@
 (setq package-pinned-packages
       '((eglot . "elpa-devel")))
 
+;; Refresh packages
+;; (package-refresh-contents)
+
 ;; Install missing packages:
 ;; (package-install-selected-packages)
 
@@ -25,6 +28,8 @@
                                   diminish
                                   edit-indirect ; for editing blocks in markdown-mode
                                   eglot
+                                  ;; eglot-java
+                                  evil
                                   embark
                                   embark-consult
                                   engine-mode
