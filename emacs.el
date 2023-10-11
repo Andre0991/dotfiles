@@ -165,7 +165,8 @@
    ("C-z" . zap-up-to-char)
    ("M-Z" . zap-up-to-char)
    ("C-S-p" . previous-buffer)
-   ("C-S-n" . next-buffer)))
+   ("C-S-n" . next-buffer)
+   ("C-h" . delete-backward-char)))
 
 (use-package hideshow
   :hook (prog-mode . hs-minor-mode)
