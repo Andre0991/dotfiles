@@ -71,6 +71,7 @@
 (require 'diminish)
 
 (require 'apt-helpers nil 'noerror)
+(require 'apt-mac-os nil 'noerror)
 
 (use-package emacs
   :init
