@@ -36,6 +36,7 @@
                                   flymake-shellcheck
                                   forge
                                   graphviz-dot-mode
+                                  go-mode
                                   gif-screencast
                                   grip-mode
                                   iedit
@@ -418,15 +419,15 @@ for better naming in the hooks it is listed."
 
 (require 'apt-project-extras nil 'noerror)
 (use-package project
-  ;; Use this on a new config:
-  ;; (project-remember-projects-under "~/dev/nu")
-  ;; (project-remember-projects-under "~/dev/peric")
   :bind
   (("C-x p P" . apt-open-project-in-new-tab)
    (:map project-prefix-map
 	     ("r" . #'consult-ripgrep)
 	     ("t" . apt-project-switch-between-test-and-implementation)))
   :config
+  ;; Use this on a new config:
+  ;; (project-remember-projects-under "/Users/andre.peric/dev/nu/")
+  ;; (project-remember-projects-under "~/dev/peric")
   (add-to-list 'project-switch-commands '(consult-ripgrep "Ripgrep") t)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   (define-key project-prefix-map "m" #'magit-project-status)
@@ -494,6 +495,7 @@ for better naming in the hooks it is listed."
 	           (buffer-modified-p))
       (eglot-format)))
   (add-hook 'clojure-mode-hook 'eglot-ensure)
+  (add-hook 'go-mode 'eglot-ensure)
   :custom
   (eglot-confirm-server-initiated-edits nil)
   (eglot-connect-timeout 300)
