@@ -106,7 +106,7 @@
         ;; completions-detailed t
         compilation-scroll-output 't
         sentence-end-double-space nil
-        auth-sources '("~/.authinfo")
+        auth-sources '("~/.authinfo.gpg")
         isearch-lazy-count t
         async-shell-command-buffer 'new-buffer
         ;; save buffers in project context (instead of all buffers)
@@ -562,6 +562,11 @@ for better naming in the hooks it is listed."
   :demand t)
 
 (use-package forge
+  ;; initial configuration:
+  ;; https://gist.github.com/erikmd/8f1e892abb997fcb63ea2359137f4ae9
+  ;; and
+  ;; https://practical.li/spacemacs/source-control/forge-configuration/
+  ;; (note: remember to enable SSO for the created token)
   :after (magit)
   :config
   ;; Display only unread
