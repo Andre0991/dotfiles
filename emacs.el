@@ -464,6 +464,17 @@ for better naming in the hooks it is listed."
   ((emacs-lisp-mode clojure-mode sly-mode) . vilpy-mode)
   :diminish vilpy-mode)
 
+(use-package consult-gh
+  ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/armindarvish/consult-gh.git
+  :load-path
+  "~/dev/peric/consult-gh/"
+  :config
+  (add-to-list 'consult-gh-default-orgs-list "Nubank")
+  (setq consult-gh-default-clone-directory "~/dev/nu")
+  (setq consult-gh-repo-maxnum 999)
+  (setq consult-gh-code-maxnum 100)
+  :diminish consult-gh-mode)
+
 (use-package clojure-mode
   :custom
   (clojure-align-forms-automatically t)
