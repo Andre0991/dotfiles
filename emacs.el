@@ -231,6 +231,10 @@
    ("C-S-e" . apt-switch-to-emacs-init)
    ("C-S-m" . apt-pop-to-messages-buffer)))
 
+(use-package apt-mac-os
+  :load-path
+  "~/dev/peric/dotfiles/elisp/apt-mac-os.el")
+
 (use-package apt-text-extras
   :load-path
   "~/dev/peric/dotfiles/elisp/apt-text-extras.el"
