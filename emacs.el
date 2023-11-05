@@ -231,6 +231,12 @@
    ("C-S-e" . apt-switch-to-emacs-init)
    ("C-S-m" . apt-pop-to-messages-buffer)))
 
+(use-package apt-text-extras
+  :load-path
+  "~/dev/peric/dotfiles/elisp/apt-text-extras.el"
+  :bind
+  (("C-S-w" . apt-forward-to-whitespace)))
+
 (use-package dired
   :custom
   ((dired-use-ls-dired t)
@@ -468,11 +474,13 @@ for better naming in the hooks it is listed."
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/armindarvish/consult-gh.git
   :load-path
   "~/dev/peric/consult-gh/"
+  :custom
+  (consult-gh-default-clone-directory "~/dev/nu")
+  (consult-gh-repo-maxnum 999)
+  (consult-gh-code-maxnum 100)
   :config
   (add-to-list 'consult-gh-default-orgs-list "Nubank")
-  (setq consult-gh-default-clone-directory "~/dev/nu")
-  (setq consult-gh-repo-maxnum 999)
-  (setq consult-gh-code-maxnum 100)
+  (require 'consult-gh-embark)
   :diminish consult-gh-mode)
 
 (use-package clojure-mode
