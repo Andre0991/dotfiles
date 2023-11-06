@@ -252,6 +252,13 @@
 (use-package elisp-mode
   :diminish emacs-lisp-mode)
 
+(use-package nuai
+  :if
+  (file-directory-p "~/dev/nu/nuai.el/")
+  :load-path
+  "~/dev/nu/nuai.el/"
+  :bind ("C-c a" . nuai))
+
 (use-package icomplete
   :disabled t
   :init
