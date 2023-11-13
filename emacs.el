@@ -725,7 +725,7 @@ for better naming in the hooks it is listed."
       ()
     (interactive)
     (project-switch-project "~/dropbox/denote"))
-  (defun apt-open-diary
+  (defun apt-open-journal
       ()
     (interactive)
     (find-file "/Users/andre.peric/dropbox/denote/20231110T141240--diary__nu.org"))
@@ -737,7 +737,7 @@ for better naming in the hooks it is listed."
   (denote-dired-directories (list denote-directory))
   :bind
   ("C-S-d" . apt-denote-project)
-  ("C-S-t" . apt-open-diary))
+  ("C-S-j" . apt-open-journal))
 
 (use-package browse-url
   ;; enable when using xwidgets
