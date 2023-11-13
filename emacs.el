@@ -481,6 +481,14 @@ for better naming in the hooks it is listed."
   ((emacs-lisp-mode clojure-mode sly-mode) . vilpy-mode)
   :diminish vilpy-mode)
 
+(use-package breadcrumb
+  ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/joaotavora/breadcrumb.git
+  :load-path
+  "~/dev/peric/breadcrumb/"
+  :hook
+  ((emacs-lisp-mode clojure-mode sly-mode) . breadcrumb-local-mode)
+  :diminish breadcrumb-local-mode)
+
 (use-package consult-gh
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/armindarvish/consult-gh.git
   :load-path
@@ -717,6 +725,10 @@ for better naming in the hooks it is listed."
       ()
     (interactive)
     (project-switch-project "~/dropbox/denote"))
+  (defun apt-open-diary
+      ()
+    (interactive)
+    (find-file "/Users/andre.peric/dropbox/denote/20231110T141240--diary__nu.org"))
   (add-hook 'after-save-hook #'apt-commit-denote)
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   :custom
@@ -724,7 +736,8 @@ for better naming in the hooks it is listed."
   (denote-known-keywords '("emacs" "tech"))
   (denote-dired-directories (list denote-directory))
   :bind
-  ("C-S-d" . apt-denote-project))
+  ("C-S-d" . apt-denote-project)
+  ("C-S-t" . apt-open-diary))
 
 (use-package browse-url
   ;; enable when using xwidgets
