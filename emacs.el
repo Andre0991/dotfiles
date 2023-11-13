@@ -4,6 +4,7 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpa-devel" . "https://elpa.gnu.org/devel/"))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 
 ;; eglot dev moved to Emacs 29
 (setq package-pinned-packages
@@ -26,9 +27,10 @@
                                   deadgrep
                                   denote
                                   diminish
+                                  ;; eglot-java
+                                  eat
                                   edit-indirect ; for editing blocks in markdown-mode
                                   eglot
-                                  ;; eglot-java
                                   evil
                                   embark
                                   embark-consult
