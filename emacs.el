@@ -26,24 +26,25 @@
                                   corfu
                                   deadgrep
                                   denote
-                                  diminish
                                   ;; eglot-java
+                                  diminish
                                   eat
                                   edit-indirect ; for editing blocks in markdown-mode
                                   eglot
-                                  evil
                                   embark
                                   embark-consult
                                   engine-mode
+                                  evil
                                   flymake-shellcheck
                                   forge
-                                  graphviz-dot-mode
-                                  go-mode
                                   gif-screencast
+                                  go-mode
+                                  graphviz-dot-mode
                                   grip-mode
                                   iedit
                                   inf-clojure
                                   jarchive
+                                  jinx
                                   keycast
                                   link-hint
                                   magit
@@ -170,7 +171,8 @@
    ("M-Z" . zap-up-to-char)
    ("C-S-p" . previous-buffer)
    ("C-S-n" . next-buffer)
-   ("C-h" . delete-backward-char)))
+   ("C-h" . delete-backward-char)
+   ("M-g s" . sh-send-line-or-region-and-step)))
 
 (use-package hideshow
   :hook (prog-mode . hs-minor-mode)
@@ -730,7 +732,7 @@ for better naming in the hooks it is listed."
   (defun apt-open-journal
       ()
     (interactive)
-    (find-file "/Users/andre.peric/dropbox/denote/20231110T141240--diary__nu.org"))
+    (find-file "/Users/andre.peric/dropbox/denote/20231110T141240--journal__nu.org"))
   (add-hook 'after-save-hook #'apt-commit-denote)
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   :custom
@@ -913,3 +915,6 @@ for better naming in the hooks it is listed."
 (use-package graphviz-dot-mode
   :config
   (setq graphviz-dot-indent-width 4))
+
+
+(use-package jinx)
