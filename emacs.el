@@ -490,7 +490,7 @@ for better naming in the hooks it is listed."
   :load-path
   "~/dev/peric/breadcrumb/"
   :hook
-  ((emacs-lisp-mode clojure-mode sly-mode) . breadcrumb-local-mode)
+  ((clojure-mode sly-mode) . breadcrumb-local-mode)
   :diminish breadcrumb-local-mode)
 
 (use-package consult-gh

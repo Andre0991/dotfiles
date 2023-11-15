@@ -241,15 +241,16 @@
     ;; TODOs:
     ;; - Do not repeat the suppression message
     ;; - Add a new prompt to the comint buffer
-    (if (not (derived-mode-p 'inf-clojure-mode))
-        output
-      (let ((max-chars-by-line 5000))
-        (if (> (- (point)
-                  (let ((inhibit-field-text-motion t))
-                    (line-beginning-position)))
-               max-chars-by-line)
-            "[omitting large output, pp it with (clojure.pprint/pprint *1)]"
-          output))))
+  (let ((max-chars-by-line 5000)
+        (suppress-output-str "[ommit]"))
+    (cond
+     ((not (derived-mode-p 'inf-clojure-mode))
+      output)
+     ((> (- (point) (let ((inhibit-field-text-motion t))
+                      (line-beginning-position)))
+         max-chars-by-line)
+      suppress-output-str)
+     (output))))
 
 (add-hook 'comint-preoutput-filter-functions #'apt-comint-preoutput-filter-function)
 
