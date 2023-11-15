@@ -917,4 +917,6 @@ for better naming in the hooks it is listed."
   (setq graphviz-dot-indent-width 4))
 
 
-(use-package jinx)
+(use-package jinx
+  :config
+  (setq jinx-languages "en_US pt_BR"))
