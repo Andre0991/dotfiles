@@ -237,6 +237,22 @@
   (find-file "/Users/andreperictavares/dev/peric/bb-playground/sample.clj")
   (inf-clojure "bb"))
 
+(defun apt-comint-preoutput-filter-function (output)
+    ;; TODOs:
+    ;; - Do not repeat the suppression message
+    ;; - Add a new prompt to the comint buffer
+    (if (not (derived-mode-p 'inf-clojure-mode))
+        output
+      (let ((max-chars-by-line 5000))
+        (if (> (- (point)
+                  (let ((inhibit-field-text-motion t))
+                    (line-beginning-position)))
+               max-chars-by-line)
+            "[omitting large output, pp it with (clojure.pprint/pprint *1)]"
+          output))))
+
+(add-hook 'comint-preoutput-filter-functions #'apt-comint-preoutput-filter-function)
+
 (provide 'apt-inf-clojure)
 
 ;;; apt-inf-clojure.el ends here
