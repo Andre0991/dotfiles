@@ -310,7 +310,6 @@ for better naming in the hooks it is listed."
   vertico
   :init
   (vertico-multiform-mode)
-  (vertico-multiform-mode)
   (setq vertico-multiform-commands
 	    '((consult-imenu buffer indexed)
 	      (execute-extended-command unobtrusive))
