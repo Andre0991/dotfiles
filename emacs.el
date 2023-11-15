@@ -66,7 +66,8 @@
                                   use-package
                                   vertico
                                   wgrep
-                                  yaml-mode))
+                                  yaml-mode
+                                  yaml-pro))
 
 (setq use-package-enable-imenu-support t
       use-package-compute-statistics t)
@@ -920,3 +921,21 @@ for better naming in the hooks it is listed."
 (use-package jinx
   :config
   (setq jinx-languages "en_US pt_BR"))
+
+(use-package treesit
+  ;; For installing the grammars defined in `treesit-language-source-alist`:
+  ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+  ;; Then, to check if a grammar is available:
+  ;; (treesit-language-available-p 'yaml)
+  :config
+  (setq treesit-language-source-alist
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          ;; For a more complete list, see
+          ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+  (setq major-mode-remap-alist
+        '((yaml-mode . yaml-ts-mode)
+          (bash-mode . bash-ts-mode))))
+
+(use-package yaml-pro
+  :hook (yaml-ts-mode . yaml-pro-ts-mode))
