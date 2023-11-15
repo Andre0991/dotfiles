@@ -238,24 +238,18 @@
   (inf-clojure "bb"))
 
 (defun apt-comint-preoutput-filter-function (output)
-  (message "preoutput!")
   ;; TODOs:
+  ;; - Do not repeat the suppression message
   ;; - Add a new prompt to the comint buffer
   (let ((max-chars-by-line 5000)
-        (suppress-output-str "[...]"))
+        (suppress-output-str "."))
     (cond
      ((not (derived-mode-p 'inf-clojure-mode))
       output)
-     ((string= suppress-output-str
-               (buffer-substring-no-properties
-                (point)
-                (let ((inhibit-field-text-motion t))
-                  (line-beginning-position))))
-      "")
      ((> (- (point) (let ((inhibit-field-text-motion t))
                       (line-beginning-position)))
          max-chars-by-line)
-      (concat "\n" suppress-output-str))
+      suppress-output-str)
      (output))))
 
 (add-hook 'comint-preoutput-filter-functions #'apt-comint-preoutput-filter-function)
