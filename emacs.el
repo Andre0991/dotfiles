@@ -45,6 +45,7 @@
                                   inf-clojure
                                   jarchive
                                   jinx
+                                  json-mode
                                   keycast
                                   link-hint
                                   magit
@@ -931,10 +932,13 @@ for better naming in the hooks it is listed."
         '((bash "https://github.com/tree-sitter/tree-sitter-bash")
           ;; For a more complete list, see
           ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+          (json "https://github.com/tree-sitter/tree-sitter-json")))
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
-          (bash-mode . bash-ts-mode))))
+          (bash-mode . bash-ts-mode)
+          (js-mode . js-ts-mode)
+          (json-mode . json-ts-mode))))
 
 (use-package yaml-pro
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
