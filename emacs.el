@@ -24,6 +24,7 @@
                                   cape
                                   consult
                                   corfu
+                                  clojure-ts-mode
                                   deadgrep
                                   denote
                                   ;; eglot-java
@@ -938,7 +939,18 @@ for better naming in the hooks it is listed."
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
           (js-mode . js-ts-mode)
-          (json-mode . json-ts-mode))))
+          (json-mode . json-ts-mode)
+          ;; (clojure-mode . clojure-ts-mode)
+          )))
 
 (use-package yaml-pro
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
+
+(use-package combobulate
+  ;; cd ~/dev/peric && git clone https://github.com/mickeynp/combobulate.git 
+  :preface
+  (setq combobulate-key-prefix "M-g t")
+  :hook ((js-ts-mode . combobulate-mode)
+         (yaml-ts-mode . combobulate-mode)
+         (json-ts-mode . combobulate-mode))
+  :load-path ("~/dev/peric/combobulate"))
