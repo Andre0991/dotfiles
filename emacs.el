@@ -2,13 +2,10 @@
 
 ;;; Packages
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("elpa-devel" . "https://elpa.gnu.org/devel/"))
-(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-
-;; eglot dev moved to Emacs 29
-(setq package-pinned-packages
-      '((eglot . "elpa-devel")))
+(dolist (archive '(("melpa" . "https://melpa.org/packages/")
+                   ("elpa-devel" . "https://elpa.gnu.org/devel/")
+                   ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+  (add-to-list 'package-archives archive))
 
 ;; Refresh packages
 ;; (package-refresh-contents)
@@ -524,6 +521,8 @@ for better naming in the hooks it is listed."
   (add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode))))
 
 (use-package eglot
+  ;; upgrade (required once, then it's updated with other packages):
+  ;; (eglot-upgrade-eglot)
   :init
   (setq apt-eldoc-echo-area-use-multiline-p (if apt-narrow-screen
                                                 nil
