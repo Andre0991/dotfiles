@@ -24,6 +24,7 @@
                                   cape
                                   consult
                                   corfu
+                                  ;; clojure-mode
                                   clojure-ts-mode
                                   deadgrep
                                   denote
@@ -43,7 +44,7 @@
                                   graphviz-dot-mode
                                   grip-mode
                                   iedit
-                                  inf-clojure
+                                  ;; inf-clojure
                                   jarchive
                                   jinx
                                   json-mode
@@ -484,7 +485,10 @@ for better naming in the hooks it is listed."
   :load-path
   "~/dev/peric/vilpy/"
   :hook
-  ((emacs-lisp-mode clojure-mode sly-mode) . vilpy-mode)
+  ((emacs-lisp-mode
+    clojure-mode
+    clojure-ts-mode
+    sly-mode) . vilpy-mode)
   :diminish vilpy-mode)
 
 (use-package breadcrumb
@@ -492,7 +496,9 @@ for better naming in the hooks it is listed."
   :load-path
   "~/dev/peric/breadcrumb/"
   :hook
-  ((clojure-mode sly-mode) . breadcrumb-local-mode)
+  ((clojure-mode
+    clojure-ts-mode
+    sly-mode) . breadcrumb-local-mode)
   :diminish breadcrumb-local-mode)
 
 (use-package consult-gh
@@ -509,6 +515,7 @@ for better naming in the hooks it is listed."
   :diminish consult-gh-mode)
 
 (use-package clojure-mode
+  :disabled t
   :custom
   (clojure-align-forms-automatically t)
   :diminish clojure-mode
@@ -538,8 +545,10 @@ for better naming in the hooks it is listed."
 	           (bound-and-true-p inf-clojure-minor-mode)
 	           (buffer-modified-p))
       (eglot-format)))
-  (add-hook 'clojure-mode-hook 'eglot-ensure)
-  (add-hook 'go-mode 'eglot-ensure)
+  (dolist (mode '(clojure-ts-mode-hook
+                  clojure-mode-hook
+                  go-mode))
+    (add-hook mode 'eglot-ensure))
   :custom
   (eglot-confirm-server-initiated-edits nil)
   (eglot-connect-timeout 300)
@@ -573,7 +582,9 @@ for better naming in the hooks it is listed."
   (inf-clojure-mode-line nil)
   :init
   (add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
-  (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode))))
+  (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
+  :load-path
+  "~/dev/peric/inf-clojure")
 
 (require 'apt-inf-clojure nil 'noerror)
 (define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
@@ -940,8 +951,7 @@ for better naming in the hooks it is listed."
           (bash-mode . bash-ts-mode)
           (js-mode . js-ts-mode)
           (json-mode . json-ts-mode)
-          ;; (clojure-mode . clojure-ts-mode)
-          )))
+          (clojure-mode . clojure-ts-mode))))
 
 (use-package yaml-pro
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
