@@ -934,23 +934,27 @@ for better naming in the hooks it is listed."
   (setq jinx-languages "en_US pt_BR"))
 
 (use-package treesit
-  ;; For installing the grammars defined in `treesit-language-source-alist`:
-  ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
-  ;; Then, to check if a grammar is available:
-  ;; (treesit-language-available-p 'yaml)
+  :preface
+  (defun apt-install-ts-grammars ()
+    (interactive)
+    (dolist (grammar '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+                       ;; For a more complete list, see
+                       ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+                       (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+                       (json "https://github.com/tree-sitter/tree-sitter-json")
+                       (go "https://github.com/tree-sitter/tree-sitter-go")))
+      (add-to-list 'treesit-language-source-alist grammar)
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar)))))
+  (dolist (mapping '((yaml-mode . yaml-ts-mode)
+                     (bash-mode . bash-ts-mode)
+                     (js-mode . js-ts-mode)
+                     (json-mode . json-ts-mode)
+                     (clojure-mode . clojure-ts-mode)
+                     (go-mode . go-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping))
   :config
-  (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          ;; For a more complete list, see
-          ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-          (json "https://github.com/tree-sitter/tree-sitter-json")))
-  (setq major-mode-remap-alist
-        '((yaml-mode . yaml-ts-mode)
-          (bash-mode . bash-ts-mode)
-          (js-mode . js-ts-mode)
-          (json-mode . json-ts-mode)
-          (clojure-mode . clojure-ts-mode))))
+  (apt-install-ts-grammars))
 
 (use-package yaml-pro
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
