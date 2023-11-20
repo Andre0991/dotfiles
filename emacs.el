@@ -546,7 +546,8 @@ for better naming in the hooks it is listed."
       (eglot-format)))
   (dolist (mode '(clojure-ts-mode-hook
                   clojure-mode-hook
-                  go-mode))
+                  go-mode
+                  go-ts-mode))
     (add-hook mode 'eglot-ensure))
   :custom
   (eglot-confirm-server-initiated-edits nil)
@@ -967,3 +968,7 @@ for better naming in the hooks it is listed."
          (yaml-ts-mode . combobulate-mode)
          (json-ts-mode . combobulate-mode))
   :load-path ("~/dev/peric/combobulate"))
+
+(use-package go-ts-mode
+  :custom
+  (go-ts-mode-indent-offset 4))
