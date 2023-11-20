@@ -794,9 +794,7 @@ for better naming in the hooks it is listed."
         ("{" . backward-paragraph)
         ("}" . forward-paragraph)
         ("C-c C-p" . shr-heading-previous)
-        ("C-c C-n" . shr-heading-next)
-        ("<up>" . apt-backward-and-recenter)
-        ("<down>" . apt-forward-and-recenter))
+        ("C-c C-n" . shr-heading-next))
   :hook (eww-mode . shr-heading-setup-imenu))
 
 (use-package gif-screencast
@@ -835,10 +833,7 @@ for better naming in the hooks it is listed."
 
 (use-package nov
   :custom (nov-text-width 80)
-  :mode ("\\.epub\\'" . nov-mode)
-  :bind (:map nov-mode-map
-	          ("<up>" . apt-backward-and-recenter)
-	          ("<down>" . apt-forward-and-recenter)))
+  :mode ("\\.epub\\'" . nov-mode))
 
 (use-package engine-mode
   :ensure t
