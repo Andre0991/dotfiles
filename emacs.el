@@ -520,6 +520,11 @@ for better naming in the hooks it is listed."
   (add-hook 'clojurec-mode-hook (lambda () (diminish 'clojure-mode)))
   (add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode))))
 
+(use-package clojure-ts-mode
+  :hook (clojure-ts-mode . (lambda ()
+                             ;; replicating clojure-mode settings
+                             (setq-local comment-add 1))))
+
 (use-package eglot
   ;; upgrade (required once, then it's updated with other packages):
   ;; (eglot-upgrade-eglot)
@@ -694,13 +699,15 @@ for better naming in the hooks it is listed."
     (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact)))
 
 (use-package md4rd
-  :defer t
+  :preface
+  (defun md4rd-open-post (url &rest _args)
+    (md4rd--fetch-comments (concat (string-replace "www" "old" url) ".json")))
   :init
-  (defun md4rd-browse-thread
-      ()
-    (interactive)
-    (let ((url "https://old.reddit.com/r/emacs/comments/wdwmch/what_is_the_current_state_of_the_art_for_emacs/"))
-      (md4rd--fetch-comments (concat (replace-regexp-in-string "/$" "" url) ".json"))))
+  (push (cons
+         (rx line-start "http" (zero-or-one "s") "://www.reddit.com/" (one-or-more anychar))
+         #'md4rd-open-post)
+	    browse-url-handlers)
+  :defer t
   :custom
   (md4rd-subs-active '(emacs clojure neovim))
   :config
@@ -780,11 +787,20 @@ for better naming in the hooks it is listed."
 
 (use-package eww
   :defer t
-  :init
+  :preface
+  (defvar apt-reddit-url-regex
+    (rx line-start "http" (zero-or-one "s") "://www.reddit.com/" (one-or-more anychar)))
+  (defvar apt-stack-overflow-url-regex
+    (rx line-start "http" (zero-or-one "s") "://stackoverflow.com/questions" (one-or-more anychar)))
   (defun apt-sx-open-link
       ()
     (interactive)
-    (sx-open-link (plist-get eww-data :url)))
+    (sx-open-link (eww-current-url)))
+  (defun apt-exec-cmd-if-url-matches ()
+    (cond ((string-match-p apt-reddit-url-regex (or (eww-current-url) ""))
+           (md4rd-open-post (eww-current-url)))
+          ((string-match-p apt-stack-overflow-url-regex (or (eww-current-url) ""))
+           (apt-sx-open-link))))
   :custom
   (eww-search-prefix "https://www.google.com/search?q=")
   :bind
@@ -795,7 +811,8 @@ for better naming in the hooks it is listed."
         ("}" . forward-paragraph)
         ("C-c C-p" . shr-heading-previous)
         ("C-c C-n" . shr-heading-next))
-  :hook (eww-mode . shr-heading-setup-imenu))
+  :hook ((eww-mode . shr-heading-setup-imenu)
+         (eww-buffers-mode-hook . apt-exec-cmd-if-url-matches)))
 
 (use-package gif-screencast
   ;; on first run, might need to reset permissions:
