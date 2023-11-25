@@ -114,9 +114,7 @@
         isearch-lazy-count t
         async-shell-command-buffer 'new-buffer
         ;; save buffers in project context (instead of all buffers)
-        save-some-buffers-default-predicate #'save-some-buffers-root
-        ;; not configurable per extension, so we just disable it  
-        large-file-warning-threshold nil)
+        save-some-buffers-default-predicate #'save-some-buffers-root)
   ;; personal
   (setq apt-narrow-screen t)
   (dolist (cmd '(narrow-to-region
@@ -701,6 +699,7 @@ for better naming in the hooks it is listed."
     (define-key inf-clojure-minor-mode-map (kbd "<C-return>") #'nuact)))
 
 (use-package md4rd
+  :after eww
   :preface
   (defun md4rd-open-post (url &rest _args)
     (md4rd--fetch-comments (concat (string-replace "www" "old" url) ".json")))
@@ -709,7 +708,6 @@ for better naming in the hooks it is listed."
          (rx line-start "http" (zero-or-one "s") "://www.reddit.com/" (one-or-more anychar))
          #'md4rd-open-post)
 	    browse-url-handlers)
-  :defer t
   :custom
   (md4rd-subs-active '(emacs clojure neovim))
   :config
@@ -800,8 +798,10 @@ for better naming in the hooks it is listed."
     (sx-open-link (eww-current-url)))
   (defun apt-exec-cmd-if-url-matches ()
     (cond ((string-match-p apt-reddit-url-regex (or (eww-current-url) ""))
+           (message "Opening md4rd...")
            (md4rd-open-post (eww-current-url)))
           ((string-match-p apt-stack-overflow-url-regex (or (eww-current-url) ""))
+           (message "Opening sx...")
            (apt-sx-open-link))))
   :custom
   (eww-search-prefix "https://www.google.com/search?q=")
@@ -814,7 +814,7 @@ for better naming in the hooks it is listed."
         ("C-c C-p" . shr-heading-previous)
         ("C-c C-n" . shr-heading-next))
   :hook ((eww-mode . shr-heading-setup-imenu)
-         (eww-buffers-mode-hook . apt-exec-cmd-if-url-matches)))
+         (eww-after-render . apt-exec-cmd-if-url-matches)))
 
 (use-package gif-screencast
   ;; on first run, might need to reset permissions:
