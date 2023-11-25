@@ -553,8 +553,8 @@ for better naming in the hooks it is listed."
       (eglot-format)))
   (dolist (mode '(clojure-ts-mode-hook
                   clojure-mode-hook
-                  go-mode
-                  go-ts-mode))
+                  go-mode-hook
+                  go-ts-mode-hook))
     (add-hook mode 'eglot-ensure))
   :custom
   (eglot-confirm-server-initiated-edits nil)
