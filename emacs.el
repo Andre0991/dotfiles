@@ -114,7 +114,9 @@
         isearch-lazy-count t
         async-shell-command-buffer 'new-buffer
         ;; save buffers in project context (instead of all buffers)
-        save-some-buffers-default-predicate #'save-some-buffers-root)
+        save-some-buffers-default-predicate #'save-some-buffers-root
+        ;; not configurable per extension, so we just disable it  
+        large-file-warning-threshold nil)
   ;; personal
   (setq apt-narrow-screen t)
   (dolist (cmd '(narrow-to-region
