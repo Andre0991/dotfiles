@@ -162,6 +162,11 @@
   (set-face-attribute 'default nil :height 240 :family "Iosevka Comfy")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
   (recentf-mode)
+  (define-minor-mode sticky-buffer-mode
+    "Make the current window always display this buffer."
+    nil " sticky" nil
+    (set-window-dedicated-p (selected-window) sticky-buffer-mode))
+
 
   :bind
   (("M-o" . other-window)
@@ -489,6 +494,7 @@ for better naming in the hooks it is listed."
   :diminish vilpy-mode)
 
 (use-package breadcrumb
+  :disabled t
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/joaotavora/breadcrumb.git
   :load-path
   "~/dev/peric/breadcrumb/"
@@ -587,6 +593,7 @@ for better naming in the hooks it is listed."
   (inf-clojure-mode-line nil)
   :init
   (add-hook 'inf-clojure-mode-hook (lambda () (diminish 'inf-clojure-mode)))
+  ;; (add-hook 'inf-clojure-mode-hook (lambda () (sticky-buffer-mode)))
   (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
   :load-path
   "~/dev/peric/inf-clojure")
@@ -904,6 +911,10 @@ for better naming in the hooks it is listed."
          ("C-c p l" . cape-line)
          ("C-c p w" . cape-dict)))
 
+(use-package olivetti
+  :after org
+  :hook (org-mode . olivetti-mode))
+
 (use-package org
   :defer t
   :config
@@ -929,7 +940,6 @@ for better naming in the hooks it is listed."
   (org-modern-todo-faces '(("DOING"
                             :background "blue"
                             :foreground "white")))
-  ;; TODO: Not applied
   :init
   (add-hook 'org-mode-hook #'org-modern-mode)
   :config
@@ -984,5 +994,8 @@ for better naming in the hooks it is listed."
   :load-path ("~/dev/peric/combobulate"))
 
 (use-package go-ts-mode
+  ;; for using `godoc-at-point':
+  ;; go install github.com/zmb3/gogetdoc@latest
   :custom
-  (go-ts-mode-indent-offset 4))
+  (go-ts-mode-indent-offset 4)
+  (godoc-at-point-function 'godoc-gogetdoc))
