@@ -529,7 +529,25 @@ for better naming in the hooks it is listed."
 (use-package clojure-ts-mode
   :hook (clojure-ts-mode . (lambda ()
                              ;; replicating clojure-mode settings
-                             (setq-local comment-add 1))))
+                             (setq-local comment-add 1)
+                             (setq-local indent-tabs-mode nil
+                                         parse-sexp-ignore-comments t
+                                         multibyte-syntax-as-symbol t
+                                         open-paren-in-column-0-is-defun-start nil
+                                         fill-paragraph-function #'clojure-fill-paragraph
+                                         adaptive-fill-function #'clojure-adaptive-fill-function
+                                         normal-auto-fill-function #'clojure-auto-fill-function
+
+                                         ;; CLOJURE INDENT
+                                         indent-line-function #'clojure-indent-line
+                                         indent-region-function #'clojure-indent-region
+                                         aggressive-indent-region-function #'clojure-indent-region
+                                         lisp-indent-function #'clojure-indent-function
+
+                                         lisp-doc-string-elt-property 'clojure-doc-string-elt
+                                         clojure-expected-ns-function #'clojure-expected-ns
+                                         add-log-current-defun-function #'clojure-current-defun-name
+                                         beginning-of-defun-function #'clojure-beginning-of-defun-function))))
 
 (use-package eglot
   ;; upgrade (required once, then it's updated with other packages):
@@ -913,7 +931,8 @@ for better naming in the hooks it is listed."
 
 (use-package olivetti
   :after org
-  :hook (org-mode . olivetti-mode))
+  :hook ((org-mode . olivetti-mode)
+         (markdown-mode . olivetti-mode)))
 
 (use-package org
   :defer t
