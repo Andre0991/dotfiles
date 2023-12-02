@@ -84,13 +84,10 @@
     ;; translate super to control
     (setq ns-command-modifier 'control
           insert-directory-program "/usr/local/bin/gls"))
-
-  (setq initial-frame-alist
-        '((top . 1)
-          (left . 1)
-          (fullscreen . fullheight))
-        default-frame-alist '((left . (+ 1200))
-                              (fullscreen . fullheight)))
+  ;; start the initial frame maximized
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+  ;; start every frame maximized
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq custom-file (make-temp-file "emacs-custom-"))
   (unless (daemonp)
     (advice-add #'display-startup-echo-area-message :override #'ignore))
@@ -1018,3 +1015,7 @@ for better naming in the hooks it is listed."
   :custom
   (go-ts-mode-indent-offset 4)
   (godoc-at-point-function 'godoc-gogetdoc))
+
+(use-package eat
+  ;; might require `(eat-compile-terminfo)` for handling keypresses correctly
+  )
