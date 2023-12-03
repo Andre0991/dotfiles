@@ -21,7 +21,6 @@
                                   cape
                                   consult
                                   corfu
-                                  ;; clojure-mode
                                   clojure-ts-mode
                                   deadgrep
                                   denote
@@ -33,6 +32,7 @@
                                   embark
                                   embark-consult
                                   engine-mode
+                                  ;; inf-clojure
                                   evil
                                   flymake-shellcheck
                                   forge
@@ -41,7 +41,6 @@
                                   graphviz-dot-mode
                                   grip-mode
                                   iedit
-                                  ;; inf-clojure
                                   jarchive
                                   jinx
                                   json-mode
@@ -50,19 +49,20 @@
                                   magit
                                   marginalia
                                   markdown-mode
-                                  nov
-                                  org-modern
                                   md4rd
                                   mermaid-mode
                                   modus-themes
+                                  nov
                                   olivetti
                                   orderless
+                                  org-modern
                                   ox-gfm
                                   ox-slack
                                   package-lint
                                   pdf-tools
-                                  sx
                                   sly
+                                  surround
+                                  sx
                                   use-package
                                   vertico
                                   wgrep
@@ -1018,4 +1018,13 @@ for better naming in the hooks it is listed."
 
 (use-package eat
   ;; might require `(eat-compile-terminfo)` for handling keypresses correctly
+  :config
+  (add-to-list 'eat-semi-char-non-bound-keys [?\e ?o])
+  (eat-update-semi-char-mode-map)
+  ;; TO-DO: confirm if this is required
+  ;; (eat-reload)
   )
+
+(use-package surround
+  :ensure t
+  :bind-keymap ("C-c s" . surround-keymap))
