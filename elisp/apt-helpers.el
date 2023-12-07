@@ -65,6 +65,16 @@
   (forward-paragraph 1)
   (recenter))
 
+(defun apt-connect-or-compile
+    ()
+  (interactive)
+  (cond ((or (derived-mode-p 'clojure-ts-mode)
+             (derived-mode-p 'clojure-mode))
+         (#'apt-inf-clojure-connect))
+        ((or (derived-mode-p 'go-ts-mode)
+             (derived-mode-p 'go-mode))
+         (recompile))))
+
 (provide 'apt-helpers)
 
 ;;; apt-helpers.el ends here

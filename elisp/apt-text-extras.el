@@ -7,13 +7,15 @@
   "Move forward to the end of the next sequence of non-whitespace
 characters. With argument, do this that many times."
   (interactive "^p")
+  (set-mark (point))
   (re-search-forward
    (if (> arg 0)
        "[^[:blank:]\n]\\(?:[[:blank:]\n]\\|\\'\\)"
      "\\(?:[[:blank:]\n]\\|\\`\\)[^[:blank:]\n]")
    nil t arg)
   (unless (= (point) (if (> arg 0) (point-max) (point-min)))
-    (forward-char (if (> arg 0) -1 1))))
+    (forward-char (if (> arg 0) -1 1))
+    (activate-mark)))
 
 (provide 'apt-text-extras)
 
