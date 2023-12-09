@@ -32,7 +32,7 @@
                                   embark
                                   embark-consult
                                   engine-mode
-                                  ;; inf-clojure
+                                  inf-clojure
                                   evil
                                   flymake-shellcheck
                                   forge
@@ -50,6 +50,7 @@
                                   marginalia
                                   markdown-mode
                                   md4rd
+                                  meow
                                   mermaid-mode
                                   modus-themes
                                   nov
@@ -61,7 +62,7 @@
                                   package-lint
                                   pdf-tools
                                   sly
-                                  surround
+                                  ;; surround  ; it bugs meow
                                   sx
                                   use-package
                                   vertico
@@ -175,7 +176,6 @@
    ("C-S-n" . next-buffer)
    ("C-h" . delete-backward-char)
    ("M-g s" . sh-send-line-or-region-and-step)
-   ("C-S-c" . apt-connect-or-compile)
    ("C-S-r" . raise-sexp)
    ("C-S-z" . repeat)))
 
@@ -236,6 +236,7 @@
   "~/dev/peric/dotfiles/elisp/"
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
+   ("C-S-c" . apt-connect-or-compile)
    ("C-S-s" . apt-switch-to-scratch)
    ("C-S-e" . apt-switch-to-emacs-init)
    ("C-S-m" . apt-pop-to-messages-buffer)))
@@ -616,7 +617,6 @@ for better naming in the hooks it is listed."
   "~/dev/peric/inf-clojure")
 
 (require 'apt-inf-clojure nil 'noerror)
-(define-key global-map (kbd "C-S-c") #'apt-inf-clojure-connect)
 (define-key global-map (kbd "C-S-b") #'apt-inf-clojure-open-bb)
 
 (use-package browse-at-remote
@@ -1028,6 +1028,7 @@ for better naming in the hooks it is listed."
   )
 
 (use-package surround
+  :disabled t
   :ensure t
   :bind-keymap ("C-c s" . surround-keymap))
 
@@ -1079,6 +1080,7 @@ for better naming in the hooks it is listed."
      '("b" . meow-back-word)
      '("B" . meow-back-symbol)
      '("c" . meow-change)
+     '("C" . meow-comment)
      '("d" . meow-delete)
      '("D" . meow-backward-delete)
      '("e" . meow-next-word)
@@ -1097,6 +1099,7 @@ for better naming in the hooks it is listed."
      '("l" . meow-right)
      '("L" . meow-right-expand)
      '("m" . meow-join)
+     '("M" . set-mark-command)
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
@@ -1104,8 +1107,9 @@ for better naming in the hooks it is listed."
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
-     '("R" . meow-swap-grab)
+     '("R" . meow-replace-pop)
      '("s" . meow-kill)
+     '("S" . subword-mode)
      '("t" . meow-till)
      '("u" . meow-undo)
      '("U" . meow-undo-in-selection)
@@ -1117,7 +1121,7 @@ for better naming in the hooks it is listed."
      '("y" . meow-save)
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
-     '("'" . repeat)
+     '("\\" . repeat)
      '("<escape>" . ignore)))
   :config
   (meow-setup)
