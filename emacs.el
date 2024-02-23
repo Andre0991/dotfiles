@@ -22,7 +22,6 @@
                                   consult
                                   corfu
                                   clojure-ts-mode
-                                  deadgrep
                                   denote
                                   ;; eglot-java
                                   diminish
@@ -160,10 +159,10 @@
   (set-face-attribute 'default nil :height 240 :family "Iosevka Comfy")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
   (recentf-mode)
-  (define-minor-mode sticky-buffer-mode
+  (define-minor-mode apt-sticky-buffer-mode
     "Make the current window always display this buffer."
     nil " sticky" nil
-    (set-window-dedicated-p (selected-window) sticky-buffer-mode))
+    (set-window-dedicated-p (selected-window) apt-sticky-buffer-mode))
   
   :bind
   (("M-o" . other-window)
@@ -636,7 +635,9 @@ for better naming in the hooks it is listed."
   :bind
   ("C-x t c" . tab-new)
   ("C-x t a" . apt-tab-bar-auto-rename-tab)
-  ("C-x t k" . tab-bar-close-tab))
+  ("C-x t k" . tab-bar-close-tab)
+  ("C-x t n" . tab-bar-new-tab)
+  ("C-x t r" . tab-rename))
 
 (use-package nu-andre
   :load-path
@@ -1070,7 +1071,7 @@ for better naming in the hooks it is listed."
      '("2" . meow-expand-2)
      '("1" . meow-expand-1)
      '("-" . negative-argument)
-     '(";" . meow-reverse)
+     '("<backtab>" . meow-reverse)
      '("," . meow-inner-of-thing)
      '("." . meow-bounds-of-thing)
      '("[" . meow-beginning-of-thing)
@@ -1080,17 +1081,19 @@ for better naming in the hooks it is listed."
      '("b" . meow-back-word)
      '("B" . meow-back-symbol)
      '("c" . meow-change)
-     '("C" . meow-comment)
+     '(";" . meow-comment)
      '("d" . meow-delete)
      '("D" . meow-backward-delete)
      '("e" . meow-next-word)
      '("E" . meow-next-symbol)
      '("f" . meow-find)
+     '("F" . meow-find-expand)
      '("g" . meow-cancel-selection)
      '("G" . meow-grab)
      '("h" . meow-left)
      '("H" . meow-left-expand)
      '("i" . meow-insert)
+     '("J" . delete-indentation)
      '("I" . meow-open-above)
      '("j" . meow-next)
      '("J" . meow-next-expand)
@@ -1122,7 +1125,12 @@ for better naming in the hooks it is listed."
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("\\" . repeat)
-     '("<escape>" . ignore)))
+     '("%" . meow-query-replace)
+     '("&" . meow-query-replace-regexp)
+     '("\\" . repeat)
+     '("<escape>" . ignore)
+     '("(" . meow-start-kmacro)
+     '(")" . meow-end-kmacro)))
   :config
   (meow-setup)
   (meow-global-mode 1))
