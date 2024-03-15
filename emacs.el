@@ -161,7 +161,9 @@
   (recentf-mode)
   (define-minor-mode apt-sticky-buffer-mode
     "Make the current window always display this buffer."
-    nil " sticky" nil
+    :init-value nil
+    :lighter " sticky"
+    nil
     (set-window-dedicated-p (selected-window) apt-sticky-buffer-mode))
   
   :bind
@@ -990,7 +992,7 @@ for better naming in the hooks it is listed."
       (add-to-list 'treesit-language-source-alist grammar)
       (unless (treesit-language-available-p (car grammar))
         (treesit-install-language-grammar (car grammar)))))
-  (dolist (mapping '((yaml-mode . yaml-ts-mode)
+  (dolist (mapping '(;; (yaml-mode . yaml-ts-mode)
                      (bash-mode . bash-ts-mode)
                      (js-mode . js-ts-mode)
                      (json-mode . json-ts-mode)
@@ -1001,6 +1003,7 @@ for better naming in the hooks it is listed."
   (apt-install-ts-grammars))
 
 (use-package yaml-pro
+  :disabled t
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
 
 (use-package combobulate

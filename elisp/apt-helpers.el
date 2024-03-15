@@ -70,7 +70,7 @@
   (interactive)
   (cond ((or (derived-mode-p 'clojure-ts-mode)
              (derived-mode-p 'clojure-mode))
-         (#'apt-inf-clojure-connect))
+         (call-interactively #'apt-inf-clojure-connect))
         ((or (derived-mode-p 'go-ts-mode)
              (derived-mode-p 'go-mode))
          (recompile))))
