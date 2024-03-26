@@ -18,20 +18,21 @@
 
 (setq package-selected-packages '(avy
                                   browse-at-remote
+                                  ;; surround  ; it bugs meow
+                                  ;; eglot-java
                                   cape
+                                  clojure-ts-mode
                                   consult
                                   corfu
-                                  clojure-ts-mode
                                   denote
-                                  ;; eglot-java
                                   diminish
                                   eat
                                   edit-indirect ; for editing blocks in markdown-mode
                                   eglot
+                                  ellama
                                   embark
                                   embark-consult
                                   engine-mode
-                                  inf-clojure
                                   evil
                                   flymake-shellcheck
                                   forge
@@ -40,6 +41,7 @@
                                   graphviz-dot-mode
                                   grip-mode
                                   iedit
+                                  inf-clojure
                                   jarchive
                                   jinx
                                   json-mode
@@ -60,8 +62,8 @@
                                   ox-slack
                                   package-lint
                                   pdf-tools
+                                  plz
                                   sly
-                                  ;; surround  ; it bugs meow
                                   sx
                                   use-package
                                   vertico
@@ -1136,4 +1138,16 @@ for better naming in the hooks it is listed."
      '(")" . meow-end-kmacro)))
   :config
   (meow-setup)
-  (meow-global-mode 1))
+  ;; (meow-global-mode 1)
+  )
+
+(use-package ellama
+  :custom
+  (llm-warn-on-nonfree nil))
+
+;; nu proj clone nu-llm.el
+(use-package nu-llm
+  :after ellama
+  :load-path (lambda () (expand-file-name "nu-llm.el" (getenv "NU_HOME")))
+  :config
+  (add-to-list 'ellama-providers (cons "Nu OpenAI" (nu-llm-make-openai))))
