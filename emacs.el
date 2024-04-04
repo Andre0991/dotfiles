@@ -72,7 +72,8 @@
                                   yaml-pro))
 
 (setq use-package-enable-imenu-support t
-      use-package-compute-statistics t)
+      use-package-compute-statistics t
+      apt-profile (if (file-directory-p "~/dev/nu/") 'work 'home))
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -1150,4 +1151,6 @@ for better naming in the hooks it is listed."
   :after ellama
   :load-path (lambda () (expand-file-name "nu-llm.el" (getenv "NU_HOME")))
   :config
-  (add-to-list 'ellama-providers (cons "Nu OpenAI" (nu-llm-make-openai))))
+  (add-to-list 'ellama-providers (cons "Nu OpenAI" (nu-llm-make-openai)))
+  (when (eq 'work apt-profile)
+      (setq ellama-provider (alist-get "Nu OpenAI" ellama-providers nil nil #'string=))))
