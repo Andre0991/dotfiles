@@ -1139,6 +1139,7 @@ for better naming in the hooks it is listed."
      '(")" . meow-end-kmacro)))
   :config
   (meow-setup)
+  (setq meow-use-clipboard t)
   ;; (meow-global-mode 1)
   )
 
