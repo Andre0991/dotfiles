@@ -991,7 +991,8 @@ for better naming in the hooks it is listed."
                        ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
                        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
                        (json "https://github.com/tree-sitter/tree-sitter-json")
-                       (go "https://github.com/tree-sitter/tree-sitter-go")))
+                       (go "https://github.com/tree-sitter/tree-sitter-go")
+                       (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
       (add-to-list 'treesit-language-source-alist grammar)
       (unless (treesit-language-available-p (car grammar))
         (treesit-install-language-grammar (car grammar)))))
