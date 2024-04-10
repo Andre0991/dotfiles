@@ -1001,7 +1001,8 @@ for better naming in the hooks it is listed."
                      (js-mode . js-ts-mode)
                      (json-mode . json-ts-mode)
                      (clojure-mode . clojure-ts-mode)
-                     (go-mode . go-ts-mode)))
+                     (go-mode . go-ts-mode)
+                     (dockerfile-mode . dockerfile-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
   (apt-install-ts-grammars))
