@@ -1157,3 +1157,10 @@ for better naming in the hooks it is listed."
   (add-to-list 'ellama-providers (cons "Nu OpenAI" (nu-llm-make-openai)))
   (when (eq 'work apt-profile)
       (setq ellama-provider (alist-get "Nu OpenAI" ellama-providers nil nil #'string=))))
+
+(use-package dockerfile-ts-mode
+  :config
+  (setq auto-mode-alist
+        (append
+         '(("/Dockerfile\\.multistage\\'" . dockerfile-ts-mode))
+         auto-mode-alist)))
