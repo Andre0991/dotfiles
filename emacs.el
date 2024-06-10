@@ -57,6 +57,7 @@
                                   nov
                                   olivetti
                                   orderless
+                                  org-download
                                   org-modern
                                   ox-gfm
                                   ox-slack
@@ -1164,3 +1165,13 @@ for better naming in the hooks it is listed."
         (append
          '(("/Dockerfile\\.multistage\\'" . dockerfile-ts-mode))
          auto-mode-alist)))
+
+(use-package magit
+  :config
+  (with-eval-after-load 'magit-status-mode
+    (define-key magit-status-mode-map (kbd "K") 'magit-discard)))
+
+(use-package org-download
+  :config
+  (setq org-download-image-dir "/Users/andre.peric/dropbox/denote/images"
+        org-download-screenshot-method "screencapture"))
