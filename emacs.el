@@ -24,6 +24,7 @@
                                   clojure-ts-mode
                                   consult
                                   corfu
+                                  cue-mode
                                   denote
                                   diminish
                                   eat
@@ -1157,7 +1158,7 @@ for better naming in the hooks it is listed."
   :config
   (add-to-list 'ellama-providers (cons "Nu OpenAI" (nu-llm-make-openai)))
   (when (eq 'work apt-profile)
-      (setq ellama-provider (alist-get "Nu OpenAI" ellama-providers nil nil #'string=))))
+    (setq ellama-provider (alist-get "Nu OpenAI" ellama-providers nil nil #'string=))))
 
 (use-package dockerfile-ts-mode
   :config
