@@ -47,6 +47,7 @@
                                   jinx
                                   json-mode
                                   keycast
+                                  key-chord
                                   link-hint
                                   magit
                                   marginalia
@@ -1144,12 +1145,12 @@ for better naming in the hooks it is listed."
   :config
   (meow-setup)
   (setq meow-use-clipboard t)
-  ;; (meow-global-mode 1)
-  )
+  (meow-global-mode 1))
 
 (use-package ellama
   :custom
-  (llm-warn-on-nonfree nil))
+  (llm-warn-on-nonfree nil)
+  (ellama-auto-scroll t))
 
 ;; nu proj clone nu-llm.el
 (use-package nu-llm
@@ -1176,3 +1177,8 @@ for better naming in the hooks it is listed."
   :config
   (setq org-download-image-dir "/Users/andre.peric/dropbox/denote/images"
         org-download-screenshot-method "screencapture"))
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (key-chord-define vilpy-mode-map "jk" 'vilpy-special))
