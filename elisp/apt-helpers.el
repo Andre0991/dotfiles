@@ -75,6 +75,23 @@
              (derived-mode-p 'go-mode))
          (recompile))))
 
+(defun apt-quick-edit-start ()
+  "Create a new buffer with a random name and switch to it."
+  (interactive)
+  (let* ((my-buffer (generate-new-buffer-name (format "random-buffer-%s"
+                                                      (format-time-string "%Y%m%d%H%M%S%N")))))
+    (generate-new-buffer my-buffer)
+    (switch-to-buffer my-buffer)
+    (yank)))
+
+(defun apt-quick-edit-end ()
+  "Util function to be executed on qed completion."
+  (interactive)
+  (mark-whole-buffer)
+  (call-interactively 'kill-ring-save)
+  (kill-buffer-and-window))
+
 (provide 'apt-helpers)
+
 
 ;;; apt-helpers.el ends here

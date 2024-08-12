@@ -1179,6 +1179,8 @@ for better naming in the hooks it is listed."
         org-download-screenshot-method "screencapture"))
 
 (use-package key-chord
+  :after
+  vilpy
   :config
   (key-chord-mode 1)
   (key-chord-define vilpy-mode-map "jk" 'vilpy-special))
