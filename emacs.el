@@ -1183,4 +1183,5 @@ for better naming in the hooks it is listed."
   vilpy
   :config
   (key-chord-mode 1)
-  (key-chord-define vilpy-mode-map "jk" 'vilpy-special))
+  (key-chord-define vilpy-mode-map "jk" 'vilpy-special)
+  (key-chord-define-global "fj" 'meow-insert-exit))

@@ -82,7 +82,9 @@
                                                       (format-time-string "%Y%m%d%H%M%S%N")))))
     (generate-new-buffer my-buffer)
     (switch-to-buffer my-buffer)
-    (yank)))
+    (yank)
+    (beginning-of-buffer)
+    ))
 
 (defun apt-quick-edit-end ()
   "Util function to be executed on qed completion."
