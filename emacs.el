@@ -498,7 +498,12 @@ for better naming in the hooks it is listed."
     clojure-mode
     clojure-ts-mode
     sly-mode) . vilpy-mode)
-  :diminish vilpy-mode)
+  :diminish vilpy-mode
+  :config
+  (vilpy-define-key vilpy-mode-map "," 'special-vilpy-barf)
+  (vilpy-define-key vilpy-mode-map "." 'special-vilpy-slurp)
+  (vilpy-define-key vilpy-mode-map "b" 'special-vilpy-eval-buffer)
+  (vilpy-define-key vilpy-mode-map "B" 'special-vilpy-back))
 
 (use-package breadcrumb
   :disabled t
