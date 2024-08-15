@@ -500,6 +500,7 @@ for better naming in the hooks it is listed."
     sly-mode) . vilpy-mode)
   :diminish vilpy-mode
   :config
+  (vilpy-define-key vilpy-mode-map "9" 'vilpy-parens)
   (vilpy-define-key vilpy-mode-map "," 'special-vilpy-barf)
   (vilpy-define-key vilpy-mode-map "." 'special-vilpy-slurp)
   (vilpy-define-key vilpy-mode-map "b" 'special-vilpy-eval-buffer)
@@ -1190,3 +1191,6 @@ for better naming in the hooks it is listed."
   (key-chord-mode 1)
   (key-chord-define vilpy-mode-map "jk" 'vilpy-special)
   (key-chord-define-global "fj" 'meow-insert-exit))
+
+(use-package ansi-color
+  :hook (compilation-filter . ansi-color-compilation-filter))

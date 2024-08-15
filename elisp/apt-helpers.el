@@ -83,8 +83,7 @@
     (generate-new-buffer my-buffer)
     (switch-to-buffer my-buffer)
     (yank)
-    (beginning-of-buffer)
-    ))
+    (goto-char (point-min))))
 
 (defun apt-quick-edit-end ()
   "Util function to be executed on qed completion."
