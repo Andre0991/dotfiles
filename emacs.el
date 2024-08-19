@@ -162,8 +162,8 @@
   ;;   (if (null (x-list-fonts font)) nil t))
 
   ;; brew install --cask font-iosevka-comfy
-  (set-face-attribute 'default nil :height 240 :family "Iosevka Comfy")
-  (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
+  (set-face-attribute 'default nil :height 180 :family "Iosevka Comfy")
+  (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 180)
   (recentf-mode)
   (define-minor-mode apt-sticky-buffer-mode
     "Make the current window always display this buffer."
@@ -563,6 +563,7 @@ for better naming in the hooks it is listed."
                                          beginning-of-defun-function #'clojure-beginning-of-defun-function))))
 
 (use-package eglot
+  ;; TODO: run this in a bootstrap context
   ;; upgrade (required once, then it's updated with other packages):
   ;; (eglot-upgrade-eglot)
   :init
@@ -609,9 +610,10 @@ for better naming in the hooks it is listed."
     ;; (advice-add command :before #'apt-eglot-format-if-clojure)
     )
   (add-hook 'eglot-managed-mode-hook
-	        ;; This displays full docs for clojure functions.
-	        ;; See https://github.com/joaotavora/eglot/discussions/894
-	        #'apt-eglot-hooks))
+            ;; This displays full docs for clojure functions.
+            ;; See https://github.com/joaotavora/eglot/discussions/894
+            #'apt-eglot-hooks)
+  )
 
 (use-package jarchive
   :config

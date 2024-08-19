@@ -11,3 +11,6 @@ brew install --cask meetingbar
 brew install MonitorControl
 brew install gh
 brew install homebrew/cask-fonts/font-iosevka-comfyx
+brew install --cask gpg-suite
+brew install gnupg
+brew install clojure-lsp/brew/clojure-lsp-native
