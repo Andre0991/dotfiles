@@ -89,7 +89,7 @@
   (when (string= system-type 'darwin)
     ;; translate super to control
     (setq ns-command-modifier 'control
-          insert-directory-program "/usr/local/bin/gls"))
+          insert-directory-program "gls"))
   ;; start the initial frame maximized
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   ;; start every frame maximized
@@ -161,7 +161,7 @@
   ;;   "check if font exists"
   ;;   (if (null (x-list-fonts font)) nil t))
 
-  ;; brew install homebrew/cask-fonts/font-iosevka-comfyx
+  ;; brew install --cask font-iosevka-comfy
   (set-face-attribute 'default nil :height 240 :family "Iosevka Comfy")
   (set-face-attribute 'variable-pitch nil :family "Helvetica" :height 240)
   (recentf-mode)
@@ -655,7 +655,7 @@ for better naming in the hooks it is listed."
 
 (use-package nu-andre
   :load-path
-  "~/Dropbox/nu/emacs-lisp"
+  "~/dev/peric/nu-andre-el"
   :bind
   ("C-S-l" . apt-lein-socket-repl)
   :demand t)
