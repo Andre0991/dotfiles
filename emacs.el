@@ -1,4 +1,4 @@
-;;; Personal configuration -*- lexical-binding: t -*-
+;;; personal configuration -*- lexical-binding: t -*-
 
 ;;; Packages
 (require 'package)
@@ -64,6 +64,7 @@
                                   ox-gfm
                                   ox-slack
                                   package-lint
+                                  pinentry
                                   pdf-tools
                                   plz
                                   sly
@@ -540,6 +541,7 @@ for better naming in the hooks it is listed."
   (add-hook 'clojurescript-mode-hook (lambda () (diminish 'clojure-mode))))
 
 (use-package clojure-ts-mode
+  :disabled t
   :hook (clojure-ts-mode . (lambda ()
                              ;; replicating clojure-mode settings
                              (setq-local comment-add 1)
@@ -1011,7 +1013,8 @@ for better naming in the hooks it is listed."
                      (bash-mode . bash-ts-mode)
                      (js-mode . js-ts-mode)
                      (json-mode . json-ts-mode)
-                     (clojure-mode . clojure-ts-mode)
+                     ;; TODO: re-add
+                     ;; (clojure-mode . clojure-ts-mode)
                      (go-mode . go-ts-mode)
                      (dockerfile-mode . dockerfile-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
@@ -1196,3 +1199,9 @@ for better naming in the hooks it is listed."
 
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter))
+
+;; (use-package pinentry
+;;   :custom
+;;   (epg-pinentry-mode 'loopback)
+;;   :config
+;;   (pinentry-start))

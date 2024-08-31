@@ -14,3 +14,7 @@ brew install homebrew/cask-fonts/font-iosevka-comfyx
 brew install --cask gpg-suite
 brew install gnupg
 brew install clojure-lsp/brew/clojure-lsp-native
+brew install --cask vladdoster/formulae/vimari
+brew install hammerspoon
+brew install minikube
+go install golang.org/x/tools/gopls@latest
