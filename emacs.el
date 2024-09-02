@@ -174,7 +174,7 @@
     (set-window-dedicated-p (selected-window) apt-sticky-buffer-mode))
   
   :bind
-  (("M-o" . other-window)
+  (("C-o" . other-window)
    ("M-O" . other-frame)
    ("M-," . pop-tag-mark)
    ("C-c f d" . delete-file)
@@ -185,7 +185,9 @@
    ("C-h" . delete-backward-char)
    ("M-g s" . sh-send-line-or-region-and-step)
    ("C-S-r" . raise-sexp)
-   ("C-S-z" . repeat)))
+   ("C-S-r" . raise-sexp)
+   ("C-M-S-x" . apt-mac-os-switch-safari)
+   ("C-M-S-v" . apt-mac-os-switch-slack)))
 
 (use-package hideshow
   :hook (prog-mode . hs-minor-mode)
