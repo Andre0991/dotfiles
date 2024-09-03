@@ -784,7 +784,7 @@ for better naming in the hooks it is listed."
       ()
     (interactive)
     (when (and buffer-file-name
-               (string-prefix-p (expand-file-name "~/dropbox/denote") buffer-file-name))
+               (string-prefix-p (expand-file-name "~/dev/peric/denote") buffer-file-name))
       ;; as `start-process` is async, the first one might end before the second call.
       ;; but this does not matter much: in the worst case, new files will end up commited
       ;; anyway in the next save.
@@ -793,15 +793,15 @@ for better naming in the hooks it is listed."
   (defun apt-denote-project
       ()
     (interactive)
-    (project-switch-project "~/dropbox/denote"))
+    (project-switch-project "~/dev/peric/denote"))
   (defun apt-open-journal
       ()
     (interactive)
-    (find-file "/Users/andre.peric/dropbox/denote/20231110T141240--journal__nu.org"))
+    (find-file "/Users/andre.peric/dev/peric/denote/20231110T141240--journal__nu.org"))
   (add-hook 'after-save-hook #'apt-commit-denote)
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   :custom
-  (denote-directory (expand-file-name "~/dropbox/denote"))
+  (denote-directory (expand-file-name "~/dev/peric/denote"))
   (denote-known-keywords '("emacs" "tech"))
   (denote-dired-directories (list denote-directory))
   :bind
@@ -1188,8 +1188,7 @@ for better naming in the hooks it is listed."
 
 (use-package org-download
   :config
-  (setq org-download-image-dir "/Users/andre.peric/dropbox/denote/images"
-        org-download-screenshot-method "screencapture"))
+  (setq org-download-screenshot-method "screencapture"))
 
 (use-package key-chord
   :after
