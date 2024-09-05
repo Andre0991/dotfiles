@@ -266,7 +266,7 @@
   ((dired-use-ls-dired t)
    (dired-dwim-target t))
   :bind (:map dired-mode-map
-              ("C-o" . consult-buffer)
+              ("C-o" . other-window)
               ("C-c C-o" . dired-display-file)))
 
 (use-package elisp-mode
@@ -426,7 +426,6 @@ for better naming in the hooks it is listed."
 (use-package consult
   :bind
   (("C-c k" . consult-kmacro)
-   ("C-o" . consult-buffer)
    ("C-x b" . consult-buffer)
    ("C-x 4 b" . consult-buffer-other-window)
    ("C-x 5 b" . consult-buffer-other-frame)
@@ -780,6 +779,7 @@ for better naming in the hooks it is listed."
 
 (use-package denote
   :init
+
   (defun apt-commit-denote
       ()
     (interactive)
@@ -788,8 +788,10 @@ for better naming in the hooks it is listed."
       ;; as `start-process` is async, the first one might end before the second call.
       ;; but this does not matter much: in the worst case, new files will end up commited
       ;; anyway in the next save.
+      (message "commiting!")
       (start-process "apt-git-add" nil "git" "add" ".")
-      (start-process "apt-git-commit" nil "git" "commit" "-am" "Update")))
+      (start-process "apt-git-commit" nil "git" "commit" "-am" "Update")
+      (start-process "apt-git-push" nil "git" "push" "origin" "main")))
   (defun apt-denote-project
       ()
     (interactive)
