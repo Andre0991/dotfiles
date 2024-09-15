@@ -37,6 +37,7 @@
                                   evil
                                   flymake-shellcheck
                                   forge
+                                  htmlize
                                   gif-screencast
                                   go-mode
                                   graphviz-dot-mode
@@ -175,7 +176,7 @@
   
   :bind
   (("C-o" . other-window)
-   ("M-O" . other-frame)
+   ("M-o" . other-frame)
    ("M-," . pop-tag-mark)
    ("C-c f d" . delete-file)
    ("C-z" . zap-up-to-char)
