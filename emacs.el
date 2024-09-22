@@ -507,7 +507,9 @@ for better naming in the hooks it is listed."
   (vilpy-define-key vilpy-mode-map "," 'special-vilpy-barf)
   (vilpy-define-key vilpy-mode-map "." 'special-vilpy-slurp)
   (vilpy-define-key vilpy-mode-map "b" 'special-vilpy-eval-buffer)
-  (vilpy-define-key vilpy-mode-map "B" 'special-vilpy-back))
+  (vilpy-define-key vilpy-mode-map "B" 'special-vilpy-back)
+  (vilpy-define-key vilpy-mode-map "i" 'inf-clojure-set-ns)
+  (vilpy-define-key vilpy-mode-map "o" 'inf-clojure-clear-repl-buffer))
 
 (use-package breadcrumb
   :disabled t
@@ -605,6 +607,9 @@ for better naming in the hooks it is listed."
   ("C-c l q" . eglot-shutdown)
   ("C-c l r" . eglot-rename)
   ("C-c l u" . xref-find-references)
+  ("C-c l w" . (lambda ()
+                 (interactive)
+                 (let ((current-prefix-arg '(4))) (call-interactively 'xref-find-references))))
   :config
   (add-to-list 'eglot-server-programs '(markdown-mode . ("ltex-ls")))
   (add-to-list 'eglot-server-programs '(org-mode . ("ltex-ls")))
