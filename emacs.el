@@ -184,7 +184,6 @@
    ("M-Z" . zap-up-to-char)
    ("C-S-p" . previous-buffer)
    ("C-S-n" . next-buffer)
-   ("C-h" . delete-backward-char)
    ("M-g s" . sh-send-line-or-region-and-step)
    ("C-S-r" . raise-sexp)
    ("C-S-r" . raise-sexp)
@@ -1064,7 +1063,7 @@ for better naming in the hooks it is listed."
       (add-to-list 'treesit-language-source-alist grammar)
       (unless (treesit-language-available-p (car grammar))
         (treesit-install-language-grammar (car grammar)))))
-  (dolist (mapping '(;; (yaml-mode . yaml-ts-mode)
+  (dolist (mapping '((yaml-mode . yaml-ts-mode)
                      (bash-mode . bash-ts-mode)
                      (js-mode . js-ts-mode)
                      (json-mode . json-ts-mode)
@@ -1253,6 +1252,10 @@ for better naming in the hooks it is listed."
 
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter))
+
+(use-package treesit-fold
+  :load-path
+  "~/dev/peric/treesit-fold")
 
 ;; (use-package pinentry
 ;;   :custom
