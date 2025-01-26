@@ -50,6 +50,7 @@
                                   json-mode
                                   keycast
                                   key-chord
+                                  kubed
                                   link-hint
                                   magit
                                   marginalia
@@ -84,7 +85,6 @@
   (require 'use-package))
 (require 'diminish)
 
-(require 'apt-helpers nil 'noerror)
 (require 'apt-mac-os nil 'noerror)
 
 (use-package emacs
@@ -243,14 +243,14 @@
 
 (use-package apt-helpers
   :load-path
-  ;; TODO: elisp brings more than apt-helpers
   "~/dev/peric/dotfiles/elisp/"
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-c" . apt-connect-or-compile)
    ("C-S-s" . apt-switch-to-scratch)
    ("C-S-e" . apt-switch-to-emacs-init)
-   ("C-S-m" . apt-pop-to-messages-buffer)))
+   ("C-S-m" . apt-pop-to-messages-buffer))
+  :demand t)
 
 (use-package apt-mac-os
   :load-path
