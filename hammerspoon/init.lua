@@ -26,8 +26,8 @@ hs.hotkey.bind({"cmd"}, "M", function()
 
 end)
 
-hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "e", function()
-    local app = hs.application.find("emacs")
+function aptLaunchApp(appName)
+       local app = hs.application.find("emacs")
 
     if app == nil then
         hs.alert.show("Launching emacs")
@@ -38,4 +38,25 @@ hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "e", function()
         local win = app:mainWindow()
         win:focus()
     end
+end
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "e", function()
+      aptLaunchApp("emacs")
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "s", function()
+      aptLaunchApp("slack")
+end)
+
+-- b stands for browser
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "b", function()
+      aptLaunchApp("safari")
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "l", function()
+      aptLaunchApp("logseq")
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "c", function()
+      aptLaunchApp("calendar")
 end)
