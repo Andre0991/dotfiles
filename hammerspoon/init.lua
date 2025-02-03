@@ -25,3 +25,17 @@ hs.hotkey.bind({"cmd"}, "M", function()
   end
 
 end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "e", function()
+    local app = hs.application.find("emacs")
+
+    if app == nil then
+        hs.alert.show("Launching emacs")
+        hs.application.launchOrFocus("emacs")
+    elseif app:isFrontmost() then
+        app:hide()
+    else
+        local win = app:mainWindow()
+        win:focus()
+    end
+end)

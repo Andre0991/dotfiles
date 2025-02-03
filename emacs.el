@@ -52,6 +52,7 @@
                                   key-chord
                                   kubed
                                   link-hint
+                                  lua-mode
                                   magit
                                   marginalia
                                   markdown-mode
