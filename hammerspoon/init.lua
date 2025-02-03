@@ -27,11 +27,11 @@ hs.hotkey.bind({"cmd"}, "M", function()
 end)
 
 function aptLaunchApp(appName)
-       local app = hs.application.find("emacs")
+       local app = hs.application.find(appName)
 
     if app == nil then
-        hs.alert.show("Launching emacs")
-        hs.application.launchOrFocus("emacs")
+        hs.alert.show("Launching app")
+        hs.application.launchOrFocus(appName)
     elseif app:isFrontmost() then
         app:hide()
     else
