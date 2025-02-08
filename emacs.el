@@ -330,7 +330,7 @@ for better naming in the hooks it is listed."
   (vertico-multiform-mode)
   (setq vertico-multiform-commands
 	    '((consult-imenu buffer indexed)
-	      (execute-extended-command unobtrusive))
+	      (execute-extended-command flat))
 	    vertico-multiform-categories
 	    '((file grid)
 	      (consult-grep buffer))))
