@@ -1061,6 +1061,7 @@ for better naming in the hooks it is listed."
                        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
                        (json "https://github.com/tree-sitter/tree-sitter-json")
                        (go "https://github.com/tree-sitter/tree-sitter-go")
+                       (gomod "https://github.com/camdencheek/tree-sitter-gomod")
                        (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
       (add-to-list 'treesit-language-source-alist grammar)
       (unless (treesit-language-available-p (car grammar))
