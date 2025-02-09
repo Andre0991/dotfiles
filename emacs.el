@@ -1229,7 +1229,8 @@ for better naming in the hooks it is listed."
     (setq ellama-provider (alist-get "Nu OpenAI" ellama-providers nil nil #'string=))))
 
 (use-package gptel
-  :commands (gptel))
+  :commands (gptel)
+  :bind ("C-S-g" . gptel-menu))
 
 (use-package nu-gptel
   :after gptel
@@ -1246,7 +1247,8 @@ for better naming in the hooks it is listed."
 (use-package magit
   :config
   (with-eval-after-load 'magit-status-mode
-    (define-key magit-status-mode-map (kbd "K") 'magit-discard)))
+    (define-key magit-status-mode-map (kbd "K") 'magit-discard)
+    (define-key magit-hunk-section-map (kbd "K") 'magit-discard)))
 
 (use-package org-download
   :config
