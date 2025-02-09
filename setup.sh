@@ -17,4 +17,5 @@ brew install clojure-lsp/brew/clojure-lsp-native
 brew install --cask vladdoster/formulae/vimari
 brew install hammerspoon
 brew install minikube
+brew install rectangle
 go install golang.org/x/tools/gopls@latest
