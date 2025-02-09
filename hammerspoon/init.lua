@@ -49,7 +49,7 @@ hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "s", function()
 end)
 
 -- b stands for browser
-hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "b", function()
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "w", function()
       aptLaunchApp("safari")
 end)
 
@@ -58,5 +58,9 @@ hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "l", function()
 end)
 
 hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "c", function()
+      aptLaunchApp("chrome")
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "d", function()
       aptLaunchApp("calendar")
 end)
