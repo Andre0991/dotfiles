@@ -944,7 +944,7 @@ for better naming in the hooks it is listed."
   :ensure t
   :bind
   ("C-c o" . link-hint-open-link)
-  ("C-c o" . link-hint-copy-link))
+  ("C-c O" . link-hint-copy-link))
 
 (use-package sx
   :defer t)
