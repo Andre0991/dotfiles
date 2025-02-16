@@ -24,6 +24,7 @@
                                   clojure-ts-mode
                                   consult
                                   corfu
+                                  copilot
                                   cue-mode
                                   dape
                                   denote
@@ -1245,9 +1246,18 @@ for better naming in the hooks it is listed."
          '(("/Dockerfile\\.multistage\\'" . dockerfile-ts-mode))
          auto-mode-alist)))
 
+;; needs `copilot-install-server`
+(use-package copilot
+  :bind
+  (:map copilot-completion-map
+        ("C-f" . copilot-accept-completion)
+        ("C-g" . copilot-clear-overlay))
+  :hook
+  (prog-mode . copilot-mode))
+
 (use-package magit
   :config
-  (with-eval-after-load 'magit-status-mode
+  (with-eval-after-load 'magit-mode
     (define-key magit-status-mode-map (kbd "K") 'magit-discard)
     (define-key magit-hunk-section-map (kbd "K") 'magit-discard)))
 

@@ -64,3 +64,7 @@ end)
 hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "d", function()
       aptLaunchApp("calendar")
 end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "t", function()
+      aptLaunchApp("terminal")
+end)
