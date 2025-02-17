@@ -83,7 +83,10 @@
 
 (setq use-package-enable-imenu-support t
       use-package-compute-statistics t
-      apt-profile (if (file-directory-p "~/dev/nu/") 'work 'home))
+      apt-profile (if (file-directory-p "~/dev/nu/") 'work 'home)
+      apt-base-path (if (eq apt-profile 'home)
+                    "~/dev/"
+                    "~/dev/nu"))
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -246,7 +249,7 @@
 
 (use-package apt-helpers
   :load-path
-  "~/dev/peric/dotfiles/elisp/"
+  (lambda () (expand-file-name "dotfiles/elisp" apt-base-path))
   :bind
   (("C-c f D" . apt-delete-file-and-buffer)
    ("C-S-c" . apt-connect-or-compile)
@@ -257,11 +260,11 @@
 
 (use-package apt-mac-os
   :load-path
-  "~/dev/peric/dotfiles/elisp/apt-mac-os.el")
+  (lambda () (expand-file-name "dotfiles/elisp/apt-mac-os.el" apt-base-path)))
 
 (use-package apt-text-extras
   :load-path
-  "~/dev/peric/dotfiles/elisp/apt-text-extras.el"
+  (lambda () (expand-file-name "dotfiles/elisp/apt-text-extras.el" apt-base-path))
   :bind
   (("C-S-w" . apt-forward-to-whitespace)))
 
@@ -498,7 +501,7 @@ for better naming in the hooks it is listed."
 (use-package vilpy
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/Andre0991/vilpy.git
   :load-path
-  "~/dev/peric/vilpy/"
+  (lambda () (expand-file-name "vilpy" apt-base-path))
   :hook
   ((emacs-lisp-mode
     clojure-mode
@@ -518,7 +521,7 @@ for better naming in the hooks it is listed."
   :disabled t
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/joaotavora/breadcrumb.git
   :load-path
-  "~/dev/peric/breadcrumb/"
+  (lambda () (expand-file-name "breadcrumb" apt-base-path))
   :hook
   ((clojure-mode
     clojure-ts-mode
@@ -528,7 +531,7 @@ for better naming in the hooks it is listed."
 (use-package consult-gh
   ;; mkdir -p ~/dev/peric && cd ~/dev/peric && git clone https://github.com/armindarvish/consult-gh.git
   :load-path
-  "~/dev/peric/consult-gh/"
+  (lambda () (expand-file-name "consult-gh" apt-base-path))
   :custom
   (consult-gh-default-clone-directory "~/dev/nu")
   (consult-gh-repo-maxnum 999)
@@ -685,7 +688,7 @@ for better naming in the hooks it is listed."
   ;; (add-hook 'inf-clojure-mode-hook (lambda () (sticky-buffer-mode)))
   (add-hook 'inf-clojure-minor-mode-hook (lambda () (diminish 'inf-clojure-minor-mode)))
   :load-path
-  "~/dev/peric/inf-clojure")
+  (lambda () (expand-file-name "inf-clojure" apt-base-path)))
 
 (require 'apt-inf-clojure nil 'noerror)
 (define-key global-map (kbd "C-S-b") #'apt-inf-clojure-open-bb)
@@ -712,8 +715,9 @@ for better naming in the hooks it is listed."
   ("C-x t r" . tab-rename))
 
 (use-package nu-andre
+  :when (eq 'work apt-profile)
   :load-path
-  "~/dev/peric/nu-andre-el"
+  (lambda () (expand-file-name "nu-andre-el" apt-base-path))
   :bind
   ("C-S-l" . apt-lein-socket-repl)
   :demand t)
@@ -757,11 +761,12 @@ for better naming in the hooks it is listed."
   :bind ("C-c i" . isa))
 
 ;;; nu indentation
-(let ((nu-clj-indentation-path "~/dev/nu/nudev/ides/emacs/"))
-  (when (file-directory-p nu-clj-indentation-path)
-    (require 'nu-clj-indentation (expand-file-name "nu-clj-indentation" nu-clj-indentation-path))))
-(eval-after-load 'clojure-mode
-  '(set-nu-clj-indent))
+(when (eq 'work apt-profile)
+  (let ((nu-clj-indentation-path "~/dev/nu/nudev/ides/emacs/"))
+    (when (file-directory-p nu-clj-indentation-path)
+      (require 'nu-clj-indentation (expand-file-name "nu-clj-indentation" nu-clj-indentation-path))))
+  (eval-after-load 'clojure-mode
+    '(set-nu-clj-indent)))
 
 (use-package howm
   :defer t
@@ -837,7 +842,7 @@ for better naming in the hooks it is listed."
       ()
     (interactive)
     (when (and buffer-file-name
-               (string-prefix-p (expand-file-name "~/dev/peric/denote") buffer-file-name))
+               (string-prefix-p (expand-file-name "denote" apt-base-path) buffer-file-name))
       ;; as `start-process` is async, the first one might end before the second call.
       ;; but this does not matter much: in the worst case, new files will end up commited
       ;; anyway in the next save.
@@ -1090,7 +1095,8 @@ for better naming in the hooks it is listed."
   :hook ((js-ts-mode . combobulate-mode)
          (yaml-ts-mode . combobulate-mode)
          (json-ts-mode . combobulate-mode))
-  :load-path ("~/dev/peric/combobulate"))
+  :load-path
+  (lambda () (expand-file-name "combobulate" apt-base-path)))
 
 (use-package go-ts-mode
   ;; for using `godoc-at-point':
@@ -1223,6 +1229,7 @@ for better naming in the hooks it is listed."
 
 ;; nu proj clone nu-llm.el
 (use-package nu-llm
+  :when (eq 'work apt-profile)
   :after ellama
   :load-path (lambda () (expand-file-name "nu-llm.el" (getenv "NU_HOME")))
   :config
@@ -1278,7 +1285,7 @@ for better naming in the hooks it is listed."
 
 (use-package treesit-fold
   :load-path
-  "~/dev/peric/treesit-fold")
+  (lambda () (expand-file-name "treesit-fold" apt-base-path)))
 
 ;; (use-package pinentry
 ;;   :custom
