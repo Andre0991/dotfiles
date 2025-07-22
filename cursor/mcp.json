@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "clojure-mcp": {
+      "command": "nu",
+      "args": [ "mcp", "server", "clojure" ]
+    }
+  }
+}

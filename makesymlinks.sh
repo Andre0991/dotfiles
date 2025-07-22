@@ -11,6 +11,6 @@ ln -s ~/dev/dotfiles/emacs.el ~/.emacs.el
 
 mkdir -p ~/.hammerspoon/
 ln -sf ~/dev/dotfiles/hammerspoon/init.lua ~/.hammerspoon/init.lua
-
+ln -s ~/dev/dotfiles/cursor/mcp.json ~/.cursor/mcp.json
 
 
