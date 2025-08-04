@@ -57,8 +57,12 @@ hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "l", function()
       aptLaunchApp("logseq")
 end)
 
-hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "c", function()
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "g", function()
       aptLaunchApp("chrome")
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "c", function()
+      aptLaunchApp("cursor")
 end)
 
 hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "d", function()
